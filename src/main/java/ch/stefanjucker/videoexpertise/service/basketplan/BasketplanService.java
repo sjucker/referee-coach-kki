@@ -1,16 +1,16 @@
 package ch.stefanjucker.videoexpertise.service.basketplan;
 
 import ch.stefanjucker.videoexpertise.dto.basketplan.BasketplanGame;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.w3c.dom.Document;
 import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
-import org.xml.sax.SAXException;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.parsers.ParserConfigurationException;
 import java.io.IOException;
 import java.util.Optional;
 
@@ -19,10 +19,12 @@ import static javax.xml.XMLConstants.FEATURE_SECURE_PROCESSING;
 @Service
 public class BasketplanService {
 
+    private static final Logger logger = LoggerFactory.getLogger(BasketplanService.class);
+
     private static final String SEARCH_GAMES_URL = "https://www.basketplan.ch/showSearchGames.do?actionType=searchGames&gameNumber=%s&xmlView=true&perspective=de_default&federationId=%d";
 
 
-    public Optional<BasketplanGame> findGameByNumber(Federation federation, String gameNumber) throws IOException, InterruptedException {
+    public Optional<BasketplanGame> findGameByNumber(Federation federation, String gameNumber) {
         // TODO validate arguments
 
         try {
@@ -46,9 +48,8 @@ public class BasketplanService {
                 // TODO log more than one found
             }
 
-        } catch (ParserConfigurationException | SAXException e) {
-            // TODO log it
-
+        } catch (Exception e) {
+            logger.error("unexpected error while retrieving game-info from Basketplan", e);
         }
 
         return Optional.empty();
