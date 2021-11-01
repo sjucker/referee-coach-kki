@@ -40,10 +40,10 @@ public class BasketplanService {
                 Node game = games.item(0);
                 NamedNodeMap attributes = game.getAttributes();
 
-                return Optional.of(new BasketplanGame(attributes.getNamedItem("gameNumber").getNodeValue(),
-                                                      attributes.getNamedItem("referee1Name").getNodeValue(),
-                                                      attributes.getNamedItem("referee2Name").getNodeValue(),
-                                                      attributes.getNamedItem("referee3Name").getNodeValue()));
+                return Optional.of(new BasketplanGame(getAttributeValue(attributes, "gameNumber").orElseThrow(),
+                                                      getAttributeValue(attributes, "referee1Name").orElseThrow(),
+                                                      getAttributeValue(attributes, "referee2Name").orElseThrow(),
+                                                      getAttributeValue(attributes, "referee3Name").orElse(null)));
             } else {
                 // TODO log more than one found
             }
@@ -53,6 +53,11 @@ public class BasketplanService {
         }
 
         return Optional.empty();
+    }
+
+    private Optional<String> getAttributeValue(NamedNodeMap attributes, String name) {
+        var node = attributes.getNamedItem(name);
+        return node != null ? Optional.ofNullable(node.getNodeValue()) : Optional.empty();
     }
 
 
