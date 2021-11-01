@@ -5,13 +5,16 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.w3c.dom.Document;
-import org.w3c.dom.NamedNodeMap;
+import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
+import java.time.LocalDate;
 import java.util.Optional;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import static javax.xml.XMLConstants.FEATURE_SECURE_PROCESSING;
 
@@ -19,6 +22,8 @@ import static javax.xml.XMLConstants.FEATURE_SECURE_PROCESSING;
 public class BasketplanService {
 
     private static final Logger logger = LoggerFactory.getLogger(BasketplanService.class);
+
+    private static final Pattern YOUTUBE_ID_PATTERN = Pattern.compile("v=([^&]+)");
 
     private static final String SEARCH_GAMES_URL = "https://www.basketplan.ch/showSearchGames.do?actionType=searchGames&gameNumber=%s&xmlView=true&perspective=de_default&federationId=%d";
 
@@ -36,13 +41,23 @@ public class BasketplanService {
 
             NodeList games = doc.getDocumentElement().getElementsByTagName("game");
             if (games.getLength() == 1) {
-                Node game = games.item(0);
-                NamedNodeMap attributes = game.getAttributes();
+                var gameNode = games.item(0);
 
-                return Optional.of(new BasketplanGame(getAttributeValue(attributes, "gameNumber").orElseThrow(),
-                                                      getAttributeValue(attributes, "referee1Name").orElseThrow(),
-                                                      getAttributeValue(attributes, "referee2Name").orElseThrow(),
-                                                      getAttributeValue(attributes, "referee3Name").orElse(null)));
+                var leagueHoldingNode = ((Element) gameNode).getElementsByTagName("leagueHolding").item(0);
+                var homeTeamNode = ((Element) gameNode).getElementsByTagName("homeTeam").item(0);
+                var guestTeamNode = ((Element) gameNode).getElementsByTagName("guestTeam").item(0);
+                var resultNode = ((Element) gameNode).getElementsByTagName("result").item(0);
+
+                return Optional.of(new BasketplanGame(getAttributeValue(leagueHoldingNode, "name").orElse("?"),
+                                                      LocalDate.parse(getAttributeValue(gameNode, "date").orElseThrow()),
+                                                      "%s - %s".formatted(getAttributeValue(resultNode, "homeTeamScore").orElse("?"),
+                                                                          getAttributeValue(resultNode, "guestTeamScore").orElse("?")),
+                                                      getAttributeValue(homeTeamNode, "name").orElseThrow(),
+                                                      getAttributeValue(guestTeamNode, "name").orElseThrow(),
+                                                      getAttributeValue(gameNode, "referee1Name").orElseThrow(),
+                                                      getAttributeValue(gameNode, "referee2Name").orElseThrow(),
+                                                      getAttributeValue(gameNode, "referee3Name").orElse(null),
+                                                      getAttributeValue(gameNode, "videoLink").map(this::getVideoId).orElse(null)));
             } else {
                 // TODO log more than one found
             }
@@ -54,8 +69,16 @@ public class BasketplanService {
         return Optional.empty();
     }
 
-    private Optional<String> getAttributeValue(NamedNodeMap attributes, String name) {
-        var node = attributes.getNamedItem(name);
+    private String getVideoId(String youtubeLink) {
+        Matcher matcher = YOUTUBE_ID_PATTERN.matcher(youtubeLink);
+        if (matcher.find()) {
+            return matcher.group(1);
+        }
+        return null;
+    }
+
+    private Optional<String> getAttributeValue(Node parentNode, String name) {
+        var node = parentNode.getAttributes().getNamedItem(name);
         return node != null ? Optional.ofNullable(node.getNodeValue()) : Optional.empty();
     }
 

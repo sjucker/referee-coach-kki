@@ -1,4 +1,14 @@
 package ch.stefanjucker.videoexpertise.dto.basketplan;
 
-public record BasketplanGame(String gameNumber, String referee1, String referee2, String referee3) {
+import java.time.LocalDate;
+
+public record BasketplanGame(String competition,
+                             LocalDate date,
+                             String result,
+                             String teamA,
+                             String teamB,
+                             String referee1,
+                             String referee2,
+                             String referee3,
+                             String videoLink) {
 }
