@@ -10,5 +10,5 @@ public record BasketplanGame(String competition,
                              String referee1,
                              String referee2,
                              String referee3,
-                             String videoLink) {
+                             String youtubeId) {
 }
