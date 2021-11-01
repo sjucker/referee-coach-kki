@@ -11,7 +11,6 @@ import org.w3c.dom.NodeList;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
-import java.io.IOException;
 import java.util.Optional;
 
 import static javax.xml.XMLConstants.FEATURE_SECURE_PROCESSING;
