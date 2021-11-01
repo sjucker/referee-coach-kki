@@ -1,6 +1,6 @@
 package ch.stefanjucker.videoexpertise.service.basketplan;
 
-import ch.stefanjucker.videoexpertise.dto.basketplan.BasketplanGame;
+import ch.stefanjucker.videoexpertise.dto.basketplan.BasketplanGameDTO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -28,7 +28,7 @@ public class BasketplanService {
     private static final String SEARCH_GAMES_URL = "https://www.basketplan.ch/showSearchGames.do?actionType=searchGames&gameNumber=%s&xmlView=true&perspective=de_default&federationId=%d";
 
 
-    public Optional<BasketplanGame> findGameByNumber(Federation federation, String gameNumber) {
+    public Optional<BasketplanGameDTO> findGameByNumber(Federation federation, String gameNumber) {
         // TODO validate arguments
 
         try {
@@ -48,16 +48,16 @@ public class BasketplanService {
                 var guestTeamNode = ((Element) gameNode).getElementsByTagName("guestTeam").item(0);
                 var resultNode = ((Element) gameNode).getElementsByTagName("result").item(0);
 
-                return Optional.of(new BasketplanGame(getAttributeValue(leagueHoldingNode, "name").orElse("?"),
-                                                      LocalDate.parse(getAttributeValue(gameNode, "date").orElseThrow()),
-                                                      "%s - %s".formatted(getAttributeValue(resultNode, "homeTeamScore").orElse("?"),
-                                                                          getAttributeValue(resultNode, "guestTeamScore").orElse("?")),
-                                                      getAttributeValue(homeTeamNode, "name").orElseThrow(),
-                                                      getAttributeValue(guestTeamNode, "name").orElseThrow(),
-                                                      getAttributeValue(gameNode, "referee1Name").orElseThrow(),
-                                                      getAttributeValue(gameNode, "referee2Name").orElseThrow(),
-                                                      getAttributeValue(gameNode, "referee3Name").orElse(null),
-                                                      getAttributeValue(gameNode, "videoLink").map(this::getVideoId).orElse(null)));
+                return Optional.of(new BasketplanGameDTO(getAttributeValue(leagueHoldingNode, "name").orElse("?"),
+                                                         LocalDate.parse(getAttributeValue(gameNode, "date").orElseThrow()),
+                                                         "%s - %s".formatted(getAttributeValue(resultNode, "homeTeamScore").orElse("?"),
+                                                                             getAttributeValue(resultNode, "guestTeamScore").orElse("?")),
+                                                         getAttributeValue(homeTeamNode, "name").orElseThrow(),
+                                                         getAttributeValue(guestTeamNode, "name").orElseThrow(),
+                                                         getAttributeValue(gameNode, "referee1Name").orElseThrow(),
+                                                         getAttributeValue(gameNode, "referee2Name").orElseThrow(),
+                                                         getAttributeValue(gameNode, "referee3Name").orElse(null),
+                                                         getAttributeValue(gameNode, "videoLink").map(this::getVideoId).orElse(null)));
             } else {
                 // TODO log more than one found
             }

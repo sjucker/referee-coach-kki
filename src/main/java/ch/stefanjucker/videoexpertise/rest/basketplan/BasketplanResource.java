@@ -1,6 +1,6 @@
 package ch.stefanjucker.videoexpertise.rest.basketplan;
 
-import ch.stefanjucker.videoexpertise.dto.basketplan.BasketplanGame;
+import ch.stefanjucker.videoexpertise.dto.basketplan.BasketplanGameDTO;
 import ch.stefanjucker.videoexpertise.service.basketplan.BasketplanService;
 import ch.stefanjucker.videoexpertise.service.basketplan.BasketplanService.Federation;
  import org.slf4j.Logger;
@@ -22,7 +22,7 @@ public class BasketplanResource {
     }
 
     @GetMapping("/game/{federation}/{gameNumber}")
-    public ResponseEntity<BasketplanGame> game(@PathVariable Federation federation, @PathVariable String gameNumber) {
+    public ResponseEntity<BasketplanGameDTO> game(@PathVariable Federation federation, @PathVariable String gameNumber) {
         logger.info("GET /game/{}/{}", federation.getId(), gameNumber);
 
         try {
