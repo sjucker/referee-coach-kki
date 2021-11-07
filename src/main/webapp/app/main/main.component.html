@@ -5,7 +5,7 @@
       <mat-icon (click)="save()">save</mat-icon>
     </button>
     <button *ngIf="model.expertise?.id" mat-icon-button>
-      <a [href]="'/view/' + model.expertise?.id" mat-raised-button target="_blank">View</a>
+      <a [href]="'/#/view/' + model.expertise?.id" mat-raised-button target="_blank">View</a>
     </button>
   </mat-toolbar>
 
