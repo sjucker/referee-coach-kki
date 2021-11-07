@@ -4,6 +4,7 @@ import javax.validation.constraints.NotNull;
 import java.util.List;
 
 public record ExpertiseDTO(String id,
+                           @NotNull BasketplanGameDTO basketplanGame,
                            @NotNull String imageComment,
                            @NotNull String mechanicsComment,
                            @NotNull String foulsComment,

@@ -17,11 +17,11 @@ public class ExpertiseService {
 
     public ExpertiseDTO save(ExpertiseDTO dto) {
         String uuid = UUID.randomUUID().toString();
-        expertisen.put(uuid, dto);
 
         // TODO map this
-        return new ExpertiseDTO(
+        ExpertiseDTO newDto = new ExpertiseDTO(
                 uuid,
+                dto.basketplanGame(),
                 dto.imageComment(),
                 dto.mechanicsComment(),
                 dto.foulsComment(),
@@ -30,10 +30,14 @@ public class ExpertiseService {
                 dto.pointsToImproveComment(),
                 dto.videoComments()
         );
+        expertisen.put(uuid, newDto);
+
+        return newDto;
     }
 
     public ExpertiseDTO update(String id, ExpertiseDTO dto) {
-        return expertisen.put(id, dto);
+        expertisen.put(id, dto);
+        return dto;
     }
 
     public Optional<ExpertiseDTO> find(String id) {

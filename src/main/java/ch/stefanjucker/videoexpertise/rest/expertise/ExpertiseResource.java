@@ -27,6 +27,8 @@ public class ExpertiseResource {
 
     @GetMapping(value = "/expertise/{id}")
     public ResponseEntity<ExpertiseDTO> getExpertise(@PathVariable String id) {
+        logger.info("GET /expertise/{}", id);
+
         return expertiseService.find(id)
                                .map(ResponseEntity::ok)
                                .orElseGet(() -> ResponseEntity.notFound().build());
