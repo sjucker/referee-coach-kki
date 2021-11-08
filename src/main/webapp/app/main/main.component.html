@@ -24,18 +24,17 @@
     <mat-card *ngIf="model.expertise">
         <mat-card-title>Game Info</mat-card-title>
         <mat-card-content>
-            <mat-grid-list cols="4" rowHeight="30px">
-                <mat-grid-tile colspan="2">
-                    Competition: {{model.expertise.basketplanGame.competition}}</mat-grid-tile>
-                <mat-grid-tile>Date: {{model.expertise.basketplanGame.date}}</mat-grid-tile>
-                <mat-grid-tile>Result: {{model.expertise.basketplanGame.result}}</mat-grid-tile>
-                <mat-grid-tile colspan="2">Team A: {{model.expertise.basketplanGame.teamA}}</mat-grid-tile>
-                <mat-grid-tile colspan="2">Team B: {{model.expertise.basketplanGame.teamB}}</mat-grid-tile>
-                <mat-grid-tile colspan="2">Umpire
-                    1: {{model.expertise.basketplanGame.referee1}}</mat-grid-tile>
-                <mat-grid-tile colspan="2">Umpire
-                    2: {{model.expertise.basketplanGame.referee2}}</mat-grid-tile>
-            </mat-grid-list>
+            <div fxLayout="column" fxLayout.gt-sm="row" fxLayoutGap.gt-sm="20px">
+                <span>Competition: {{model.expertise.basketplanGame.competition}}</span>
+                <span>Date: {{model.expertise.basketplanGame.date | date:'dd.MM.yyyy' }}</span>
+                <span>Result: {{model.expertise.basketplanGame.result}}</span>
+                <span>Team A: {{model.expertise.basketplanGame.teamA}}</span>
+                <span>Team B: {{model.expertise.basketplanGame.teamB}}</span>
+            </div>
+            <div fxLayout="column" fxLayout.gt-sm="row" fxLayoutGap.gt-sm="20px">
+                <span>Umpire 1: {{model.expertise.basketplanGame.referee1}}</span>
+                <span>Umpire 2: {{model.expertise.basketplanGame.referee2}}</span>
+            </div>
         </mat-card-content>
     </mat-card>
 
