@@ -9,10 +9,8 @@
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
     <groupId>ch.stefanjucker</groupId>
-    <artifactId>video-expertise-server</artifactId>
+    <artifactId>video-expertise</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-    <name>video-expertise-server</name>
-    <description>video-expertise-server</description>
     <properties>
         <java.version>17</java.version>
 
