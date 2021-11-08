@@ -5,36 +5,36 @@ import {ExpertiseDTO} from "../rest";
 import {YouTubePlayer} from "@angular/youtube-player";
 
 @Component({
-  selector: 'app-view-expertise',
-  templateUrl: './view-expertise.component.html',
-  styleUrls: ['./view-expertise.component.css']
+    selector: 'app-view-expertise',
+    templateUrl: './view-expertise.component.html',
+    styleUrls: ['./view-expertise.component.css']
 })
 export class ViewExpertiseComponent implements OnInit {
 
-  @ViewChild('youtubePlayer') youtube?: YouTubePlayer;
+    @ViewChild('youtubePlayer') youtube?: YouTubePlayer;
 
-  dto?: ExpertiseDTO;
+    dto?: ExpertiseDTO;
 
-  constructor(private route: ActivatedRoute,
-              private readonly expertiseService: ExpertiseService) {
-  }
+    constructor(private route: ActivatedRoute,
+                private readonly expertiseService: ExpertiseService) {
+    }
 
-  ngOnInit(): void {
-    // This code loads the IFrame Player API code asynchronously, according to the instructions at
-    // https://developers.google.com/youtube/iframe_api_reference#Getting_Started
-    const tag = document.createElement('script');
-    tag.src = 'https://www.youtube.com/iframe_api';
-    document.body.appendChild(tag);
+    ngOnInit(): void {
+        // This code loads the IFrame Player API code asynchronously, according to the instructions at
+        // https://developers.google.com/youtube/iframe_api_reference#Getting_Started
+        const tag = document.createElement('script');
+        tag.src = 'https://www.youtube.com/iframe_api';
+        document.body.appendChild(tag);
 
-    this.expertiseService.getExpertise(this.route.snapshot.paramMap.get('id')!).subscribe(result => {
-      this.dto = result;
-      console.log(this.dto);
-    });
-  }
+        this.expertiseService.getExpertise(this.route.snapshot.paramMap.get('id')!).subscribe(result => {
+            this.dto = result;
+            console.log(this.dto);
+        });
+    }
 
-  play(time: number): void {
-    this.youtube!.seekTo(time, true);
-    this.youtube!.playVideo();
-  }
+    play(time: number): void {
+        this.youtube!.seekTo(time, true);
+        this.youtube!.playVideo();
+    }
 
 }

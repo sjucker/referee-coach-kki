@@ -1,53 +1,54 @@
 <div>
-  <div *ngIf="dto">
-    <mat-toolbar>
-      Report
-    </mat-toolbar>
+    <div *ngIf="dto">
+        <mat-toolbar color="primary">
+            Video Report
+        </mat-toolbar>
 
-    <div fxLayout="row" fxLayoutAlign="space-around stretch">
-      <mat-card fxFlex="33%">
-        <mat-card-title>Image, Approach, Fitness Condition</mat-card-title>
-        <mat-card-content><p>{{dto.imageComment}}</p></mat-card-content>
-      </mat-card>
-      <mat-card fxFlex="33%">
-        <mat-card-title>2PO Mechanics & Individual Officiating Techniques</mat-card-title>
-        <mat-card-content><p>{{dto.mechanicsComment}}</p></mat-card-content>
-      </mat-card>
-      <mat-card fxFlex="33%">
-        <mat-card-title>Critera: Fouls & Violations</mat-card-title>
-        <mat-card-content><p>{{dto.foulsComment}}</p></mat-card-content>
-      </mat-card>
+        <div fxLayout="column" fxLayout.gt-md="row" fxLayoutAlign="space-around stretch">
+            <mat-card fxFlex.gt-md="33%">
+                <mat-card-title>Image, Approach, Fitness Condition</mat-card-title>
+                <mat-card-content><p>{{dto.imageComment}}</p></mat-card-content>
+            </mat-card>
+            <mat-card fxFlex.gt-md="33%">
+                <mat-card-title>2PO Mechanics & Individual Officiating Techniques</mat-card-title>
+                <mat-card-content><p>{{dto.mechanicsComment}}</p></mat-card-content>
+            </mat-card>
+            <mat-card fxFlex.gt-md="33%">
+                <mat-card-title>Critera: Fouls & Violations</mat-card-title>
+                <mat-card-content><p>{{dto.foulsComment}}</p></mat-card-content>
+            </mat-card>
+        </div>
+        <div fxLayout="column" fxLayout.gt-md="row" fxLayoutAlign="space-around stretch">
+            <mat-card fxFlex.gt-md="33%">
+                <mat-card-title>Game Control and Management</mat-card-title>
+                <mat-card-content><p>{{dto.gameManagementComment}}</p></mat-card-content>
+            </mat-card>
+            <mat-card fxFlex.gt-md="33%">
+                <mat-card-title>Points to Keep</mat-card-title>
+                <mat-card-content><p>{{dto.pointsToKeepComment}}</p></mat-card-content>
+            </mat-card>
+            <mat-card fxFlex.gt-md="33%">
+                <mat-card-title>Points to Improve</mat-card-title>
+                <mat-card-content><p>{{dto.pointsToImproveComment}}</p></mat-card-content>
+            </mat-card>
+        </div>
+        <div fxLayout="column" fxLayout.gt-md="row">
+            <div style="margin: 10px;">
+                <youtube-player #youtubePlayer [videoId]="dto.basketplanGame.youtubeId"></youtube-player>
+            </div>
+            <div fxFlex="stretch">
+                <mat-card *ngFor="let videoComment of dto.videoComments; index as i;">
+                    <mat-card-title>Video Comment #{{i + 1}}</mat-card-title>
+                    <mat-card-content>
+                        {{videoComment.comment}}
+                    </mat-card-content>
+                    <mat-card-actions>
+                        <button (click)="play(videoComment.timestamp)" color="accent" mat-stroked-button>
+                            Jump to Scene
+                        </button>
+                    </mat-card-actions>
+                </mat-card>
+            </div>
+        </div>
     </div>
-    <div fxLayout="row">
-      <mat-card fxFlex="33%">
-        <mat-card-title>Game Control and Management</mat-card-title>
-        <mat-card-content><p>{{dto.gameManagementComment}}</p></mat-card-content>
-      </mat-card>
-      <mat-card fxFlex="33%">
-        <mat-card-title>Points to Keep</mat-card-title>
-        <mat-card-content><p>{{dto.pointsToKeepComment}}</p></mat-card-content>
-      </mat-card>
-      <mat-card fxFlex="33%">
-        <mat-card-title>Points to Improve</mat-card-title>
-        <mat-card-content><p>{{dto.pointsToImproveComment}}</p></mat-card-content>
-      </mat-card>
-    </div>
-    <div fxLayout="row">
-      <div style="margin: 10px;">
-        <youtube-player #youtubePlayer [videoId]="dto.basketplanGame.youtubeId"></youtube-player>
-      </div>
-      <div fxFlex="stretch">
-        <mat-card *ngFor="let videoComment of dto.videoComments; index as i;">
-          <mat-card-title>Video Comment #{{i + 1}}</mat-card-title>
-          <mat-card-content>
-            {{videoComment.comment}}
-          </mat-card-content>
-          <mat-card-actions>
-            <button (click)="play(videoComment.timestamp)" mat-raised-button>Jump to Scene</button>
-          </mat-card-actions>
-        </mat-card>
-
-      </div>
-    </div>
-  </div>
 </div>
