@@ -2,7 +2,7 @@ import {Component, OnInit, ViewChild} from '@angular/core';
 import {YouTubePlayer} from "@angular/youtube-player";
 import {BasketplanService} from "../service/basketplan.service";
 import {ExpertiseService} from "../service/expertise.service";
-import {ExpertiseDTO, VideoCommentDTO} from "../rest";
+import {BasketplanGameDTO, ExpertiseDTO, Reportee, VideoCommentDTO} from "../rest";
 import {ActivatedRoute, Router} from "@angular/router";
 
 interface VideoExpertiseModel {
@@ -19,6 +19,8 @@ interface VideoExpertiseModel {
 export class MainComponent implements OnInit {
 
     @ViewChild('youtubePlayer') youtube?: YouTubePlayer;
+
+    reportees: Map<Reportee, string> = new Map<Reportee, string>();
 
     model: VideoExpertiseModel = {
         gameNumber: '21-05249', // TODO remove
@@ -43,6 +45,7 @@ export class MainComponent implements OnInit {
         if (id) {
             this.expertiseService.getExpertise(id).subscribe(dto => {
                 this.model.expertise = dto;
+                this.fillReporteeMap(dto.basketplanGame);
             });
         }
     }
@@ -57,6 +60,7 @@ export class MainComponent implements OnInit {
             this.model.expertise = {
                 id: undefined,
                 basketplanGame: result,
+                reportee: Reportee.FIRST_REFEREE,
                 imageComment: '',
                 mechanicsComment: '',
                 foulsComment: '',
@@ -65,7 +69,16 @@ export class MainComponent implements OnInit {
                 pointsToImproveComment: '',
                 videoComments: [],
             }
+            this.fillReporteeMap(result);
         })
+    }
+
+    private fillReporteeMap(result: BasketplanGameDTO) {
+        this.reportees.set(Reportee.FIRST_REFEREE, 'Umpire 1');
+        this.reportees.set(Reportee.SECOND_REFEREE, 'Umpire 2');
+        if (result.referee3) {
+            this.reportees.set(Reportee.THIRD_REFEREE, "Umpire 3");
+        }
     }
 
     loadVideo() {

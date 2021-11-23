@@ -4,6 +4,23 @@
             Video Report
         </mat-toolbar>
 
+        <mat-card>
+            <mat-card-title>Game Info</mat-card-title>
+            <mat-card-content>
+                <div fxLayout="column" fxLayout.gt-sm="row" fxLayoutGap.gt-sm="20px">
+                    <span>Competition: {{dto.basketplanGame.competition}}</span>
+                    <span>Date: {{dto.basketplanGame.date | date:'dd.MM.yyyy' }}</span>
+                    <span>Result: {{dto.basketplanGame.result}}</span>
+                    <span>Team A: {{dto.basketplanGame.teamA}}</span>
+                    <span>Team B: {{dto.basketplanGame.teamB}}</span>
+                </div>
+                <div fxLayout="column" fxLayout.gt-sm="row" fxLayoutGap.gt-sm="20px">
+                    <span [ngClass]="isFirstUmpire() ? 'reportee' : ''">Umpire 1: {{dto.basketplanGame.referee1}}</span>
+                    <span [ngClass]="isSecondUmpire() ? 'reportee' : ''">Umpire 2: {{dto.basketplanGame.referee2}}</span>
+                </div>
+            </mat-card-content>
+        </mat-card>
+
         <div fxLayout="column" fxLayout.gt-md="row" fxLayoutAlign="space-around stretch">
             <mat-card fxFlex.gt-md="33%">
                 <mat-card-title>Image, Approach, Fitness Condition</mat-card-title>

@@ -22,6 +22,7 @@ public class ExpertiseService {
         ExpertiseDTO newDto = new ExpertiseDTO(
                 uuid,
                 dto.basketplanGame(),
+                dto.reportee(),
                 dto.imageComment(),
                 dto.mechanicsComment(),
                 dto.foulsComment(),

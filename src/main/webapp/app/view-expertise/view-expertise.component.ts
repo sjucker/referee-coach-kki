@@ -1,7 +1,7 @@
 import {Component, OnInit, ViewChild} from '@angular/core';
 import {ActivatedRoute} from "@angular/router";
 import {ExpertiseService} from "../service/expertise.service";
-import {ExpertiseDTO} from "../rest";
+import {ExpertiseDTO, Reportee} from "../rest";
 import {YouTubePlayer} from "@angular/youtube-player";
 
 @Component({
@@ -35,6 +35,18 @@ export class ViewExpertiseComponent implements OnInit {
     play(time: number): void {
         this.youtube!.seekTo(time, true);
         this.youtube!.playVideo();
+    }
+
+    isFirstUmpire(): boolean {
+        return this.dto?.reportee === Reportee.FIRST_REFEREE;
+    }
+
+    isSecondUmpire(): boolean {
+        return this.dto?.reportee === Reportee.SECOND_REFEREE;
+    }
+
+    isThirdUmpire(): boolean {
+        return this.dto?.reportee === Reportee.THIRD_REFEREE;
     }
 
 }

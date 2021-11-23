@@ -39,6 +39,16 @@
     </mat-card>
 
     <mat-card *ngIf="model.expertise">
+        <mat-card-content>
+            <mat-radio-group [(ngModel)]="model.expertise.reportee">
+                <mat-radio-button *ngFor="let reportee of reportees | keyvalue" [value]="reportee.key">
+                    {{reportee.value}}
+                </mat-radio-button>
+            </mat-radio-group>
+        </mat-card-content>
+    </mat-card>
+
+    <mat-card *ngIf="model.expertise">
         <mat-card-title>Comments</mat-card-title>
 
         <mat-card-content>

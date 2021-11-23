@@ -17,31 +17,33 @@ import {FlexLayoutModule} from "@angular/flex-layout";
 import {MatIconModule} from "@angular/material/icon";
 import {MainComponent} from './main/main.component';
 import {ViewExpertiseComponent} from './view-expertise/view-expertise.component';
+import {MatRadioModule} from "@angular/material/radio";
 
 @NgModule({
-  declarations: [
-    AppComponent,
-    MainComponent,
-    ViewExpertiseComponent
-  ],
-  imports: [
-    BrowserModule,
-    AppRoutingModule,
-    BrowserAnimationsModule,
-    YouTubePlayerModule,
-    MatButtonModule,
-    MatFormFieldModule,
-    MatToolbarModule,
-    MatInputModule,
-    MatCardModule,
-    FormsModule,
-    HttpClientModule,
-    MatGridListModule,
-    FlexLayoutModule,
-    MatIconModule,
-  ],
-  providers: [],
-  bootstrap: [AppComponent]
+    declarations: [
+        AppComponent,
+        MainComponent,
+        ViewExpertiseComponent
+    ],
+    imports: [
+        BrowserModule,
+        AppRoutingModule,
+        BrowserAnimationsModule,
+        YouTubePlayerModule,
+        MatButtonModule,
+        MatFormFieldModule,
+        MatToolbarModule,
+        MatInputModule,
+        MatCardModule,
+        FormsModule,
+        HttpClientModule,
+        MatGridListModule,
+        FlexLayoutModule,
+        MatIconModule,
+        MatRadioModule,
+    ],
+    providers: [],
+    bootstrap: [AppComponent]
 })
 export class AppModule {
 }

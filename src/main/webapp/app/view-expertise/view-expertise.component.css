@@ -1,3 +1,8 @@
 p {
     white-space: pre-wrap;
 }
+
+.reportee {
+    font-weight: bold;
+    font-style: italic;
+}

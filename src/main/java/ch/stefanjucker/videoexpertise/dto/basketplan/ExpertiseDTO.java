@@ -5,6 +5,7 @@ import java.util.List;
 
 public record ExpertiseDTO(String id,
                            @NotNull BasketplanGameDTO basketplanGame,
+                           @NotNull Reportee reportee,
                            @NotNull String imageComment,
                            @NotNull String mechanicsComment,
                            @NotNull String foulsComment,
