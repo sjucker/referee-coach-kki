@@ -57,7 +57,7 @@
                 <mat-card *ngFor="let videoComment of dto.videoComments; index as i;">
                     <mat-card-title>Video Comment #{{i + 1}}</mat-card-title>
                     <mat-card-content>
-                        {{videoComment.comment}}
+                        <p>{{videoComment.comment}}</p>
                     </mat-card-content>
                     <mat-card-actions>
                         <button (click)="play(videoComment.timestamp)" color="accent" mat-stroked-button>
