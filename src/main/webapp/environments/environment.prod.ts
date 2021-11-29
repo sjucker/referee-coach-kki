@@ -1,4 +1,4 @@
 export const environment = {
     production: true,
-    baseUrl: 'https://video-expertise.herokuapp.com'
+    baseUrl: 'https://referee-coach.herokuapp.com'
 };

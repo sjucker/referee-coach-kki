@@ -3,7 +3,7 @@
   "version": 1,
   "newProjectRoot": "projects",
   "projects": {
-    "video-expertise-ui": {
+    "referee-coach-ui": {
       "projectType": "application",
       "schematics": {
         "@schematics/angular:application": {
@@ -69,10 +69,10 @@
           "builder": "@angular-devkit/build-angular:dev-server",
           "configurations": {
             "production": {
-              "browserTarget": "video-expertise-ui:build:production"
+              "browserTarget": "referee-coach-ui:build:production"
             },
             "development": {
-              "browserTarget": "video-expertise-ui:build:development"
+              "browserTarget": "referee-coach-ui:build:development"
             }
           },
           "defaultConfiguration": "development"
@@ -80,7 +80,7 @@
         "extract-i18n": {
           "builder": "@angular-devkit/build-angular:extract-i18n",
           "options": {
-            "browserTarget": "video-expertise-ui:build"
+            "browserTarget": "referee-coach-ui:build"
           }
         },
         "test": {
@@ -104,5 +104,5 @@
       }
     }
   },
-  "defaultProject": "video-expertise-ui"
+  "defaultProject": "referee-coach-ui"
 }
