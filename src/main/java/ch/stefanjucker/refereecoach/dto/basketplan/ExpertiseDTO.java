@@ -1,4 +1,4 @@
-package ch.stefanjucker.videoexpertise.dto.basketplan;
+package ch.stefanjucker.refereecoach.dto.basketplan;
 
 import javax.validation.constraints.NotNull;
 import java.util.List;

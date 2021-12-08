@@ -15,14 +15,17 @@ import {HttpClientModule} from "@angular/common/http";
 import {MatGridListModule} from "@angular/material/grid-list";
 import {FlexLayoutModule} from "@angular/flex-layout";
 import {MatIconModule} from "@angular/material/icon";
-import {MainComponent} from './main/main.component';
+import {ExpertiseComponent} from './expertise/expertise.component';
 import {ViewExpertiseComponent} from './view-expertise/view-expertise.component';
 import {MatRadioModule} from "@angular/material/radio";
+import {MainComponent} from "./main/main.component";
+import {MatTableModule} from "@angular/material/table";
 
 @NgModule({
     declarations: [
         AppComponent,
         MainComponent,
+        ExpertiseComponent,
         ViewExpertiseComponent
     ],
     imports: [
@@ -41,6 +44,7 @@ import {MatRadioModule} from "@angular/material/radio";
         FlexLayoutModule,
         MatIconModule,
         MatRadioModule,
+        MatTableModule,
     ],
     providers: [],
     bootstrap: [AppComponent]

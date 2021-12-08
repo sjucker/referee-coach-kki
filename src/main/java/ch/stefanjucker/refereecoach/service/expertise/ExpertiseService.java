@@ -1,9 +1,11 @@
-package ch.stefanjucker.videoexpertise.service.expertise;
+package ch.stefanjucker.refereecoach.service.expertise;
 
-import ch.stefanjucker.videoexpertise.dto.basketplan.ExpertiseDTO;
+import ch.stefanjucker.refereecoach.dto.basketplan.ExpertiseDTO;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
@@ -43,6 +45,10 @@ public class ExpertiseService {
 
     public Optional<ExpertiseDTO> find(String id) {
         return Optional.ofNullable(expertisen.get(id));
+    }
+
+    public List<ExpertiseDTO> findAll() {
+        return new ArrayList<>(expertisen.values());
     }
 
 }

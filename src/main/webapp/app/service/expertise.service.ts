@@ -18,6 +18,10 @@ export class ExpertiseService {
         return this.httpClient.get<ExpertiseDTO>(`${this.baseUrl}/expertise/${id}`);
     }
 
+    getAllExpertise(): Observable<ExpertiseDTO[]> {
+        return this.httpClient.get<ExpertiseDTO[]>(`${this.baseUrl}/expertise`);
+    }
+
     saveExpertise(dto: ExpertiseDTO): Observable<ExpertiseDTO> {
         if (dto.id) {
             return this.httpClient.patch<ExpertiseDTO>(`${this.baseUrl}/expertise/${dto.id}`, dto);

@@ -1,4 +1,4 @@
-package ch.stefanjucker.videoexpertise.configuration;
+package ch.stefanjucker.refereecoach.configuration;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

@@ -1,7 +1,7 @@
-package ch.stefanjucker.videoexpertise.rest.expertise;
+package ch.stefanjucker.refereecoach.rest.expertise;
 
-import ch.stefanjucker.videoexpertise.dto.basketplan.ExpertiseDTO;
-import ch.stefanjucker.videoexpertise.service.expertise.ExpertiseService;
+import ch.stefanjucker.refereecoach.dto.basketplan.ExpertiseDTO;
+import ch.stefanjucker.refereecoach.service.expertise.ExpertiseService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
@@ -11,6 +11,8 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.util.List;
 
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
@@ -23,6 +25,13 @@ public class ExpertiseResource {
 
     public ExpertiseResource(ExpertiseService expertiseService) {
         this.expertiseService = expertiseService;
+    }
+
+    @GetMapping(value = "/expertise")
+    public ResponseEntity<List<ExpertiseDTO>> getAllExpertise() {
+        logger.info("GET /expertise");
+
+        return ResponseEntity.ok(expertiseService.findAll());
     }
 
     @GetMapping(value = "/expertise/{id}")

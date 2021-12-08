@@ -124,7 +124,7 @@
                     <jsonLibrary>jackson2</jsonLibrary>
                     <optionalProperties>useLibraryDefinition</optionalProperties>
                     <classPatterns>
-                        <pattern>ch.stefanjucker.videoexpertise.**DTO</pattern>
+                        <pattern>ch.stefanjucker.refereecoach.**DTO</pattern>
                     </classPatterns>
                     <outputFile>src/main/webapp/app/rest.ts</outputFile>
                     <outputKind>module</outputKind>

@@ -1,13 +1,13 @@
-package ch.stefanjucker.videoexpertise;
+package ch.stefanjucker.refereecoach;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-public class VideoExpertiseServerApplication {
+public class RefereeCoachServerApplication {
 
     public static void main(String[] args) {
-        SpringApplication.run(VideoExpertiseServerApplication.class, args);
+        SpringApplication.run(RefereeCoachServerApplication.class, args);
     }
 
 }

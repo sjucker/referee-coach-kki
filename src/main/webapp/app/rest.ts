@@ -6,6 +6,7 @@ export interface BasketplanGameDTO {
     result: string;
     teamA: string;
     teamB: string;
+    officiatingMode: OfficiatingMode;
     referee1: string;
     referee2: string;
     referee3?: string;
@@ -28,6 +29,11 @@ export interface ExpertiseDTO {
 export interface VideoCommentDTO {
     timestamp: number;
     comment: string;
+}
+
+export enum OfficiatingMode {
+    OFFICIATING_2PO = "OFFICIATING_2PO",
+    OFFICIATING_3PO = "OFFICIATING_3PO",
 }
 
 export enum Reportee {

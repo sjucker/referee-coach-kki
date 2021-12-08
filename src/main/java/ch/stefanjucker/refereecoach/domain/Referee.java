@@ -1,4 +1,4 @@
-package ch.stefanjucker.videoexpertise.domain;
+package ch.stefanjucker.refereecoach.domain;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;

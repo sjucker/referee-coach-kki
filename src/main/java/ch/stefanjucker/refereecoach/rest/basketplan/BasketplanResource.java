@@ -1,8 +1,8 @@
-package ch.stefanjucker.videoexpertise.rest.basketplan;
+package ch.stefanjucker.refereecoach.rest.basketplan;
 
-import ch.stefanjucker.videoexpertise.dto.basketplan.BasketplanGameDTO;
-import ch.stefanjucker.videoexpertise.service.basketplan.BasketplanService;
-import ch.stefanjucker.videoexpertise.service.basketplan.BasketplanService.Federation;
+import ch.stefanjucker.refereecoach.dto.basketplan.BasketplanGameDTO;
+import ch.stefanjucker.refereecoach.service.basketplan.BasketplanService;
+import ch.stefanjucker.refereecoach.service.basketplan.BasketplanService.Federation;
  import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
