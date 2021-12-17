@@ -1,8 +1,8 @@
 import {Component, OnInit, ViewChild} from '@angular/core';
 import {ActivatedRoute} from "@angular/router";
 import {ExpertiseService} from "../service/expertise.service";
-import {ExpertiseDTO, Reportee} from "../rest";
 import {YouTubePlayer} from "@angular/youtube-player";
+import {OfficiatingMode, Reportee, VideoExpertiseDTO} from "../rest";
 
 @Component({
     selector: 'app-view-expertise',
@@ -13,7 +13,7 @@ export class ViewExpertiseComponent implements OnInit {
 
     @ViewChild('youtubePlayer') youtube?: YouTubePlayer;
 
-    dto?: ExpertiseDTO;
+    dto?: VideoExpertiseDTO;
 
     constructor(private route: ActivatedRoute,
                 private readonly expertiseService: ExpertiseService) {
@@ -28,13 +28,20 @@ export class ViewExpertiseComponent implements OnInit {
 
         this.expertiseService.getExpertise(this.route.snapshot.paramMap.get('id')!).subscribe(result => {
             this.dto = result;
-            console.log(this.dto);
         });
     }
 
     play(time: number): void {
         this.youtube!.seekTo(time, true);
         this.youtube!.playVideo();
+    }
+
+    is2PO(): boolean {
+        return this.dto?.basketplanGame.officiatingMode === OfficiatingMode.OFFICIATING_2PO;
+    }
+
+    is3PO(): boolean {
+        return this.dto?.basketplanGame.officiatingMode === OfficiatingMode.OFFICIATING_3PO;
     }
 
     isFirstUmpire(): boolean {

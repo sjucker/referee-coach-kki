@@ -1,170 +1,77 @@
-<div>
+<div xmlns="http://www.w3.org/1999/html">
     <mat-toolbar color="primary">
-        <span>Video Report</span>
-        <button *ngIf="model.expertise" mat-icon-button>
-            <mat-icon (click)="save()">save</mat-icon>
-        </button>
-        <a *ngIf="model.expertise?.id" [href]="'/#/view/' + model.expertise?.id" mat-icon-button target="_blank">
-            <mat-icon>open_in_new</mat-icon>
-        </a>
+        <span>Referee Coach</span>
     </mat-toolbar>
 
-    <mat-card *ngIf="!model.expertise">
-        <mat-card-content>
-            <form (ngSubmit)="searchGame()" role="form">
-                <mat-form-field appearance="outline" color="accent">
-                    <mat-label>Game Number (e.g., 21-07707)</mat-label>
-                    <input [(ngModel)]="model.gameNumber" autocomplete="off" matInput name="gameNumber" type="text">
-                </mat-form-field>
-                <button color="primary" mat-flat-button type="submit">Search</button>
-            </form>
-        </mat-card-content>
-    </mat-card>
-
-    <mat-card *ngIf="model.expertise">
-        <mat-card-title>Game Info</mat-card-title>
+    <mat-card>
         <mat-card-content>
             <div fxLayout="column" fxLayout.gt-sm="row" fxLayoutGap.gt-sm="20px">
-                <span>Competition: {{model.expertise.basketplanGame.competition}}</span>
-                <span>Date: {{model.expertise.basketplanGame.date | date:'dd.MM.yyyy' }}</span>
-                <span>Result: {{model.expertise.basketplanGame.result}}</span>
-                <span>Team A: {{model.expertise.basketplanGame.teamA}}</span>
-                <span>Team B: {{model.expertise.basketplanGame.teamB}}</span>
-            </div>
-            <div fxLayout="column" fxLayout.gt-sm="row" fxLayoutGap.gt-sm="20px">
-                <span>Umpire 1: {{model.expertise.basketplanGame.referee1}}</span>
-                <span>Umpire 2: {{model.expertise.basketplanGame.referee2}}</span>
-            </div>
-        </mat-card-content>
-    </mat-card>
-
-    <mat-card *ngIf="model.expertise">
-        <mat-card-content>
-            <mat-radio-group [(ngModel)]="model.expertise.reportee">
-                <mat-radio-button *ngFor="let reportee of reportees | keyvalue" [value]="reportee.key">
-                    {{reportee.value}}
-                </mat-radio-button>
-            </mat-radio-group>
-        </mat-card-content>
-    </mat-card>
-
-    <mat-card *ngIf="model.expertise">
-        <mat-card-title>Comments</mat-card-title>
-
-        <mat-card-content>
-            <div fxLayout="column" fxLayout.gt-sm="row" fxLayoutGap="0" fxLayoutGap.gt-sm="10px">
-                <mat-form-field appearance="fill" color="accent">
-                    <mat-label>Image, Approach, Fitness Condition</mat-label>
-                    <textarea [(ngModel)]="model.expertise.imageComment"
-                              cdkAutosizeMaxRows="5"
-                              cdkAutosizeMinRows="2"
-                              cdkTextareaAutosize
-                              matInput></textarea>
-                </mat-form-field>
-
-                <mat-form-field appearance="fill" color="accent">
-                    <mat-label>2PO Mechanics & Individual Officiating Techniques</mat-label>
-                    <textarea [(ngModel)]="model.expertise.mechanicsComment"
-                              cdkAutosizeMaxRows="5"
-                              cdkAutosizeMinRows="2"
-                              cdkTextareaAutosize
-                              matInput></textarea>
-                </mat-form-field>
-            </div>
-
-            <div fxLayout="column" fxLayout.gt-sm="row" fxLayoutGap="0" fxLayoutGap.gt-sm="10px">
-                <mat-form-field appearance="fill" color="accent">
-                    <mat-label>Critera: Fouls & Violations</mat-label>
-                    <textarea [(ngModel)]="model.expertise.foulsComment"
-                              cdkAutosizeMaxRows="5"
-                              cdkAutosizeMinRows="2"
-                              cdkTextareaAutosize
-                              matInput></textarea>
-                </mat-form-field>
-
-                <mat-form-field appearance="fill" color="accent">
-                    <mat-label>Game Control and Management</mat-label>
-                    <textarea [(ngModel)]="model.expertise.gameManagementComment"
-                              cdkAutosizeMaxRows="5"
-                              cdkAutosizeMinRows="2"
-                              cdkTextareaAutosize
-                              matInput></textarea>
-                </mat-form-field>
-            </div>
-
-            <div fxLayout="column" fxLayout.gt-sm="row" fxLayoutGap="0" fxLayoutGap.gt-sm="10px">
-                <mat-form-field appearance="fill" color="accent">
-                    <mat-label>Points to Keep</mat-label>
-                    <textarea [(ngModel)]="model.expertise.pointsToKeepComment"
-                              cdkAutosizeMaxRows="5"
-                              cdkAutosizeMinRows="2"
-                              cdkTextareaAutosize
-                              matInput></textarea>
-                </mat-form-field>
-
-                <mat-form-field appearance="fill" color="accent">
-                    <mat-label>Points to Improve</mat-label>
-                    <textarea [(ngModel)]="model.expertise.pointsToImproveComment"
-                              cdkAutosizeMaxRows="5"
-                              cdkAutosizeMinRows="2"
-                              cdkTextareaAutosize
-                              matInput></textarea>
-                </mat-form-field>
-            </div>
-        </mat-card-content>
-    </mat-card>
-
-
-    <mat-card *ngIf="model.expertise && !model.expertise.basketplanGame.youtubeId">
-        <mat-card-content>
-            <form (ngSubmit)="loadVideo()" role="form">
-                <mat-form-field appearance="outline" color="accent">
-                    <mat-label>YouTube Link</mat-label>
-                    <input [(ngModel)]="model.youtubeLink" autocomplete="off" matInput name="youtubeLink"
-                           type="text">
-                </mat-form-field>
-                <button color="primary" mat-flat-button type="submit">Load Video</button>
-            </form>
-        </mat-card-content>
-    </mat-card>
-
-    <mat-card *ngIf="model.expertise && model.expertise.basketplanGame.youtubeId">
-        <mat-card-header>
-            <mat-card-title>Video</mat-card-title>
-        </mat-card-header>
-        <mat-card-content>
-            <div fxLayout="row">
-                <div fxLayout="column">
-                    <youtube-player #youtubePlayer
-                                    [videoId]="model.expertise.basketplanGame.youtubeId"></youtube-player>
-                    <button (click)="addVideoComment()" color="primary" mat-flat-button>
-                        Create comment for current timestamp
-                    </button>
+                <form (ngSubmit)="searchGame()" role="form">
+                    <mat-form-field appearance="outline" color="accent">
+                        <mat-label>Game Number (e.g., 21-03520)</mat-label>
+                        <input [(ngModel)]="gameNumber" autocomplete="off" matInput name="gameNumber" type="text">
+                    </mat-form-field>
+                    <button color="primary" mat-flat-button type="submit">Search</button>
+                </form>
+                <div *ngIf="ready">
+                    <form (ngSubmit)="createVideoExpertise()" role="form">
+                        <mat-form-field appearance="fill">
+                            <mat-label>Reportee</mat-label>
+                            <mat-select [(value)]="reportee">
+                                <mat-option *ngFor="let r of reportees" [value]="r.reportee">{{r.name}}</mat-option>
+                            </mat-select>
+                        </mat-form-field>
+                        <button color="primary" mat-flat-button [disabled]="!reportee">Start</button>
+                    </form>
                 </div>
-
-                <div fxFlex="stretch">
-                    <mat-card *ngFor="let videoComment of model.expertise.videoComments; index as i;">
-                        <mat-card-content>
-                            <mat-form-field appearance="fill" color="accent">
-                                <mat-label>Comment</mat-label>
-                                <textarea [(ngModel)]="videoComment.comment"
-                                          cdkAutosizeMaxRows="5"
-                                          cdkAutosizeMinRows="1"
-                                          cdkTextareaAutosize
-                                          matInput></textarea>
-                            </mat-form-field>
-                        </mat-card-content>
-                        <mat-card-actions>
-                            <button (click)="jumpTo(videoComment.timestamp)" color="accent" mat-stroked-button>
-                                Jump to Scene
-                            </button>
-                            <button (click)="deleteComment(videoComment)" color="accent" mat-stroked-button>
-                                Delete Comment
-                            </button>
-                        </mat-card-actions>
-                    </mat-card>
+                <div *ngIf="!ready && problemDescription">
+                    {{problemDescription}}
                 </div>
             </div>
         </mat-card-content>
     </mat-card>
+
+    <table mat-table [dataSource]="videoReportDtos">
+        <ng-container matColumnDef="date">
+            <th mat-header-cell *matHeaderCellDef>Date</th>
+            <td mat-cell *matCellDef="let element">{{element.basketplanGame.date | date}}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="competition">
+            <th mat-header-cell *matHeaderCellDef>Competition</th>
+            <td mat-cell *matCellDef="let element">{{element.basketplanGame.competition}}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="teams">
+            <th mat-header-cell *matHeaderCellDef>Teams</th>
+            <td mat-cell *matCellDef="let element">{{element.basketplanGame.teamA}}
+                - {{element.basketplanGame.teamB}}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="reportee">
+            <th mat-header-cell *matHeaderCellDef>Reportee</th>
+            <td mat-cell *matCellDef="let element">{{getReportee(element)}}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="edit">
+            <th mat-header-cell *matHeaderCellDef>Edit</th>
+            <td mat-cell *matCellDef="let element">
+                <a [routerLink]="'edit/' + element.id" *ngIf="!element.finished">
+                    <mat-icon color="primary">edit</mat-icon>
+                </a>
+            </td>
+        </ng-container>
+
+        <ng-container matColumnDef="view">
+            <th mat-header-cell *matHeaderCellDef>View</th>
+            <td mat-cell *matCellDef="let element">
+                <a [routerLink]="'view/' + element.id">
+                    <mat-icon color="primary">open_in_new</mat-icon>
+                </a>
+            </td>
+        </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+    </table>
 </div>

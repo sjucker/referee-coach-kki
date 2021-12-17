@@ -1,6 +1,8 @@
-package ch.stefanjucker.videoexpertise.service.basketplan;
+package ch.stefanjucker.refereecoach.service.basketplan;
 
-import ch.stefanjucker.videoexpertise.dto.basketplan.BasketplanGameDTO;
+import ch.stefanjucker.refereecoach.domain.Referee;
+import ch.stefanjucker.refereecoach.domain.repository.RefereeRepository;
+import ch.stefanjucker.refereecoach.dto.BasketplanGameDTO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -16,6 +18,8 @@ import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import static ch.stefanjucker.refereecoach.dto.OfficiatingMode.OFFICIATING_2PO;
+import static ch.stefanjucker.refereecoach.dto.OfficiatingMode.OFFICIATING_3PO;
 import static javax.xml.XMLConstants.FEATURE_SECURE_PROCESSING;
 
 @Service
@@ -24,9 +28,13 @@ public class BasketplanService {
     private static final Logger logger = LoggerFactory.getLogger(BasketplanService.class);
 
     private static final Pattern YOUTUBE_ID_PATTERN = Pattern.compile("v=([^&]+)");
-
     private static final String SEARCH_GAMES_URL = "https://www.basketplan.ch/showSearchGames.do?actionType=searchGames&gameNumber=%s&xmlView=true&perspective=de_default&federationId=%d";
 
+    private final RefereeRepository refereeRepository;
+
+    public BasketplanService(RefereeRepository refereeRepository) {
+        this.refereeRepository = refereeRepository;
+    }
 
     public Optional<BasketplanGameDTO> findGameByNumber(Federation federation, String gameNumber) {
         // TODO validate arguments
@@ -48,18 +56,19 @@ public class BasketplanService {
                 var guestTeamNode = ((Element) gameNode).getElementsByTagName("guestTeam").item(0);
                 var resultNode = ((Element) gameNode).getElementsByTagName("result").item(0);
 
-                return Optional.of(new BasketplanGameDTO(getAttributeValue(leagueHoldingNode, "name").orElse("?"),
-                                                         LocalDate.parse(getAttributeValue(gameNode, "date").orElseThrow()),
-                                                         "%s - %s".formatted(getAttributeValue(resultNode, "homeTeamScore").orElse("?"),
-                                                                             getAttributeValue(resultNode, "guestTeamScore").orElse("?")),
-                                                         getAttributeValue(homeTeamNode, "name").orElseThrow(),
-                                                         getAttributeValue(guestTeamNode, "name").orElseThrow(),
-                                                         getAttributeValue(gameNode, "referee1Name").orElseThrow(),
-                                                         getAttributeValue(gameNode, "referee2Name").orElseThrow(),
-                                                         getAttributeValue(gameNode, "referee3Name").orElse(null),
-                                                         getAttributeValue(gameNode, "videoLink").map(this::getVideoId).orElse(null)));
-            } else {
-                // TODO log more than one found
+                return Optional.of(new BasketplanGameDTO(
+                        getAttributeValue(leagueHoldingNode, "name").orElse("?"),
+                        LocalDate.parse(getAttributeValue(gameNode, "date").orElseThrow()),
+                        "%s - %s".formatted(getAttributeValue(resultNode, "homeTeamScore").orElse("?"),
+                                            getAttributeValue(resultNode, "guestTeamScore").orElse("?")),
+                        getAttributeValue(homeTeamNode, "name").orElseThrow(),
+                        getAttributeValue(guestTeamNode, "name").orElseThrow(),
+                        getAttributeValue(gameNode, "referee3Name").isPresent() ? OFFICIATING_3PO : OFFICIATING_2PO,
+                        getReferee(gameNode, "referee1Name"),
+                        getReferee(gameNode, "referee2Name"),
+                        getReferee(gameNode, "referee3Name"),
+                        getAttributeValue(gameNode, "videoLink").map(this::getVideoId).orElse(null)
+                ));
             }
 
         } catch (Exception e) {
@@ -67,6 +76,19 @@ public class BasketplanService {
         }
 
         return Optional.empty();
+    }
+
+    private String getReferee(Node gameNode, String name) {
+        Optional<String> refereeName = getAttributeValue(gameNode, name);
+        if (refereeName.isPresent()) {
+            Optional<Referee> referee = refereeRepository.findByName(refereeName.get());
+            if (referee.isPresent()) {
+                return referee.get().getName();
+            } else {
+                logger.error("referee '{}' not found in database", refereeName.get());
+            }
+        }
+        return null;
     }
 
     private String getVideoId(String youtubeLink) {
@@ -82,6 +104,9 @@ public class BasketplanService {
         return node != null ? Optional.ofNullable(node.getNodeValue()) : Optional.empty();
     }
 
+    public Optional<Referee> findReferee(String name) {
+        return refereeRepository.findByName(name);
+    }
 
     public enum Federation {
         SBL(12),

@@ -1,14 +1,13 @@
-import {Component, OnInit, ViewChild} from '@angular/core';
-import {YouTubePlayer} from "@angular/youtube-player";
-import {BasketplanService} from "../service/basketplan.service";
+import {Component, OnInit} from '@angular/core';
+import {OfficiatingMode, Reportee, VideoExpertiseDTO} from "../rest";
 import {ExpertiseService} from "../service/expertise.service";
-import {BasketplanGameDTO, ExpertiseDTO, Reportee, VideoCommentDTO} from "../rest";
-import {ActivatedRoute, Router} from "@angular/router";
+import {BasketplanService} from "../service/basketplan.service";
+import {Router} from "@angular/router";
+import {MatTableDataSource} from "@angular/material/table";
 
-interface VideoExpertiseModel {
-    gameNumber: string;
-    youtubeLink: string;
-    expertise?: ExpertiseDTO;
+interface ReporteeSelection {
+    reportee: Reportee,
+    name: string
 }
 
 @Component({
@@ -17,102 +16,78 @@ interface VideoExpertiseModel {
     styleUrls: ['./main.component.css']
 })
 export class MainComponent implements OnInit {
+    displayedColumns: string[] = ['date', 'competition', 'teams', 'reportee', 'edit',  'view'];
+    gameNumber: string = '21-03520';
 
-    @ViewChild('youtubePlayer') youtube?: YouTubePlayer;
+    // whether we are ready to start with expertise
+    ready = false;
+    problemDescription = '';
 
-    reportees: Map<Reportee, string> = new Map<Reportee, string>();
+    videoReportDtos: MatTableDataSource<VideoExpertiseDTO> = new MatTableDataSource<VideoExpertiseDTO>([]);
 
-    model: VideoExpertiseModel = {
-        gameNumber: '21-05249', // TODO remove
-        youtubeLink: '',
-        expertise: undefined
-    }
+    reportee?: Reportee
+    reportees: ReporteeSelection[] = []
 
     constructor(private readonly basketplanService: BasketplanService,
                 private readonly expertiseService: ExpertiseService,
-                private route: ActivatedRoute,
                 private router: Router) {
     }
 
     ngOnInit(): void {
-        // This code loads the IFrame Player API code asynchronously, according to the instructions at
-        // https://developers.google.com/youtube/iframe_api_reference#Getting_Started
-        const tag = document.createElement('script');
-        tag.src = 'https://www.youtube.com/iframe_api';
-        document.body.appendChild(tag);
-
-        const id = this.route.snapshot.paramMap.get('id');
-        if (id) {
-            this.expertiseService.getExpertise(id).subscribe(dto => {
-                this.model.expertise = dto;
-                this.fillReporteeMap(dto.basketplanGame);
-            });
-        }
+        this.expertiseService.getAllExpertise().subscribe(value => {
+            this.videoReportDtos = new MatTableDataSource<VideoExpertiseDTO>(value);
+        });
     }
 
-    jumpTo(time: number): void {
-        this.youtube!.seekTo(time, true)
-    }
-
-    searchGame() {
-        // TODO error handling
-        this.basketplanService.searchGame(this.model.gameNumber).subscribe(result => {
-            this.model.expertise = {
-                id: undefined,
-                basketplanGame: result,
-                reportee: Reportee.FIRST_REFEREE,
-                imageComment: '',
-                mechanicsComment: '',
-                foulsComment: '',
-                gameManagementComment: '',
-                pointsToKeepComment: '',
-                pointsToImproveComment: '',
-                videoComments: [],
-            }
-            this.fillReporteeMap(result);
-        })
-    }
-
-    private fillReporteeMap(result: BasketplanGameDTO) {
-        this.reportees.set(Reportee.FIRST_REFEREE, 'Umpire 1');
-        this.reportees.set(Reportee.SECOND_REFEREE, 'Umpire 2');
-        if (result.referee3) {
-            this.reportees.set(Reportee.THIRD_REFEREE, "Umpire 3");
-        }
-    }
-
-    loadVideo() {
-        if (this.model.expertise && this.model.youtubeLink) {
-            const match = this.model.youtubeLink.match(/v=([^&]+)/);
-            if (match) {
-                this.model.expertise.basketplanGame.youtubeId = match[1];
+    searchGame(): void {
+        this.basketplanService.searchGame(this.gameNumber).subscribe(dto => {
+            if (dto.referee1 && dto.referee2
+                && (dto.officiatingMode === OfficiatingMode.OFFICIATING_2PO || dto.referee3)) {
+                if (dto.youtubeId) {
+                    this.ready = true;
+                    this.problemDescription = '';
+                    if (dto.officiatingMode === OfficiatingMode.OFFICIATING_2PO) {
+                        this.reportees = [
+                            {reportee: Reportee.FIRST_REFEREE, name: dto.referee1},
+                            {reportee: Reportee.SECOND_REFEREE, name: dto.referee2}
+                        ];
+                    } else {
+                        this.reportees = [
+                            {reportee: Reportee.FIRST_REFEREE, name: dto.referee1},
+                            {reportee: Reportee.SECOND_REFEREE, name: dto.referee2},
+                            {reportee: Reportee.THIRD_REFEREE, name: dto.referee3!} // TODO solve this better
+                        ];
+                    }
+                } else {
+                    this.ready = false;
+                    this.problemDescription = 'No YouTube video available'
+                }
             } else {
-                alert("Could not parse provided YouTube link...")
+                this.ready = false;
+                this.problemDescription = 'At least one referee not available in database';
             }
+        });
+    }
+
+    createVideoExpertise() {
+        if (this.reportee) {
+            this.expertiseService.createExpertise(this.gameNumber, this.reportee).subscribe(response => {
+                this.router.navigate(['/edit/' + response.id]);
+            })
         } else {
-            // TODO alert
+            // TODO proper error handling
         }
-
     }
 
-    save() {
-        this.expertiseService.saveExpertise(this.model.expertise!).subscribe(dto => {
-            this.model.expertise = dto;
-            if (this.route.snapshot.url.length == 0) {
-                this.router.navigate(['/edit/' + dto.id]);
-            }
-        })
-    }
-
-    addVideoComment(): void {
-        this.model.expertise!.videoComments.push({
-            comment: '',
-            timestamp: Math.round(this.youtube!.getCurrentTime())
-        })
-    }
-
-    deleteComment(videoComment: VideoCommentDTO) {
-        this.model.expertise!.videoComments.splice(this.model.expertise!.videoComments.indexOf(videoComment), 1);
+    getReportee(report: VideoExpertiseDTO): string {
+        switch (report.reportee) {
+            case Reportee.FIRST_REFEREE:
+                return report.basketplanGame.referee1!;
+            case Reportee.SECOND_REFEREE:
+                return report.basketplanGame.referee2!;
+            case Reportee.THIRD_REFEREE:
+                return report.basketplanGame.referee3!;
+        }
     }
 
 }

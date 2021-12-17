@@ -1,3 +1,4 @@
-.mat-radio-button ~ .mat-radio-button {
-    margin-left: 16px;
+table {
+    margin: 10px;
+    width: 100%;
 }

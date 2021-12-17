@@ -1,7 +1,8 @@
 import {NgModule} from '@angular/core';
 import {RouterModule, Routes} from '@angular/router';
-import {MainComponent} from "./main/main.component";
+import {ExpertiseComponent} from "./expertise/expertise.component";
 import {ViewExpertiseComponent} from "./view-expertise/view-expertise.component";
+import {MainComponent} from "./main/main.component";
 
 const routes: Routes = [
     {
@@ -14,7 +15,7 @@ const routes: Routes = [
     },
     {
         path: 'edit/:id',
-        component: MainComponent
+        component: ExpertiseComponent
     }
 ];
 

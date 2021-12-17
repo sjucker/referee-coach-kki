@@ -1,4 +1,4 @@
-package ch.stefanjucker.videoexpertise.dto.basketplan;
+package ch.stefanjucker.refereecoach.dto;
 
 import javax.validation.constraints.NotNull;
 import java.time.LocalDate;
@@ -8,8 +8,10 @@ public record BasketplanGameDTO(@NotNull String competition,
                                 @NotNull String result,
                                 @NotNull String teamA,
                                 @NotNull String teamB,
-                                @NotNull String referee1,
-                                @NotNull String referee2,
+                                @NotNull OfficiatingMode officiatingMode,
+                                // all referees are nullable if not found in database
+                                String referee1,
+                                String referee2,
                                 String referee3,
                                 String youtubeId) {
 }
