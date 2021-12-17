@@ -1,7 +1,7 @@
 import {Injectable} from '@angular/core';
 import {HttpClient} from "@angular/common/http";
 import {Observable} from "rxjs";
-import {ExpertiseDTO} from "../rest";
+import {CreateVideoExpertiseDTO, Federation, Reportee, VideoExpertiseDTO} from "../rest";
 import {environment} from "../../environments/environment";
 
 @Injectable({
@@ -14,20 +14,27 @@ export class ExpertiseService {
     constructor(private readonly httpClient: HttpClient) {
     }
 
-    getExpertise(id: string): Observable<ExpertiseDTO> {
-        return this.httpClient.get<ExpertiseDTO>(`${this.baseUrl}/expertise/${id}`);
+    getExpertise(id: string): Observable<VideoExpertiseDTO> {
+        return this.httpClient.get<VideoExpertiseDTO>(`${this.baseUrl}/video-expertise/${id}`);
     }
 
-    getAllExpertise(): Observable<ExpertiseDTO[]> {
-        return this.httpClient.get<ExpertiseDTO[]>(`${this.baseUrl}/expertise`);
+    getAllExpertise(): Observable<VideoExpertiseDTO[]> {
+        return this.httpClient.get<VideoExpertiseDTO[]>(`${this.baseUrl}/video-expertise`);
     }
 
-    saveExpertise(dto: ExpertiseDTO): Observable<ExpertiseDTO> {
-        if (dto.id) {
-            return this.httpClient.patch<ExpertiseDTO>(`${this.baseUrl}/expertise/${dto.id}`, dto);
-        } else {
-            return this.httpClient.post<ExpertiseDTO>(`${this.baseUrl}/expertise`, dto);
-        }
+    createExpertise(gameNumber: string, reportee: Reportee) {
+        const request: CreateVideoExpertiseDTO = {
+            gameNumber: gameNumber,
+            reportee: reportee,
+            federation: Federation.SBL
+        };
+        return this.httpClient.post<VideoExpertiseDTO>(`${this.baseUrl}/video-expertise`, request);
+    }
+
+    saveExpertise(dto: VideoExpertiseDTO): Observable<VideoExpertiseDTO> {
+
+        return this.httpClient.put<VideoExpertiseDTO>(`${this.baseUrl}/video-expertise/${dto.id}`, dto);
+
     }
 
 }

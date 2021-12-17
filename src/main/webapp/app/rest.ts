@@ -7,14 +7,25 @@ export interface BasketplanGameDTO {
     teamA: string;
     teamB: string;
     officiatingMode: OfficiatingMode;
-    referee1: string;
-    referee2: string;
+    referee1?: string;
+    referee2?: string;
     referee3?: string;
     youtubeId?: string;
 }
 
-export interface ExpertiseDTO {
-    id?: string;
+export interface CreateVideoExpertiseDTO {
+    federation?: Federation;
+    gameNumber?: string;
+    reportee?: Reportee;
+}
+
+export interface VideoCommentDTO {
+    timestamp: number;
+    comment: string;
+}
+
+export interface VideoExpertiseDTO {
+    id: string;
     basketplanGame: BasketplanGameDTO;
     reportee: Reportee;
     imageComment: string;
@@ -24,16 +35,17 @@ export interface ExpertiseDTO {
     pointsToKeepComment: string;
     pointsToImproveComment: string;
     videoComments: VideoCommentDTO[];
-}
-
-export interface VideoCommentDTO {
-    timestamp: number;
-    comment: string;
+    finished: boolean;
 }
 
 export enum OfficiatingMode {
     OFFICIATING_2PO = "OFFICIATING_2PO",
     OFFICIATING_3PO = "OFFICIATING_3PO",
+}
+
+export enum Federation {
+    SBL = "SBL",
+    PROBASKET = "PROBASKET",
 }
 
 export enum Reportee {

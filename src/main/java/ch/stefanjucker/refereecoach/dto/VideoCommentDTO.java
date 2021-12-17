@@ -1,4 +1,4 @@
-package ch.stefanjucker.refereecoach.dto.basketplan;
+package ch.stefanjucker.refereecoach.dto;
 
 import javax.validation.constraints.NotNull;
 

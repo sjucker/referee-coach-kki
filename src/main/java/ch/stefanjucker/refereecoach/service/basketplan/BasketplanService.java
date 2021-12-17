@@ -2,7 +2,7 @@ package ch.stefanjucker.refereecoach.service.basketplan;
 
 import ch.stefanjucker.refereecoach.domain.Referee;
 import ch.stefanjucker.refereecoach.domain.repository.RefereeRepository;
-import ch.stefanjucker.refereecoach.dto.basketplan.BasketplanGameDTO;
+import ch.stefanjucker.refereecoach.dto.BasketplanGameDTO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -18,8 +18,8 @@ import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import static ch.stefanjucker.refereecoach.dto.basketplan.OfficiatingMode.OFFICIATING_2PO;
-import static ch.stefanjucker.refereecoach.dto.basketplan.OfficiatingMode.OFFICIATING_3PO;
+import static ch.stefanjucker.refereecoach.dto.OfficiatingMode.OFFICIATING_2PO;
+import static ch.stefanjucker.refereecoach.dto.OfficiatingMode.OFFICIATING_3PO;
 import static javax.xml.XMLConstants.FEATURE_SECURE_PROCESSING;
 
 @Service

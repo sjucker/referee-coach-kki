@@ -14,7 +14,12 @@
                     <span>Team A: {{dto.basketplanGame.teamA}}</span>
                     <span>Team B: {{dto.basketplanGame.teamB}}</span>
                 </div>
-                <div fxLayout="column" fxLayout.gt-sm="row" fxLayoutGap.gt-sm="20px">
+                <div fxLayout="column" fxLayout.gt-sm="row" fxLayoutGap.gt-sm="20px" *ngIf="is3PO()">
+                    <span [ngClass]="isFirstUmpire() ? 'reportee' : ''">Crew Chief: {{dto.basketplanGame.referee1}}</span>
+                    <span [ngClass]="isSecondUmpire() ? 'reportee' : ''">Umpire 1: {{dto.basketplanGame.referee2}}</span>
+                    <span [ngClass]="isThirdUmpire() ? 'reportee' : ''">Umpire 2: {{dto.basketplanGame.referee2}}</span>
+                </div>
+                <div fxLayout="column" fxLayout.gt-sm="row" fxLayoutGap.gt-sm="20px" *ngIf="is2PO()">
                     <span [ngClass]="isFirstUmpire() ? 'reportee' : ''">Umpire 1: {{dto.basketplanGame.referee1}}</span>
                     <span [ngClass]="isSecondUmpire() ? 'reportee' : ''">Umpire 2: {{dto.basketplanGame.referee2}}</span>
                 </div>
@@ -27,7 +32,8 @@
                 <mat-card-content><p>{{dto.imageComment}}</p></mat-card-content>
             </mat-card>
             <mat-card fxFlex.gt-md="33%">
-                <mat-card-title>2PO Mechanics & Individual Officiating Techniques</mat-card-title>
+                <mat-card-title *ngIf="is2PO()">2PO Mechanics & Individual Officiating Techniques</mat-card-title>
+                <mat-card-title *ngIf="is3PO()">3PO Mechanics & Individual Officiating Techniques</mat-card-title>
                 <mat-card-content><p>{{dto.mechanicsComment}}</p></mat-card-content>
             </mat-card>
             <mat-card fxFlex.gt-md="33%">

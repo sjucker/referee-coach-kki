@@ -20,6 +20,7 @@ import {ViewExpertiseComponent} from './view-expertise/view-expertise.component'
 import {MatRadioModule} from "@angular/material/radio";
 import {MainComponent} from "./main/main.component";
 import {MatTableModule} from "@angular/material/table";
+import {MatSelectModule} from "@angular/material/select";
 
 @NgModule({
     declarations: [
@@ -45,6 +46,7 @@ import {MatTableModule} from "@angular/material/table";
         MatIconModule,
         MatRadioModule,
         MatTableModule,
+        MatSelectModule,
     ],
     providers: [],
     bootstrap: [AppComponent]

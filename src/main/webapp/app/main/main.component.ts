@@ -1,7 +1,13 @@
 import {Component, OnInit} from '@angular/core';
-import {ExpertiseDTO, OfficiatingMode} from "../rest";
+import {OfficiatingMode, Reportee, VideoExpertiseDTO} from "../rest";
 import {ExpertiseService} from "../service/expertise.service";
 import {BasketplanService} from "../service/basketplan.service";
+import {Router} from "@angular/router";
+
+interface ReporteeSelection {
+    reportee: Reportee,
+    name: string
+}
 
 @Component({
     selector: 'app-main',
@@ -16,10 +22,14 @@ export class MainComponent implements OnInit {
     ready = false;
     problemDescription = '';
 
-    videoReportDtos: ExpertiseDTO[] = [];
+    videoReportDtos: VideoExpertiseDTO[] = [];
+
+    reportee?: Reportee
+    reportees: ReporteeSelection[] = []
 
     constructor(private readonly basketplanService: BasketplanService,
-                private readonly expertiseService: ExpertiseService) {
+                private readonly expertiseService: ExpertiseService,
+                private router: Router) {
     }
 
     ngOnInit(): void {
@@ -35,6 +45,18 @@ export class MainComponent implements OnInit {
                 if (dto.youtubeId) {
                     this.ready = true;
                     this.problemDescription = '';
+                    if (dto.officiatingMode === OfficiatingMode.OFFICIATING_2PO) {
+                        this.reportees = [
+                            {reportee: Reportee.FIRST_REFEREE, name: dto.referee1},
+                            {reportee: Reportee.SECOND_REFEREE, name: dto.referee2}
+                        ];
+                    } else {
+                        this.reportees = [
+                            {reportee: Reportee.FIRST_REFEREE, name: dto.referee1},
+                            {reportee: Reportee.SECOND_REFEREE, name: dto.referee2},
+                            {reportee: Reportee.THIRD_REFEREE, name: dto.referee3!} // TODO solve this better
+                        ];
+                    }
                 } else {
                     this.ready = false;
                     this.problemDescription = 'No YouTube video available'
@@ -46,5 +68,14 @@ export class MainComponent implements OnInit {
         });
     }
 
+    createVideoExpertise() {
+        if (this.reportee) {
+            this.expertiseService.createExpertise(this.gameNumber, this.reportee).subscribe(response => {
+                this.router.navigate(['/edit/' + response.id]);
+            })
+        } else {
+            // TODO proper error handling
+        }
+    }
 
 }

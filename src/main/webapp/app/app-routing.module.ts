@@ -14,7 +14,7 @@ const routes: Routes = [
         component: ViewExpertiseComponent
     },
     {
-        path: 'edit',
+        path: 'edit/:id',
         component: ExpertiseComponent
     }
 ];

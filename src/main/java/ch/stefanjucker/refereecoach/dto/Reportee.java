@@ -1,4 +1,4 @@
-package ch.stefanjucker.refereecoach.dto.basketplan;
+package ch.stefanjucker.refereecoach.dto;
 
 public enum Reportee {
     FIRST_REFEREE,

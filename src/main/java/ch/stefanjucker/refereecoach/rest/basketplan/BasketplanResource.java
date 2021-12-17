@@ -1,6 +1,6 @@
 package ch.stefanjucker.refereecoach.rest.basketplan;
 
-import ch.stefanjucker.refereecoach.dto.basketplan.BasketplanGameDTO;
+import ch.stefanjucker.refereecoach.dto.BasketplanGameDTO;
 import ch.stefanjucker.refereecoach.service.basketplan.BasketplanService;
 import ch.stefanjucker.refereecoach.service.basketplan.BasketplanService.Federation;
  import org.slf4j.Logger;
