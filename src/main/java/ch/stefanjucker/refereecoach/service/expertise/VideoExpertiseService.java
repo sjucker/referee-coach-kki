@@ -31,14 +31,6 @@ public class VideoExpertiseService {
     }
 
     public VideoExpertiseDTO create(Federation federation, String gameNumber, Reportee reportee) {
-        SimpleMailMessage simpleMessage = new SimpleMailMessage();
-        simpleMessage.setFrom("logging@stefanjucker.ch");
-        simpleMessage.setTo("jucker@run4fun.ch");
-        simpleMessage.setSubject("test");
-        simpleMessage.setText("test");
-
-        mailSender.send(simpleMessage);
-
         // TODO proper error handling
         var game = basketplanService.findGameByNumber(federation, gameNumber).orElseThrow();
 
@@ -72,6 +64,20 @@ public class VideoExpertiseService {
 
     public VideoExpertiseDTO update(String id, VideoExpertiseDTO dto) {
         expertisen.put(id, dto);
+        if (dto.finished()) {
+            // TODO log it
+            SimpleMailMessage simpleMessage = new SimpleMailMessage();
+            simpleMessage.setFrom("noreply@stefanjucker.ch"); // TODO add to properties
+            simpleMessage.setTo("stefan.jucker@gmail.com"); // TODO actual referee
+            simpleMessage.setSubject("New Video Report");
+            // TODO error handling
+            var referee = basketplanService.findReferee(dto.relevantReferee()).orElseThrow();
+            // TODO do not hardcode base URL
+            simpleMessage.setText("Hi %s (%s)\nPlease visit: https://referee-coach.herokuapp.com/#/view/%s"
+                                          .formatted(referee.getName(), referee.getEmail(), dto.id()));
+
+            mailSender.send(simpleMessage);
+        }
         return dto;
     }
 

@@ -53,8 +53,7 @@ public class VideoExpertiseResource {
 
     @PutMapping(value = "/video-expertise/{id}", consumes = APPLICATION_JSON_VALUE, produces = APPLICATION_JSON_VALUE)
     public ResponseEntity<VideoExpertiseDTO> updateExpertise(@PathVariable String id, @RequestBody VideoExpertiseDTO dto) {
-        logger.info("PATCH /video-expertise/{} {}", id, dto);
-
+        logger.info("PUT /video-expertise/{} {}", id, dto);
         return ResponseEntity.ok(expertiseService.update(id, dto));
     }
 

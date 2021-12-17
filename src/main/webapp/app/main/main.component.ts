@@ -3,6 +3,7 @@ import {OfficiatingMode, Reportee, VideoExpertiseDTO} from "../rest";
 import {ExpertiseService} from "../service/expertise.service";
 import {BasketplanService} from "../service/basketplan.service";
 import {Router} from "@angular/router";
+import {MatTableDataSource} from "@angular/material/table";
 
 interface ReporteeSelection {
     reportee: Reportee,
@@ -15,14 +16,14 @@ interface ReporteeSelection {
     styleUrls: ['./main.component.css']
 })
 export class MainComponent implements OnInit {
-    displayedColumns: string[] = ['date', 'link'];
+    displayedColumns: string[] = ['date', 'competition', 'teams', 'reportee', 'edit',  'view'];
     gameNumber: string = '21-03520';
 
     // whether we are ready to start with expertise
     ready = false;
     problemDescription = '';
 
-    videoReportDtos: VideoExpertiseDTO[] = [];
+    videoReportDtos: MatTableDataSource<VideoExpertiseDTO> = new MatTableDataSource<VideoExpertiseDTO>([]);
 
     reportee?: Reportee
     reportees: ReporteeSelection[] = []
@@ -34,7 +35,7 @@ export class MainComponent implements OnInit {
 
     ngOnInit(): void {
         this.expertiseService.getAllExpertise().subscribe(value => {
-            this.videoReportDtos = value;
+            this.videoReportDtos = new MatTableDataSource<VideoExpertiseDTO>(value);
         });
     }
 
@@ -75,6 +76,17 @@ export class MainComponent implements OnInit {
             })
         } else {
             // TODO proper error handling
+        }
+    }
+
+    getReportee(report: VideoExpertiseDTO): string {
+        switch (report.reportee) {
+            case Reportee.FIRST_REFEREE:
+                return report.basketplanGame.referee1!;
+            case Reportee.SECOND_REFEREE:
+                return report.basketplanGame.referee2!;
+            case Reportee.THIRD_REFEREE:
+                return report.basketplanGame.referee3!;
         }
     }
 

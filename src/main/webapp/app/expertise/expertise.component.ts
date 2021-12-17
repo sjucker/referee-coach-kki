@@ -2,7 +2,7 @@ import {Component, OnInit, ViewChild} from '@angular/core';
 import {YouTubePlayer} from "@angular/youtube-player";
 import {BasketplanService} from "../service/basketplan.service";
 import {ExpertiseService} from "../service/expertise.service";
-import {BasketplanGameDTO, OfficiatingMode, Reportee, VideoCommentDTO, VideoExpertiseDTO} from "../rest";
+import {OfficiatingMode, Reportee, VideoCommentDTO, VideoExpertiseDTO} from "../rest";
 import {ActivatedRoute, Router} from "@angular/router";
 
 @Component({
@@ -33,6 +33,7 @@ export class ExpertiseComponent implements OnInit {
         if (id) {
             this.expertiseService.getExpertise(id).subscribe(dto => {
                 // TODO error handling
+                // TODO if finished redirect to read-only view
                 this.report = dto;
             });
         }
@@ -43,9 +44,22 @@ export class ExpertiseComponent implements OnInit {
     }
 
     save() {
-        this.expertiseService.saveExpertise(this.report!).subscribe(dto => {
-            this.report = dto;
-        })
+        if (this.report) {
+            this.expertiseService.saveExpertise(this.report).subscribe(dto => {
+                this.report = dto;
+            })
+        }
+    }
+
+    finish() {
+        if (this.report) {
+            this.report = {...this.report, finished: true}
+            this.expertiseService.saveExpertise(this.report).subscribe(response => {
+                if (response.finished) {
+                    this.router.navigate(['/view/' + response.id]);
+                }
+            })
+        }
     }
 
     addVideoComment(): void {

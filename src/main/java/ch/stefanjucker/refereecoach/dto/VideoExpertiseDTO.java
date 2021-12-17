@@ -14,4 +14,13 @@ public record VideoExpertiseDTO(@NotNull String id,
                                 @NotNull String pointsToImproveComment,
                                 @NotNull List<VideoCommentDTO> videoComments,
                                 boolean finished) {
+
+    public String relevantReferee() {
+        return switch (reportee) {
+            case FIRST_REFEREE -> basketplanGame.referee1();
+            case SECOND_REFEREE -> basketplanGame.referee2();
+            case THIRD_REFEREE -> basketplanGame.referee3();
+        };
+    }
+
 }

@@ -17,7 +17,7 @@
                 <div fxLayout="column" fxLayout.gt-sm="row" fxLayoutGap.gt-sm="20px" *ngIf="is3PO()">
                     <span [ngClass]="isFirstUmpire() ? 'reportee' : ''">Crew Chief: {{dto.basketplanGame.referee1}}</span>
                     <span [ngClass]="isSecondUmpire() ? 'reportee' : ''">Umpire 1: {{dto.basketplanGame.referee2}}</span>
-                    <span [ngClass]="isThirdUmpire() ? 'reportee' : ''">Umpire 2: {{dto.basketplanGame.referee2}}</span>
+                    <span [ngClass]="isThirdUmpire() ? 'reportee' : ''">Umpire 2: {{dto.basketplanGame.referee3}}</span>
                 </div>
                 <div fxLayout="column" fxLayout.gt-sm="row" fxLayoutGap.gt-sm="20px" *ngIf="is2PO()">
                     <span [ngClass]="isFirstUmpire() ? 'reportee' : ''">Umpire 1: {{dto.basketplanGame.referee1}}</span>
