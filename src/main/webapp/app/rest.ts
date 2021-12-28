@@ -1,22 +1,33 @@
 /* eslint-disable */
 
 export interface BasketplanGameDTO {
+    gameNumber: string;
     competition: string;
     date: Date;
     result: string;
     teamA: string;
     teamB: string;
     officiatingMode: OfficiatingMode;
-    referee1?: string;
-    referee2?: string;
-    referee3?: string;
+    referee1?: RefereeDTO;
+    referee2?: RefereeDTO;
+    referee3?: RefereeDTO;
     youtubeId?: string;
 }
 
-export interface CreateVideoExpertiseDTO {
+export interface CreateVideoReportDTO {
     federation?: Federation;
     gameNumber?: string;
     reportee?: Reportee;
+}
+
+export interface RefereeDTO {
+    id: number;
+    name: string;
+}
+
+export interface ReporterDTO {
+    id: number;
+    name: string;
 }
 
 export interface VideoCommentDTO {
@@ -24,9 +35,10 @@ export interface VideoCommentDTO {
     comment: string;
 }
 
-export interface VideoExpertiseDTO {
+export interface VideoReportDTO {
     id: string;
     basketplanGame: BasketplanGameDTO;
+    reporter: ReporterDTO;
     reportee: Reportee;
     imageComment: string;
     mechanicsComment: string;

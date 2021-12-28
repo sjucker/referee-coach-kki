@@ -1,6 +1,9 @@
-create table user
+CREATE TABLE user
 (
-    id    int          not null auto_increment,
-    email varchar(255) not null,
-    primary key (id)
+    id    BIGINT       NOT NULL AUTO_INCREMENT,
+    email VARCHAR(255) NOT NULL,
+    name  VARCHAR(255) NOT NULL,
+    CONSTRAINT pk_user PRIMARY KEY (id)
 );
+
+INSERT INTO user (email, name) VALUE ('stefan.jucker@gmail.com', 'Stefan Jucker');

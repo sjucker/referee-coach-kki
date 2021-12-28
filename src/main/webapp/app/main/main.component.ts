@@ -1,5 +1,5 @@
 import {Component, OnInit} from '@angular/core';
-import {OfficiatingMode, Reportee, VideoExpertiseDTO} from "../rest";
+import {OfficiatingMode, Reportee, VideoReportDTO} from "../rest";
 import {ExpertiseService} from "../service/expertise.service";
 import {BasketplanService} from "../service/basketplan.service";
 import {Router} from "@angular/router";
@@ -16,14 +16,14 @@ interface ReporteeSelection {
     styleUrls: ['./main.component.css']
 })
 export class MainComponent implements OnInit {
-    displayedColumns: string[] = ['date', 'competition', 'teams', 'reportee', 'edit',  'view'];
+    displayedColumns: string[] = ['date', 'gameNumber', 'competition', 'teams', 'coach', 'reportee', 'edit', 'view'];
     gameNumber: string = '21-03520';
 
     // whether we are ready to start with expertise
     ready = false;
     problemDescription = '';
 
-    videoReportDtos: MatTableDataSource<VideoExpertiseDTO> = new MatTableDataSource<VideoExpertiseDTO>([]);
+    videoReportDtos: MatTableDataSource<VideoReportDTO> = new MatTableDataSource<VideoReportDTO>([]);
 
     reportee?: Reportee
     reportees: ReporteeSelection[] = []
@@ -35,7 +35,7 @@ export class MainComponent implements OnInit {
 
     ngOnInit(): void {
         this.expertiseService.getAllExpertise().subscribe(value => {
-            this.videoReportDtos = new MatTableDataSource<VideoExpertiseDTO>(value);
+            this.videoReportDtos = new MatTableDataSource<VideoReportDTO>(value);
         });
     }
 
@@ -48,14 +48,14 @@ export class MainComponent implements OnInit {
                     this.problemDescription = '';
                     if (dto.officiatingMode === OfficiatingMode.OFFICIATING_2PO) {
                         this.reportees = [
-                            {reportee: Reportee.FIRST_REFEREE, name: dto.referee1},
-                            {reportee: Reportee.SECOND_REFEREE, name: dto.referee2}
+                            {reportee: Reportee.FIRST_REFEREE, name: dto.referee1.name},
+                            {reportee: Reportee.SECOND_REFEREE, name: dto.referee2.name}
                         ];
                     } else {
                         this.reportees = [
-                            {reportee: Reportee.FIRST_REFEREE, name: dto.referee1},
-                            {reportee: Reportee.SECOND_REFEREE, name: dto.referee2},
-                            {reportee: Reportee.THIRD_REFEREE, name: dto.referee3!} // TODO solve this better
+                            {reportee: Reportee.FIRST_REFEREE, name: dto.referee1.name},
+                            {reportee: Reportee.SECOND_REFEREE, name: dto.referee2.name},
+                            {reportee: Reportee.THIRD_REFEREE, name: dto.referee3!.name} // TODO solve this better
                         ];
                     }
                 } else {
@@ -69,7 +69,7 @@ export class MainComponent implements OnInit {
         });
     }
 
-    createVideoExpertise() {
+    createVideoReport() {
         if (this.reportee) {
             this.expertiseService.createExpertise(this.gameNumber, this.reportee).subscribe(response => {
                 this.router.navigate(['/edit/' + response.id]);
@@ -79,14 +79,14 @@ export class MainComponent implements OnInit {
         }
     }
 
-    getReportee(report: VideoExpertiseDTO): string {
+    getReportee(report: VideoReportDTO): string {
         switch (report.reportee) {
             case Reportee.FIRST_REFEREE:
-                return report.basketplanGame.referee1!;
+                return report.basketplanGame.referee1!.name;
             case Reportee.SECOND_REFEREE:
-                return report.basketplanGame.referee2!;
+                return report.basketplanGame.referee2!.name;
             case Reportee.THIRD_REFEREE:
-                return report.basketplanGame.referee3!;
+                return report.basketplanGame.referee3!.name;
         }
     }
 

@@ -3,6 +3,8 @@ package ch.stefanjucker.refereecoach.service.basketplan;
 import ch.stefanjucker.refereecoach.domain.Referee;
 import ch.stefanjucker.refereecoach.domain.repository.RefereeRepository;
 import ch.stefanjucker.refereecoach.dto.BasketplanGameDTO;
+import ch.stefanjucker.refereecoach.dto.RefereeDTO;
+import ch.stefanjucker.refereecoach.mapper.DTOMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -26,6 +28,7 @@ import static javax.xml.XMLConstants.FEATURE_SECURE_PROCESSING;
 public class BasketplanService {
 
     private static final Logger logger = LoggerFactory.getLogger(BasketplanService.class);
+    private static final DTOMapper DTO_MAPPER = DTOMapper.INSTANCE;
 
     private static final Pattern YOUTUBE_ID_PATTERN = Pattern.compile("v=([^&]+)");
     private static final String SEARCH_GAMES_URL = "https://www.basketplan.ch/showSearchGames.do?actionType=searchGames&gameNumber=%s&xmlView=true&perspective=de_default&federationId=%d";
@@ -57,6 +60,7 @@ public class BasketplanService {
                 var resultNode = ((Element) gameNode).getElementsByTagName("result").item(0);
 
                 return Optional.of(new BasketplanGameDTO(
+                        gameNumber,
                         getAttributeValue(leagueHoldingNode, "name").orElse("?"),
                         LocalDate.parse(getAttributeValue(gameNode, "date").orElseThrow()),
                         "%s - %s".formatted(getAttributeValue(resultNode, "homeTeamScore").orElse("?"),
@@ -78,12 +82,12 @@ public class BasketplanService {
         return Optional.empty();
     }
 
-    private String getReferee(Node gameNode, String name) {
+    private RefereeDTO getReferee(Node gameNode, String name) {
         Optional<String> refereeName = getAttributeValue(gameNode, name);
         if (refereeName.isPresent()) {
             Optional<Referee> referee = refereeRepository.findByName(refereeName.get());
             if (referee.isPresent()) {
-                return referee.get().getName();
+                return DTO_MAPPER.toDTO(referee.get());
             } else {
                 logger.error("referee '{}' not found in database", refereeName.get());
             }

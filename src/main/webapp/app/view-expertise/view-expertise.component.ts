@@ -2,7 +2,7 @@ import {Component, OnInit, ViewChild} from '@angular/core';
 import {ActivatedRoute} from "@angular/router";
 import {ExpertiseService} from "../service/expertise.service";
 import {YouTubePlayer} from "@angular/youtube-player";
-import {OfficiatingMode, Reportee, VideoExpertiseDTO} from "../rest";
+import {OfficiatingMode, Reportee, VideoReportDTO} from "../rest";
 
 @Component({
     selector: 'app-view-expertise',
@@ -13,7 +13,7 @@ export class ViewExpertiseComponent implements OnInit {
 
     @ViewChild('youtubePlayer') youtube?: YouTubePlayer;
 
-    dto?: VideoExpertiseDTO;
+    dto?: VideoReportDTO;
 
     constructor(private route: ActivatedRoute,
                 private readonly expertiseService: ExpertiseService) {

@@ -23,13 +23,13 @@
                 <span>Team B: {{report.basketplanGame.teamB}}</span>
             </div>
             <div fxLayout="column" fxLayout.gt-sm="row" fxLayoutGap.gt-sm="20px" *ngIf="is3PO()">
-                <span [ngClass]="isFirstUmpire() ? 'reportee' : ''">Crew Chief: {{report.basketplanGame.referee1}}</span>
-                <span [ngClass]="isSecondUmpire() ? 'reportee' : ''">Umpire 1: {{report.basketplanGame.referee2}}</span>
-                <span [ngClass]="isThirdUmpire() ? 'reportee' : ''">Umpire 2: {{report.basketplanGame.referee3}}</span>
+                <span [ngClass]="isFirstUmpire() ? 'reportee' : ''">Crew Chief: {{report.basketplanGame.referee1!.name}}</span>
+                <span [ngClass]="isSecondUmpire() ? 'reportee' : ''">Umpire 1: {{report.basketplanGame.referee2!.name}}</span>
+                <span [ngClass]="isThirdUmpire() ? 'reportee' : ''">Umpire 2: {{report.basketplanGame.referee3!.name}}</span>
             </div>
             <div fxLayout="column" fxLayout.gt-sm="row" fxLayoutGap.gt-sm="20px" *ngIf="is2PO()">
-                <span [ngClass]="isFirstUmpire() ? 'reportee' : ''">Umpire 1: {{report.basketplanGame.referee1}}</span>
-                <span [ngClass]="isSecondUmpire() ? 'reportee' : ''">Umpire 2: {{report.basketplanGame.referee2}}</span>
+                <span [ngClass]="isFirstUmpire() ? 'reportee' : ''">Referee 1: {{report.basketplanGame.referee1!.name}}</span>
+                <span [ngClass]="isSecondUmpire() ? 'reportee' : ''">Referee 2: {{report.basketplanGame.referee2!.name}}</span>
             </div>
         </mat-card-content>
     </mat-card>
@@ -42,6 +42,7 @@
                 <mat-form-field appearance="fill" color="accent">
                     <mat-label>Image, Approach, Fitness Condition</mat-label>
                     <textarea [(ngModel)]="report.imageComment"
+                              maxlength="1024"
                               cdkAutosizeMaxRows="5"
                               cdkAutosizeMinRows="2"
                               cdkTextareaAutosize
@@ -52,6 +53,7 @@
                     <mat-label *ngIf="is3PO()">3PO Mechanics & Individual Officiating Techniques</mat-label>
                     <mat-label *ngIf="is2PO()">2PO Mechanics & Individual Officiating Techniques</mat-label>
                     <textarea [(ngModel)]="report.mechanicsComment"
+                              maxlength="1024"
                               cdkAutosizeMaxRows="5"
                               cdkAutosizeMinRows="2"
                               cdkTextareaAutosize
@@ -63,6 +65,7 @@
                 <mat-form-field appearance="fill" color="accent">
                     <mat-label>Critera: Fouls & Violations</mat-label>
                     <textarea [(ngModel)]="report.foulsComment"
+                              maxlength="1024"
                               cdkAutosizeMaxRows="5"
                               cdkAutosizeMinRows="2"
                               cdkTextareaAutosize
@@ -72,6 +75,7 @@
                 <mat-form-field appearance="fill" color="accent">
                     <mat-label>Game Control and Management</mat-label>
                     <textarea [(ngModel)]="report.gameManagementComment"
+                              maxlength="1024"
                               cdkAutosizeMaxRows="5"
                               cdkAutosizeMinRows="2"
                               cdkTextareaAutosize
@@ -83,6 +87,7 @@
                 <mat-form-field appearance="fill" color="accent">
                     <mat-label>Points to Keep</mat-label>
                     <textarea [(ngModel)]="report.pointsToKeepComment"
+                              maxlength="1024"
                               cdkAutosizeMaxRows="5"
                               cdkAutosizeMinRows="2"
                               cdkTextareaAutosize
@@ -92,6 +97,7 @@
                 <mat-form-field appearance="fill" color="accent">
                     <mat-label>Points to Improve</mat-label>
                     <textarea [(ngModel)]="report.pointsToImproveComment"
+                              maxlength="1024"
                               cdkAutosizeMaxRows="5"
                               cdkAutosizeMinRows="2"
                               cdkTextareaAutosize

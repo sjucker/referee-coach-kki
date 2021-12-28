@@ -2,7 +2,7 @@ import {Component, OnInit, ViewChild} from '@angular/core';
 import {YouTubePlayer} from "@angular/youtube-player";
 import {BasketplanService} from "../service/basketplan.service";
 import {ExpertiseService} from "../service/expertise.service";
-import {OfficiatingMode, Reportee, VideoCommentDTO, VideoExpertiseDTO} from "../rest";
+import {OfficiatingMode, Reportee, VideoCommentDTO, VideoReportDTO} from "../rest";
 import {ActivatedRoute, Router} from "@angular/router";
 
 @Component({
@@ -14,7 +14,7 @@ export class ExpertiseComponent implements OnInit {
 
     @ViewChild('youtubePlayer') youtube?: YouTubePlayer;
 
-    report?: VideoExpertiseDTO;
+    report?: VideoReportDTO;
 
     constructor(private readonly basketplanService: BasketplanService,
                 private readonly expertiseService: ExpertiseService,
