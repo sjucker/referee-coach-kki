@@ -1,19 +1,19 @@
-package ch.stefanjucker.refereecoach.rest.basketplan;
+package ch.stefanjucker.refereecoach.rest;
 
 import ch.stefanjucker.refereecoach.dto.BasketplanGameDTO;
-import ch.stefanjucker.refereecoach.service.basketplan.BasketplanService;
-import ch.stefanjucker.refereecoach.service.basketplan.BasketplanService.Federation;
- import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import ch.stefanjucker.refereecoach.service.BasketplanService;
+import ch.stefanjucker.refereecoach.service.BasketplanService.Federation;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+@Slf4j
 @RestController
+@RequestMapping("/api/game")
 public class BasketplanResource {
-
-    private static final Logger logger = LoggerFactory.getLogger(BasketplanResource.class);
 
     private final BasketplanService basketplanService;
 
@@ -21,9 +21,9 @@ public class BasketplanResource {
         this.basketplanService = basketplanService;
     }
 
-    @GetMapping("/game/{federation}/{gameNumber}")
+    @GetMapping("/{federation}/{gameNumber}")
     public ResponseEntity<BasketplanGameDTO> game(@PathVariable Federation federation, @PathVariable String gameNumber) {
-        logger.info("GET /game/{}/{}", federation.getId(), gameNumber);
+        log.info("GET /game/{}/{}", federation.getId(), gameNumber);
 
         try {
             return ResponseEntity.of(basketplanService.findGameByNumber(federation, gameNumber));

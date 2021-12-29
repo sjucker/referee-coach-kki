@@ -1,12 +1,11 @@
-package ch.stefanjucker.refereecoach.service.basketplan;
+package ch.stefanjucker.refereecoach.service;
 
 import ch.stefanjucker.refereecoach.domain.Referee;
 import ch.stefanjucker.refereecoach.domain.repository.RefereeRepository;
 import ch.stefanjucker.refereecoach.dto.BasketplanGameDTO;
 import ch.stefanjucker.refereecoach.dto.RefereeDTO;
 import ch.stefanjucker.refereecoach.mapper.DTOMapper;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -24,10 +23,10 @@ import static ch.stefanjucker.refereecoach.dto.OfficiatingMode.OFFICIATING_2PO;
 import static ch.stefanjucker.refereecoach.dto.OfficiatingMode.OFFICIATING_3PO;
 import static javax.xml.XMLConstants.FEATURE_SECURE_PROCESSING;
 
+@Slf4j
 @Service
 public class BasketplanService {
 
-    private static final Logger logger = LoggerFactory.getLogger(BasketplanService.class);
     private static final DTOMapper DTO_MAPPER = DTOMapper.INSTANCE;
 
     private static final Pattern YOUTUBE_ID_PATTERN = Pattern.compile("v=([^&]+)");
@@ -76,7 +75,7 @@ public class BasketplanService {
             }
 
         } catch (Exception e) {
-            logger.error("unexpected error while retrieving game-info from Basketplan", e);
+            log.error("unexpected error while retrieving game-info from Basketplan", e);
         }
 
         return Optional.empty();
@@ -89,7 +88,7 @@ public class BasketplanService {
             if (referee.isPresent()) {
                 return DTO_MAPPER.toDTO(referee.get());
             } else {
-                logger.error("referee '{}' not found in database", refereeName.get());
+                log.error("referee '{}' not found in database", refereeName.get());
             }
         }
         return null;
@@ -126,6 +125,5 @@ public class BasketplanService {
             return id;
         }
     }
-
 
 }

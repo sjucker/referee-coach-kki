@@ -10,6 +10,10 @@
         <a *ngIf="report?.id" [href]="'/#/view/' + report?.id" mat-icon-button target="_blank">
             <mat-icon>open_in_new</mat-icon>
         </a>
+        <span class="spacer"></span>
+        <a routerLink="/" mat-icon-button>
+            <mat-icon>home</mat-icon>
+        </a>
     </mat-toolbar>
 
     <mat-card *ngIf="report">

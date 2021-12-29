@@ -10,24 +10,31 @@ import {MatButtonModule} from "@angular/material/button";
 import {MatFormFieldModule} from "@angular/material/form-field";
 import {MatInputModule} from "@angular/material/input";
 import {MatCardModule} from "@angular/material/card";
-import {FormsModule} from "@angular/forms";
-import {HttpClientModule} from "@angular/common/http";
+import {FormsModule, ReactiveFormsModule} from "@angular/forms";
+import {HTTP_INTERCEPTORS, HttpClientModule} from "@angular/common/http";
 import {MatGridListModule} from "@angular/material/grid-list";
 import {FlexLayoutModule} from "@angular/flex-layout";
 import {MatIconModule} from "@angular/material/icon";
-import {ExpertiseComponent} from './expertise/expertise.component';
-import {ViewExpertiseComponent} from './view-expertise/view-expertise.component';
+import {VideoReportComponent} from './video-report/video-report.component';
+import {ViewVideoReportComponent} from './view-report/view-video-report.component';
 import {MatRadioModule} from "@angular/material/radio";
 import {MainComponent} from "./main/main.component";
 import {MatTableModule} from "@angular/material/table";
 import {MatSelectModule} from "@angular/material/select";
+import {LoginComponent} from './login/login.component';
+import {AuthenticationInterceptor} from "./interceptors/authentication-interceptor.service";
+import {MatSnackBarModule} from "@angular/material/snack-bar";
+import { ChangePasswordComponent } from './change-password/change-password.component';
+import {MatSidenavModule} from "@angular/material/sidenav";
 
 @NgModule({
     declarations: [
         AppComponent,
         MainComponent,
-        ExpertiseComponent,
-        ViewExpertiseComponent
+        VideoReportComponent,
+        ViewVideoReportComponent,
+        LoginComponent,
+        ChangePasswordComponent
     ],
     imports: [
         BrowserModule,
@@ -47,8 +54,11 @@ import {MatSelectModule} from "@angular/material/select";
         MatRadioModule,
         MatTableModule,
         MatSelectModule,
+        MatSnackBarModule,
+        ReactiveFormsModule,
+        MatSidenavModule,
     ],
-    providers: [],
+    providers: [{provide: HTTP_INTERCEPTORS, useClass: AuthenticationInterceptor, multi: true}],
     bootstrap: [AppComponent]
 })
 export class AppModule {

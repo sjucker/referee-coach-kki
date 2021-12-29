@@ -1,4 +1,4 @@
-package ch.stefanjucker.refereecoach.service.expertise;
+package ch.stefanjucker.refereecoach.service;
 
 import ch.stefanjucker.refereecoach.domain.VideoReport;
 import ch.stefanjucker.refereecoach.domain.repository.UserRepository;
@@ -6,8 +6,7 @@ import ch.stefanjucker.refereecoach.domain.repository.VideoReportRepository;
 import ch.stefanjucker.refereecoach.dto.Reportee;
 import ch.stefanjucker.refereecoach.dto.VideoReportDTO;
 import ch.stefanjucker.refereecoach.mapper.DTOMapper;
-import ch.stefanjucker.refereecoach.service.basketplan.BasketplanService;
-import ch.stefanjucker.refereecoach.service.basketplan.BasketplanService.Federation;
+import ch.stefanjucker.refereecoach.service.BasketplanService.Federation;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
