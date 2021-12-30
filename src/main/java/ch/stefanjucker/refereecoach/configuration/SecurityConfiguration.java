@@ -4,7 +4,6 @@ import ch.stefanjucker.refereecoach.security.JwtRequestFilter;
 import ch.stefanjucker.refereecoach.security.UserAuthService;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -19,6 +18,9 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import org.springframework.web.filter.CorsFilter;
 
 import static org.springframework.http.HttpHeaders.AUTHORIZATION;
+import static org.springframework.http.HttpMethod.GET;
+import static org.springframework.http.HttpMethod.OPTIONS;
+import static org.springframework.http.HttpMethod.POST;
 import static org.springframework.security.config.BeanIds.AUTHENTICATION_MANAGER;
 import static org.springframework.security.config.http.SessionCreationPolicy.STATELESS;
 
@@ -75,14 +77,14 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
             .cors().and()
             .csrf().disable()
             .authorizeRequests()
-                .antMatchers(HttpMethod.GET, "/").permitAll()
-                .antMatchers(HttpMethod.OPTIONS, "/**").permitAll()
-                .antMatchers(HttpMethod.POST, "/api/authenticate").permitAll()
+                .antMatchers(GET, "/*").permitAll()
+                .antMatchers(OPTIONS, "/api/**").permitAll()
+                .antMatchers(POST, "/api/authenticate").permitAll()
                 //  read-only report also available for anonymous users
-                .antMatchers(HttpMethod.GET, "/api/video-report/*").permitAll()
-                .anyRequest().authenticated()
-                    .and().exceptionHandling()
-                    .and().sessionManagement().sessionCreationPolicy(STATELESS);
+                .antMatchers(GET, "/api/video-report/*").permitAll()
+                .antMatchers("/api/**").authenticated()
+            .and().exceptionHandling()
+            .and().sessionManagement().sessionCreationPolicy(STATELESS);
 
         http.addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class);
         // @formatter:on
