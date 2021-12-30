@@ -6,6 +6,7 @@ import {OfficiatingMode, Reportee, VideoCommentDTO, VideoReportDTO} from "../res
 import {ActivatedRoute, Router} from "@angular/router";
 import {MatDialog} from "@angular/material/dialog";
 import {VideoReportFinishDialogComponent} from "../video-report-finish-dialog/video-report-finish-dialog.component";
+import {MatSnackBar} from "@angular/material/snack-bar";
 
 @Component({
     selector: 'app-video-report',
@@ -22,7 +23,8 @@ export class VideoReportComponent implements OnInit {
                 private readonly videoReportService: VideoReportService,
                 private route: ActivatedRoute,
                 private router: Router,
-                public dialog: MatDialog) {
+                public dialog: MatDialog,
+                public snackBar: MatSnackBar) {
     }
 
     ngOnInit(): void {
@@ -52,6 +54,11 @@ export class VideoReportComponent implements OnInit {
         if (this.report) {
             this.videoReportService.saveVideoReport(this.report).subscribe(dto => {
                 this.report = dto;
+                this.snackBar.open("Save successful!", undefined, {
+                    duration: 2000,
+                    verticalPosition: "top",
+                    horizontalPosition: "center"
+                });
             })
         }
     }
