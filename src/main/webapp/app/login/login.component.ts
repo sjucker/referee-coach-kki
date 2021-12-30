@@ -31,7 +31,7 @@ export class LoginComponent implements OnInit {
             this.authenticationError = false;
             const val = this.loginForm.value;
             this.authenticationService.login(val.email, val.password).subscribe(response => {
-                    this.authenticationService.setAuthorizationToken(response.jwt);
+                    this.authenticationService.setCredentials(response);
                     this.router.navigate(['/']);
                 },
                 error => {

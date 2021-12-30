@@ -3,6 +3,7 @@ package ch.stefanjucker.refereecoach.domain;
 import ch.stefanjucker.refereecoach.dto.OfficiatingMode;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 
 import javax.persistence.Column;
 import javax.persistence.Embeddable;
@@ -16,6 +17,7 @@ import static javax.persistence.EnumType.STRING;
 @Embeddable
 @Getter
 @Setter
+@ToString(of = "gameNumber")
 public class BasketplanGame {
 
     @Column(nullable = false, name = "game_number")

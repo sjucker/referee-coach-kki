@@ -4,6 +4,7 @@ import {VideoReportService} from "../service/video-report.service";
 import {BasketplanService} from "../service/basketplan.service";
 import {Router} from "@angular/router";
 import {MatTableDataSource} from "@angular/material/table";
+import {AuthenticationService} from "../service/authentication.service";
 
 interface ReporteeSelection {
     reportee: Reportee,
@@ -28,8 +29,9 @@ export class MainComponent implements OnInit {
     reportee?: Reportee
     reportees: ReporteeSelection[] = []
 
-    constructor(private readonly basketplanService: BasketplanService,
-                private readonly videoReportService: VideoReportService,
+    constructor(private basketplanService: BasketplanService,
+                private videoReportService: VideoReportService,
+                private authenticationService: AuthenticationService,
                 private router: Router) {
     }
 
@@ -105,4 +107,7 @@ export class MainComponent implements OnInit {
         this.videoReportDtos.filter = filterValue.trim().toLowerCase();
     }
 
+    isEditable(report: VideoReportDTO) {
+        return !report.finished && report.reporter.id === this.authenticationService.getUserId();
+    }
 }

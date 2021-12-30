@@ -31,12 +31,21 @@ export class AuthenticationService {
         return this.httpClient.post(`${this.baseUrl}/authenticate/change-password`, request);
     }
 
-    setAuthorizationToken(token: string): void {
-        sessionStorage.setItem('token', token);
+    setCredentials(dto: LoginResponseDTO): void {
+        sessionStorage.setItem('token', dto.jwt);
+        sessionStorage.setItem('user-id', String(dto.id));
     }
 
     getAuthorizationToken(): string | null {
         return sessionStorage.getItem('token');
+    }
+
+    getUserId(): number | null {
+        const userId = sessionStorage.getItem('user-id');
+        if (userId) {
+            return parseInt(userId);
+        }
+        return null;
     }
 
     isLoggedIn(): boolean {

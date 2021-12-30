@@ -1,12 +1,13 @@
 package ch.stefanjucker.refereecoach.service;
 
+import ch.stefanjucker.refereecoach.domain.User;
 import ch.stefanjucker.refereecoach.domain.VideoReport;
-import ch.stefanjucker.refereecoach.domain.repository.UserRepository;
 import ch.stefanjucker.refereecoach.domain.repository.VideoReportRepository;
 import ch.stefanjucker.refereecoach.dto.Reportee;
 import ch.stefanjucker.refereecoach.dto.VideoReportDTO;
 import ch.stefanjucker.refereecoach.mapper.DTOMapper;
 import ch.stefanjucker.refereecoach.service.BasketplanService.Federation;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
@@ -16,27 +17,28 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import static org.springframework.data.domain.Sort.Order.desc;
+import static org.springframework.data.domain.Sort.by;
+
+@Slf4j
 @Service
 public class VideoReportService {
 
     private static final DTOMapper DTO_MAPPER = DTOMapper.INSTANCE;
 
     private final VideoReportRepository videoReportRepository;
-    private final UserRepository userRepository;
     private final BasketplanService basketplanService;
     private final JavaMailSender mailSender;
 
     public VideoReportService(VideoReportRepository videoReportRepository,
-                              UserRepository userRepository,
                               BasketplanService basketplanService,
                               JavaMailSender mailSender) {
         this.videoReportRepository = videoReportRepository;
-        this.userRepository = userRepository;
         this.basketplanService = basketplanService;
         this.mailSender = mailSender;
     }
 
-    public VideoReportDTO create(Federation federation, String gameNumber, Reportee reportee) {
+    public VideoReportDTO create(Federation federation, String gameNumber, Reportee reportee, User user) {
         // TODO proper error handling
         var game = basketplanService.findGameByNumber(federation, gameNumber).orElseThrow();
 
@@ -44,7 +46,7 @@ public class VideoReportService {
         videoReport.setId(getUuid());
         videoReport.setBasketplanGame(DTO_MAPPER.fromDTO(game));
         videoReport.setReportee(reportee);
-        videoReport.setReporter(userRepository.findAll().get(0)); // TODO actual user!
+        videoReport.setReporter(user);
         videoReport.setVideoComments(new ArrayList<>());
         videoReport.setFinished(false);
 
@@ -62,8 +64,13 @@ public class VideoReportService {
         return uuid;
     }
 
-    public VideoReportDTO update(String id, VideoReportDTO dto) {
+    public VideoReportDTO update(String id, VideoReportDTO dto, User user) {
         var videoReport = videoReportRepository.findById(id).orElseThrow();
+        if (!videoReport.getReporter().getEmail().equals(user.getEmail())) {
+            log.error("user {} tried to update video-report {} that does not belong to them", user, videoReport);
+            throw new IllegalStateException("user is not allowed to update this video-report!");
+        }
+
         DTO_MAPPER.update(dto, videoReport);
         videoReport = videoReportRepository.save(videoReport);
 
@@ -90,8 +97,8 @@ public class VideoReportService {
     }
 
     public List<VideoReportDTO> findAll() {
-        // TODO sort it
-        return videoReportRepository.findAll().stream()
+        return videoReportRepository.findAll(by(desc("basketplanGame.date")))
+                                    .stream()
                                     .map(DTO_MAPPER::toDTO)
                                     .toList();
     }
