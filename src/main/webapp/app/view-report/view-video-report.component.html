@@ -12,6 +12,7 @@
             <mat-card-title>Game Info</mat-card-title>
             <mat-card-content>
                 <div fxLayout="column" fxLayout.gt-sm="row" fxLayoutGap.gt-sm="20px">
+                    <span>Game Number: {{dto.basketplanGame.gameNumber}}</span>
                     <span>Competition: {{dto.basketplanGame.competition}}</span>
                     <span>Date: {{dto.basketplanGame.date | date:'dd.MM.yyyy' }}</span>
                     <span>Result: {{dto.basketplanGame.result}}</span>

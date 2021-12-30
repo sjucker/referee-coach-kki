@@ -20,9 +20,9 @@ export interface ChangePasswordRequestDTO {
 }
 
 export interface CreateVideoReportDTO {
-    federation?: Federation;
-    gameNumber?: string;
-    reportee?: Reportee;
+    federation: Federation;
+    gameNumber: string;
+    reportee: Reportee;
 }
 
 export interface LoginRequestDTO {
@@ -62,12 +62,12 @@ export interface VideoReportDTO {
     basketplanGame: BasketplanGameDTO;
     reporter: ReporterDTO;
     reportee: Reportee;
-    imageComment: string;
-    mechanicsComment: string;
-    foulsComment: string;
-    gameManagementComment: string;
-    pointsToKeepComment: string;
-    pointsToImproveComment: string;
+    imageComment?: string;
+    mechanicsComment?: string;
+    foulsComment?: string;
+    gameManagementComment?: string;
+    pointsToKeepComment?: string;
+    pointsToImproveComment?: string;
     videoComments: VideoCommentDTO[];
     finished: boolean;
 }

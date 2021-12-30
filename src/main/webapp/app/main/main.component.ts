@@ -1,10 +1,11 @@
 import {Component, OnInit} from '@angular/core';
-import {OfficiatingMode, Reportee, VideoReportDTO} from "../rest";
+import {BasketplanGameDTO, OfficiatingMode, Reportee, VideoReportDTO} from "../rest";
 import {VideoReportService} from "../service/video-report.service";
 import {BasketplanService} from "../service/basketplan.service";
 import {Router} from "@angular/router";
 import {MatTableDataSource} from "@angular/material/table";
 import {AuthenticationService} from "../service/authentication.service";
+import {MatSnackBar} from "@angular/material/snack-bar";
 
 interface ReporteeSelection {
     reportee: Reportee,
@@ -18,21 +19,23 @@ interface ReporteeSelection {
 })
 export class MainComponent implements OnInit {
     displayedColumns: string[] = ['date', 'gameNumber', 'competition', 'teams', 'coach', 'reportee', 'edit', 'view'];
-    gameNumber: string = '21-03520';
+    videoReportDtos: MatTableDataSource<VideoReportDTO> = new MatTableDataSource<VideoReportDTO>([]);
+
+    gameNumberInput: string = '21-03520';
 
     // whether we are ready to start with video-report
     ready = false;
     problemDescription = '';
 
-    videoReportDtos: MatTableDataSource<VideoReportDTO> = new MatTableDataSource<VideoReportDTO>([]);
-
     reportee?: Reportee
     reportees: ReporteeSelection[] = []
+    game?: BasketplanGameDTO;
 
     constructor(private basketplanService: BasketplanService,
                 private videoReportService: VideoReportService,
                 private authenticationService: AuthenticationService,
-                private router: Router) {
+                private router: Router,
+                private snackBar: MatSnackBar) {
     }
 
     ngOnInit(): void {
@@ -52,42 +55,72 @@ export class MainComponent implements OnInit {
     }
 
     searchGame(): void {
-        this.basketplanService.searchGame(this.gameNumber).subscribe(dto => {
-            if (dto.referee1 && dto.referee2
-                && (dto.officiatingMode === OfficiatingMode.OFFICIATING_2PO || dto.referee3)) {
-                if (dto.youtubeId) {
-                    this.ready = true;
-                    this.problemDescription = '';
-                    if (dto.officiatingMode === OfficiatingMode.OFFICIATING_2PO) {
+        this.ready = false;
+        this.problemDescription = '';
+
+        if (!this.gameNumberInput) {
+            this.problemDescription = 'Please enter a game number';
+            return;
+        }
+
+        this.basketplanService.searchGame(this.gameNumberInput.trim()).subscribe(
+            dto => {
+                if (dto.referee1 && dto.referee2
+                    && (dto.officiatingMode === OfficiatingMode.OFFICIATING_2PO || dto.referee3)) {
+                    if (dto.youtubeId) {
+                        this.ready = true;
+                        this.problemDescription = '';
+                        this.game = dto;
+
                         this.reportees = [
                             {reportee: Reportee.FIRST_REFEREE, name: dto.referee1.name},
                             {reportee: Reportee.SECOND_REFEREE, name: dto.referee2.name}
                         ];
+
+                        if (dto.officiatingMode === OfficiatingMode.OFFICIATING_3PO && dto.referee3) {
+                            this.reportees = [...this.reportees, {
+                                reportee: Reportee.THIRD_REFEREE,
+                                name: dto.referee3.name
+                            }];
+                        }
                     } else {
-                        this.reportees = [
-                            {reportee: Reportee.FIRST_REFEREE, name: dto.referee1.name},
-                            {reportee: Reportee.SECOND_REFEREE, name: dto.referee2.name},
-                            {reportee: Reportee.THIRD_REFEREE, name: dto.referee3!.name} // TODO solve this better
-                        ];
+                        this.problemDescription = 'No YouTube video available'
                     }
                 } else {
-                    this.ready = false;
-                    this.problemDescription = 'No YouTube video available'
+                    this.problemDescription = 'At least one referee not available in database';
                 }
-            } else {
-                this.ready = false;
-                this.problemDescription = 'At least one referee not available in database';
             }
-        });
+            ,
+            error => {
+                if (error.status === 404) {
+                    this.problemDescription = 'No game found for given game number';
+                } else {
+                    this.problemDescription = 'An unexpected error occurred'
+                }
+            }
+        )
+        ;
     }
 
     createVideoReport() {
-        if (this.reportee) {
-            this.videoReportService.createVideoReport(this.gameNumber, this.reportee).subscribe(response => {
-                this.router.navigate(['/edit/' + response.id]);
-            })
+        if (this.game && this.reportee) {
+            this.videoReportService.createVideoReport(this.game!.gameNumber, this.reportee).subscribe(
+                response => {
+                    this.router.navigate(['/edit/' + response.id]);
+                },
+                error => {
+                    this.snackBar.open("An unexpected error occurred, video report could not be created.", undefined, {
+                        duration: 3000,
+                        horizontalPosition: "center",
+                        verticalPosition: "top"
+                    })
+                })
         } else {
-            // TODO proper error handling
+            this.snackBar.open("Please search for a game or select a referee", undefined, {
+                duration: 3000,
+                horizontalPosition: "center",
+                verticalPosition: "top"
+            });
         }
     }
 

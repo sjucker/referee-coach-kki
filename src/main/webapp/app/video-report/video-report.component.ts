@@ -52,14 +52,18 @@ export class VideoReportComponent implements OnInit {
 
     save() {
         if (this.report) {
-            this.videoReportService.saveVideoReport(this.report).subscribe(dto => {
-                this.report = dto;
-                this.snackBar.open("Save successful!", undefined, {
-                    duration: 2000,
-                    verticalPosition: "top",
-                    horizontalPosition: "center"
-                });
-            })
+            this.videoReportService.saveVideoReport(this.report).subscribe(
+                response => {
+                    this.report = response;
+                    this.snackBar.open("Successfully saved!", undefined, {
+                        duration: 2000,
+                        verticalPosition: "top",
+                        horizontalPosition: "center"
+                    });
+                },
+                error => {
+                    this.snackBar.open("An unexpected error occurred, video report could not be saved.")
+                })
         }
     }
 
