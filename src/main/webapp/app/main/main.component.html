@@ -44,8 +44,8 @@
 
             <table mat-table [dataSource]="videoReportDtos">
                 <ng-container matColumnDef="date">
-                    <th mat-header-cell *matHeaderCellDef>Date</th>
-                    <td mat-cell *matCellDef="let element">{{element.basketplanGame.date | date: 'dd.MM.yyyy'}}</td>
+                    <th mat-header-cell *matHeaderCellDef fxHide fxShow.gt-sm>Date</th>
+                    <td mat-cell *matCellDef="let element" fxHide fxShow.gt-sm>{{element.basketplanGame.date | date: 'dd.MM.yyyy'}}</td>
                 </ng-container>
 
                 <ng-container matColumnDef="gameNumber">
@@ -54,14 +54,15 @@
                 </ng-container>
 
                 <ng-container matColumnDef="competition">
-                    <th mat-header-cell *matHeaderCellDef>Competition</th>
-                    <td mat-cell *matCellDef="let element">{{element.basketplanGame.competition}}</td>
+                    <th mat-header-cell *matHeaderCellDef fxHide fxShow.gt-sm>Competition</th>
+                    <td mat-cell *matCellDef="let element" fxHide fxShow.gt-sm>{{element.basketplanGame.competition}}</td>
                 </ng-container>
 
                 <ng-container matColumnDef="teams">
-                    <th mat-header-cell *matHeaderCellDef>Teams</th>
-                    <td mat-cell *matCellDef="let element">{{element.basketplanGame.teamA}}
-                        - {{element.basketplanGame.teamB}}</td>
+                    <th mat-header-cell *matHeaderCellDef fxHide fxShow.gt-xs>Teams</th>
+                    <td mat-cell *matCellDef="let element" fxHide fxShow.gt-xs>
+                        {{element.basketplanGame.teamA}} - {{element.basketplanGame.teamB}}
+                    </td>
                 </ng-container>
 
                 <ng-container matColumnDef="coach">
