@@ -24,14 +24,17 @@ import {MatSelectModule} from "@angular/material/select";
 import {LoginComponent} from './login/login.component';
 import {AuthenticationInterceptor} from "./interceptors/authentication-interceptor.service";
 import {MatSnackBarModule} from "@angular/material/snack-bar";
-import { ChangePasswordComponent } from './change-password/change-password.component';
+import {ChangePasswordComponent} from './change-password/change-password.component';
 import {MatSidenavModule} from "@angular/material/sidenav";
+import {MatDialogModule} from "@angular/material/dialog";
+import {VideoReportFinishDialogComponent} from "./video-report-finish-dialog/video-report-finish-dialog.component";
 
 @NgModule({
     declarations: [
         AppComponent,
         MainComponent,
         VideoReportComponent,
+        VideoReportFinishDialogComponent,
         ViewVideoReportComponent,
         LoginComponent,
         ChangePasswordComponent
@@ -57,6 +60,7 @@ import {MatSidenavModule} from "@angular/material/sidenav";
         MatSnackBarModule,
         ReactiveFormsModule,
         MatSidenavModule,
+        MatDialogModule
     ],
     providers: [{provide: HTTP_INTERCEPTORS, useClass: AuthenticationInterceptor, multi: true}],
     bootstrap: [AppComponent]

@@ -71,6 +71,11 @@ public class VideoReportService {
             throw new IllegalStateException("user is not allowed to update this video-report!");
         }
 
+        if (videoReport.isFinished()) {
+            log.error("user {} tried to update video-report {} that is already finished", user, videoReport);
+            throw new IllegalStateException("user is not allowed to update already finished video-report!");
+        }
+
         DTO_MAPPER.update(dto, videoReport);
         videoReport = videoReportRepository.save(videoReport);
 

@@ -18,6 +18,9 @@
                     <span>Team A: {{dto.basketplanGame.teamA}}</span>
                     <span>Team B: {{dto.basketplanGame.teamB}}</span>
                 </div>
+                <div fxLayout="column" fxLayout.gt-sm="row" fxLayoutGap.gt-sm="20px">
+                    <span>Coach: {{dto.reporter.name}}</span>
+                </div>
                 <div fxLayout="column" fxLayout.gt-sm="row" fxLayoutGap.gt-sm="20px" *ngIf="is3PO()">
                     <span [ngClass]="isFirstUmpire() ? 'reportee' : ''">Crew Chief: {{dto.basketplanGame.referee1!.name}}</span>
                     <span [ngClass]="isSecondUmpire() ? 'reportee' : ''">Umpire 1: {{dto.basketplanGame.referee2!.name}}</span>

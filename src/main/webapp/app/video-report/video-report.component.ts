@@ -4,6 +4,8 @@ import {BasketplanService} from "../service/basketplan.service";
 import {VideoReportService} from "../service/video-report.service";
 import {OfficiatingMode, Reportee, VideoCommentDTO, VideoReportDTO} from "../rest";
 import {ActivatedRoute, Router} from "@angular/router";
+import {MatDialog} from "@angular/material/dialog";
+import {VideoReportFinishDialogComponent} from "../video-report-finish-dialog/video-report-finish-dialog.component";
 
 @Component({
     selector: 'app-video-report',
@@ -19,7 +21,8 @@ export class VideoReportComponent implements OnInit {
     constructor(private readonly basketplanService: BasketplanService,
                 private readonly videoReportService: VideoReportService,
                 private route: ActivatedRoute,
-                private router: Router) {
+                private router: Router,
+                public dialog: MatDialog) {
     }
 
     ngOnInit(): void {
@@ -32,8 +35,10 @@ export class VideoReportComponent implements OnInit {
         const id = this.route.snapshot.paramMap.get('id');
         if (id) {
             this.videoReportService.getVideoReport(id).subscribe(dto => {
+                if (dto.finished) {
+                    this.router.navigate(['/view/' + dto.id]);
+                }
                 // TODO error handling
-                // TODO if finished redirect to read-only view
                 this.report = dto;
             });
         }
@@ -53,10 +58,14 @@ export class VideoReportComponent implements OnInit {
 
     finish() {
         if (this.report) {
-            this.report = {...this.report, finished: true}
-            this.videoReportService.saveVideoReport(this.report).subscribe(response => {
-                if (response.finished) {
-                    this.router.navigate(['/view/' + response.id]);
+            this.dialog.open(VideoReportFinishDialogComponent).afterClosed().subscribe(decision => {
+                if (decision && this.report) {
+                    this.report = {...this.report, finished: true}
+                    this.videoReportService.saveVideoReport(this.report).subscribe(response => {
+                        if (response.finished) {
+                            this.router.navigate(['/view/' + response.id]);
+                        }
+                    });
                 }
             })
         }
