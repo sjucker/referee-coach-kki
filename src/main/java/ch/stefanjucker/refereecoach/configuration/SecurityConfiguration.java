@@ -75,9 +75,10 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
             .cors().and()
             .csrf().disable()
             .authorizeRequests()
+                .antMatchers(HttpMethod.GET, "/").permitAll()
                 .antMatchers(HttpMethod.OPTIONS, "/**").permitAll()
                 .antMatchers(HttpMethod.POST, "/api/authenticate").permitAll()
-                // report read-only also available for anonymous users
+                //  read-only report also available for anonymous users
                 .antMatchers(HttpMethod.GET, "/api/video-report/*").permitAll()
                 .anyRequest().authenticated()
                     .and().exceptionHandling()
