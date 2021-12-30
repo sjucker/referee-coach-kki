@@ -1,23 +1,23 @@
 import {Component, OnInit, ViewChild} from '@angular/core';
 import {YouTubePlayer} from "@angular/youtube-player";
 import {BasketplanService} from "../service/basketplan.service";
-import {ExpertiseService} from "../service/expertise.service";
+import {VideoReportService} from "../service/video-report.service";
 import {OfficiatingMode, Reportee, VideoCommentDTO, VideoReportDTO} from "../rest";
 import {ActivatedRoute, Router} from "@angular/router";
 
 @Component({
-    selector: 'app-expertise',
-    templateUrl: './expertise.component.html',
-    styleUrls: ['./expertise.component.css']
+    selector: 'app-video-report',
+    templateUrl: './video-report.component.html',
+    styleUrls: ['./video-report.component.css']
 })
-export class ExpertiseComponent implements OnInit {
+export class VideoReportComponent implements OnInit {
 
     @ViewChild('youtubePlayer') youtube?: YouTubePlayer;
 
     report?: VideoReportDTO;
 
     constructor(private readonly basketplanService: BasketplanService,
-                private readonly expertiseService: ExpertiseService,
+                private readonly videoReportService: VideoReportService,
                 private route: ActivatedRoute,
                 private router: Router) {
     }
@@ -31,7 +31,7 @@ export class ExpertiseComponent implements OnInit {
 
         const id = this.route.snapshot.paramMap.get('id');
         if (id) {
-            this.expertiseService.getExpertise(id).subscribe(dto => {
+            this.videoReportService.getVideoReport(id).subscribe(dto => {
                 // TODO error handling
                 // TODO if finished redirect to read-only view
                 this.report = dto;
@@ -45,7 +45,7 @@ export class ExpertiseComponent implements OnInit {
 
     save() {
         if (this.report) {
-            this.expertiseService.saveExpertise(this.report).subscribe(dto => {
+            this.videoReportService.saveVideoReport(this.report).subscribe(dto => {
                 this.report = dto;
             })
         }
@@ -54,7 +54,7 @@ export class ExpertiseComponent implements OnInit {
     finish() {
         if (this.report) {
             this.report = {...this.report, finished: true}
-            this.expertiseService.saveExpertise(this.report).subscribe(response => {
+            this.videoReportService.saveVideoReport(this.report).subscribe(response => {
                 if (response.finished) {
                     this.router.navigate(['/view/' + response.id]);
                 }

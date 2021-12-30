@@ -1,6 +1,10 @@
 <div xmlns="http://www.w3.org/1999/html">
     <mat-toolbar color="primary">
-        <span>Referee Coach</span>
+        <h1>Referee Coach</h1>
+        <span class="spacer"></span>
+        <a routerLink="/change-password" mat-icon-button>
+            <mat-icon>settings</mat-icon>
+        </a>
     </mat-toolbar>
 
     <mat-card>
@@ -33,6 +37,11 @@
 
     <mat-card>
         <mat-card-content>
+            <mat-form-field appearance="standard">
+                <mat-label>Filter</mat-label>
+                <input matInput (keyup)="applyFilter($event)">
+            </mat-form-field>
+
             <table mat-table [dataSource]="videoReportDtos">
                 <ng-container matColumnDef="date">
                     <th mat-header-cell *matHeaderCellDef>Date</th>
@@ -85,6 +94,10 @@
 
                 <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
                 <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+
+                <tr class="mat-row" *matNoDataRow>
+                    <td class="mat-cell" colspan="8">No data</td>
+                </tr>
             </table>
         </mat-card-content>
     </mat-card>

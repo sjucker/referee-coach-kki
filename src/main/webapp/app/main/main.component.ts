@@ -1,6 +1,6 @@
 import {Component, OnInit} from '@angular/core';
 import {OfficiatingMode, Reportee, VideoReportDTO} from "../rest";
-import {ExpertiseService} from "../service/expertise.service";
+import {VideoReportService} from "../service/video-report.service";
 import {BasketplanService} from "../service/basketplan.service";
 import {Router} from "@angular/router";
 import {MatTableDataSource} from "@angular/material/table";
@@ -19,7 +19,7 @@ export class MainComponent implements OnInit {
     displayedColumns: string[] = ['date', 'gameNumber', 'competition', 'teams', 'coach', 'reportee', 'edit', 'view'];
     gameNumber: string = '21-03520';
 
-    // whether we are ready to start with expertise
+    // whether we are ready to start with video-report
     ready = false;
     problemDescription = '';
 
@@ -29,13 +29,23 @@ export class MainComponent implements OnInit {
     reportees: ReporteeSelection[] = []
 
     constructor(private readonly basketplanService: BasketplanService,
-                private readonly expertiseService: ExpertiseService,
+                private readonly videoReportService: VideoReportService,
                 private router: Router) {
     }
 
     ngOnInit(): void {
-        this.expertiseService.getAllExpertise().subscribe(value => {
+        this.videoReportService.getAllVideoReports().subscribe(value => {
             this.videoReportDtos = new MatTableDataSource<VideoReportDTO>(value);
+            this.videoReportDtos.filterPredicate = (data, filter) => {
+                // default filter cannot handle nested objects, so handle each column specifically
+                return data.basketplanGame.gameNumber.toLowerCase().indexOf(filter) != -1
+                    || data.basketplanGame.competition.toLowerCase().indexOf(filter) != -1
+                    || data.basketplanGame.teamA.toLowerCase().indexOf(filter) != -1
+                    || data.basketplanGame.teamB.toLowerCase().indexOf(filter) != -1
+                    || data.basketplanGame.teamB.toLowerCase().indexOf(filter) != -1
+                    || data.reporter.name.toLowerCase().indexOf(filter) != -1
+                    || this.getReportee(data).toLowerCase().indexOf(filter) != -1;
+            }
         });
     }
 
@@ -71,7 +81,7 @@ export class MainComponent implements OnInit {
 
     createVideoReport() {
         if (this.reportee) {
-            this.expertiseService.createExpertise(this.gameNumber, this.reportee).subscribe(response => {
+            this.videoReportService.createVideoReport(this.gameNumber, this.reportee).subscribe(response => {
                 this.router.navigate(['/edit/' + response.id]);
             })
         } else {
@@ -88,6 +98,11 @@ export class MainComponent implements OnInit {
             case Reportee.THIRD_REFEREE:
                 return report.basketplanGame.referee3!.name;
         }
+    }
+
+    applyFilter(event: Event) {
+        const filterValue = (event.target as HTMLInputElement).value;
+        this.videoReportDtos.filter = filterValue.trim().toLowerCase();
     }
 
 }

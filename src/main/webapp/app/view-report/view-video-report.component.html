@@ -1,7 +1,11 @@
 <div>
     <div *ngIf="dto">
         <mat-toolbar color="primary">
-            Video Report
+            <h1>Video Report</h1>
+            <span class="spacer"></span>
+            <a routerLink="/" mat-icon-button *ngIf="isLoggedIn">
+                <mat-icon>home</mat-icon>
+            </a>
         </mat-toolbar>
 
         <mat-card>

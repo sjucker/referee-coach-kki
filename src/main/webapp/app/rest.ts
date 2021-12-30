@@ -14,10 +14,27 @@ export interface BasketplanGameDTO {
     youtubeId?: string;
 }
 
+export interface ChangePasswordRequestDTO {
+    oldPassword: string;
+    newPassword: string;
+}
+
 export interface CreateVideoReportDTO {
     federation?: Federation;
     gameNumber?: string;
     reportee?: Reportee;
+}
+
+export interface LoginRequestDTO {
+    email: string;
+    password: string;
+}
+
+export interface LoginResponseDTO {
+    id: number;
+    name: string;
+    admin: boolean;
+    jwt: string;
 }
 
 export interface RefereeDTO {
@@ -28,6 +45,11 @@ export interface RefereeDTO {
 export interface ReporterDTO {
     id: number;
     name: string;
+}
+
+export interface UserDTO {
+    email?: string;
+    admin: boolean;
 }
 
 export interface VideoCommentDTO {

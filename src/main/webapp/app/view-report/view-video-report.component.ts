@@ -1,22 +1,24 @@
 import {Component, OnInit, ViewChild} from '@angular/core';
 import {ActivatedRoute} from "@angular/router";
-import {ExpertiseService} from "../service/expertise.service";
+import {VideoReportService} from "../service/video-report.service";
 import {YouTubePlayer} from "@angular/youtube-player";
 import {OfficiatingMode, Reportee, VideoReportDTO} from "../rest";
+import {AuthenticationService} from "../service/authentication.service";
 
 @Component({
-    selector: 'app-view-expertise',
-    templateUrl: './view-expertise.component.html',
-    styleUrls: ['./view-expertise.component.css']
+    selector: 'app-view-video-report',
+    templateUrl: './view-video-report.component.html',
+    styleUrls: ['./view-video-report.component.css']
 })
-export class ViewExpertiseComponent implements OnInit {
+export class ViewVideoReportComponent implements OnInit {
 
     @ViewChild('youtubePlayer') youtube?: YouTubePlayer;
 
     dto?: VideoReportDTO;
 
     constructor(private route: ActivatedRoute,
-                private readonly expertiseService: ExpertiseService) {
+                private videoReportService: VideoReportService,
+                private authenticationService: AuthenticationService) {
     }
 
     ngOnInit(): void {
@@ -26,7 +28,7 @@ export class ViewExpertiseComponent implements OnInit {
         tag.src = 'https://www.youtube.com/iframe_api';
         document.body.appendChild(tag);
 
-        this.expertiseService.getExpertise(this.route.snapshot.paramMap.get('id')!).subscribe(result => {
+        this.videoReportService.getVideoReport(this.route.snapshot.paramMap.get('id')!).subscribe(result => {
             this.dto = result;
         });
     }
@@ -54,6 +56,10 @@ export class ViewExpertiseComponent implements OnInit {
 
     isThirdUmpire(): boolean {
         return this.dto?.reportee === Reportee.THIRD_REFEREE;
+    }
+
+    isLoggedIn(): boolean {
+        return this.authenticationService.isLoggedIn();
     }
 
 }
