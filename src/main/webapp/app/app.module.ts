@@ -24,7 +24,7 @@ import {MatSelectModule} from "@angular/material/select";
 import {LoginComponent} from './login/login.component';
 import {AuthenticationInterceptor} from "./interceptors/authentication-interceptor.service";
 import {MatSnackBarModule} from "@angular/material/snack-bar";
-import {ChangePasswordComponent} from './change-password/change-password.component';
+import {SettingsComponent} from './settings/settings.component';
 import {MatSidenavModule} from "@angular/material/sidenav";
 import {MatDialogModule} from "@angular/material/dialog";
 import {VideoReportFinishDialogComponent} from "./video-report-finish-dialog/video-report-finish-dialog.component";
@@ -37,7 +37,7 @@ import {VideoReportFinishDialogComponent} from "./video-report-finish-dialog/vid
         VideoReportFinishDialogComponent,
         ViewVideoReportComponent,
         LoginComponent,
-        ChangePasswordComponent
+        SettingsComponent
     ],
     imports: [
         BrowserModule,

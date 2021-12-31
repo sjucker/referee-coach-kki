@@ -5,7 +5,7 @@ import {ViewVideoReportComponent} from "./view-report/view-video-report.componen
 import {MainComponent} from "./main/main.component";
 import {LoginComponent} from "./login/login.component";
 import {AuthenticationGuard} from "./service/authentication.guard";
-import {ChangePasswordComponent} from "./change-password/change-password.component";
+import {SettingsComponent} from "./settings/settings.component";
 
 const routes: Routes = [
     {
@@ -28,8 +28,8 @@ const routes: Routes = [
         component: LoginComponent
     },
     {
-        path: 'change-password',
-        component: ChangePasswordComponent,
+        path: 'settings',
+        component: SettingsComponent,
         canActivate: [AuthenticationGuard]
     }
 ];

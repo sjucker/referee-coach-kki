@@ -3,11 +3,11 @@ import {FormBuilder, Validators} from "@angular/forms";
 import {AuthenticationService} from "../service/authentication.service";
 
 @Component({
-    selector: 'app-change-password',
-    templateUrl: './change-password.component.html',
-    styleUrls: ['./change-password.component.css']
+    selector: 'app-settings',
+    templateUrl: './settings.component.html',
+    styleUrls: ['./settings.component.css']
 })
-export class ChangePasswordComponent implements OnInit {
+export class SettingsComponent implements OnInit {
 
     error = false;
     errorMessage = '';
