@@ -1,5 +1,6 @@
 package ch.stefanjucker.refereecoach.service;
 
+import ch.stefanjucker.refereecoach.configuration.RefereeCoachProperties;
 import ch.stefanjucker.refereecoach.domain.User;
 import ch.stefanjucker.refereecoach.domain.VideoReport;
 import ch.stefanjucker.refereecoach.domain.repository.VideoReportRepository;
@@ -9,11 +10,14 @@ import ch.stefanjucker.refereecoach.mapper.DTOMapper;
 import ch.stefanjucker.refereecoach.service.BasketplanService.Federation;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.RandomStringUtils;
+import org.springframework.core.env.Environment;
+import org.springframework.mail.MailException;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
@@ -29,17 +33,22 @@ public class VideoReportService {
     private final VideoReportRepository videoReportRepository;
     private final BasketplanService basketplanService;
     private final JavaMailSender mailSender;
+    private final RefereeCoachProperties properties;
+    private final Environment environment;
 
     public VideoReportService(VideoReportRepository videoReportRepository,
                               BasketplanService basketplanService,
-                              JavaMailSender mailSender) {
+                              JavaMailSender mailSender,
+                              RefereeCoachProperties properties,
+                              Environment environment) {
         this.videoReportRepository = videoReportRepository;
         this.basketplanService = basketplanService;
         this.mailSender = mailSender;
+        this.properties = properties;
+        this.environment = environment;
     }
 
     public VideoReportDTO create(Federation federation, String gameNumber, Reportee reportee, User user) {
-        // TODO proper error handling
         var game = basketplanService.findGameByNumber(federation, gameNumber).orElseThrow();
 
         var videoReport = new VideoReport();
@@ -80,18 +89,31 @@ public class VideoReportService {
         videoReport = videoReportRepository.save(videoReport);
 
         if (videoReport.isFinished()) {
-            // TODO log it
             SimpleMailMessage simpleMessage = new SimpleMailMessage();
-            simpleMessage.setFrom("noreply@stefanjucker.ch"); // TODO add to properties
-            simpleMessage.setTo("stefan.jucker@gmail.com"); // TODO actual referee
-            simpleMessage.setSubject("New Video Report");
-            // TODO error handling
-            var referee = videoReport.relevantReferee();
-            // TODO do not hardcode base URL
-            simpleMessage.setText("Hi %s (%s)\nPlease visit: https://referee-coach.herokuapp.com/#/view/%s"
-                                          .formatted(referee.getName(), referee.getEmail(), dto.id()));
+            try {
+                var referee = videoReport.relevantReferee();
+                log.info("finishing {}, send email to {}", videoReport, referee.getEmail());
 
-            mailSender.send(simpleMessage);
+                simpleMessage.setSubject("[Referee Coach] New Video Report");
+                simpleMessage.setFrom(environment.getRequiredProperty("spring.mail.username"));
+                if (properties.isOverrideRecipient()) {
+                    // do not send to actual referee
+                    simpleMessage.setTo("stefan.jucker@gmail.com");
+                    simpleMessage.setSubject(simpleMessage.getSubject() + " (%s)".formatted(referee.getEmail()));
+                } else {
+                    simpleMessage.setTo(referee.getEmail());
+                }
+                simpleMessage.setCc(videoReport.getReporter().getEmail());
+                simpleMessage.setReplyTo(videoReport.getReporter().getEmail());
+
+                simpleMessage.setText("Hi %s\nPlease visit: %s/#/view/%s".formatted(referee.getName(),
+                                                                                    properties.getBaseUrl(),
+                                                                                    dto.id()));
+
+                mailSender.send(simpleMessage);
+            } catch (MailException e) {
+                log.error("could not send email to: " + Arrays.toString(simpleMessage.getTo()), e);
+            }
         }
         return dto;
     }

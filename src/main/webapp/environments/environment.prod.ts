@@ -1,4 +1,4 @@
 export const environment = {
     production: true,
-    baseUrl: 'https://referee-coach.herokuapp.com/api'
+    baseUrl: 'https://app.referee-coach.ch/api'
 };

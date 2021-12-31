@@ -1,12 +1,11 @@
 package ch.stefanjucker.refereecoach.security;
 
+import ch.stefanjucker.refereecoach.configuration.RefereeCoachProperties;
 import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.Jwt;
 import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import javax.crypto.spec.SecretKeySpec;
@@ -22,8 +21,8 @@ public class JwtService {
     private final SignatureAlgorithm signatureAlgorithm = HS256;
     private final SecretKeySpec secretKey;
 
-    public JwtService(@Value("${jwt.secret}") String secret) {
-        this.secretKey = new SecretKeySpec(secret.getBytes(UTF_8), signatureAlgorithm.getJcaName());
+    public JwtService(RefereeCoachProperties properties) {
+        this.secretKey = new SecretKeySpec(properties.getJwtSecret().getBytes(UTF_8), signatureAlgorithm.getJcaName());
     }
 
     public String createJwt(String email) {
