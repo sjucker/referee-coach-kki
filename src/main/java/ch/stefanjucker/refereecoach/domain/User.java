@@ -9,6 +9,7 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import java.time.LocalDateTime;
 
 @Entity
 @Getter
@@ -33,5 +34,8 @@ public class User {
 
     @Column(nullable = false)
     private boolean admin;
+
+    @Column(name = "last_login")
+    private LocalDateTime lastLogin;
 
 }

@@ -1,6 +1,5 @@
 package ch.stefanjucker.refereecoach.rest;
 
-import ch.stefanjucker.refereecoach.domain.User;
 import ch.stefanjucker.refereecoach.domain.repository.UserRepository;
 import ch.stefanjucker.refereecoach.dto.ChangePasswordRequestDTO;
 import ch.stefanjucker.refereecoach.dto.LoginRequestDTO;
@@ -17,7 +16,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.validation.Valid;
-import java.util.Optional;
+import java.time.LocalDateTime;
 
 import static org.springframework.http.HttpStatus.UNAUTHORIZED;
 
@@ -40,14 +39,18 @@ public class AuthenticationResource {
     public ResponseEntity<LoginResponseDTO> login(@RequestBody LoginRequestDTO request) {
         log.info("POST /api/authenticate {}", request.email());
 
-        Optional<User> user = userRepository.findByEmail(request.email());
+        var user = userRepository.findByEmail(request.email()).orElse(null);
 
-        if (user.isPresent()) {
-            if (passwordEncoder.matches(request.password(), user.get().getPassword())) {
+        if (user != null) {
+            if (passwordEncoder.matches(request.password(), user.getPassword())) {
+
+                user.setLastLogin(LocalDateTime.now());
+                userRepository.save(user);
+
                 return ResponseEntity.ok(new LoginResponseDTO(
-                        user.get().getId(),
-                        user.get().getName(),
-                        user.get().isAdmin(),
+                        user.getId(),
+                        user.getName(),
+                        user.isAdmin(),
                         jwtService.createJwt(request.email())
                 ));
             } else {
