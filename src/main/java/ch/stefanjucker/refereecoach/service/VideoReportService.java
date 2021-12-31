@@ -96,15 +96,15 @@ public class VideoReportService {
 
                 simpleMessage.setSubject("[Referee Coach] New Video Report");
                 simpleMessage.setFrom(environment.getRequiredProperty("spring.mail.username"));
+                simpleMessage.setReplyTo(videoReport.getReporter().getEmail());
+
                 if (properties.isOverrideRecipient()) {
-                    // do not send to actual referee
-                    simpleMessage.setTo("stefan.jucker@gmail.com");
+                    simpleMessage.setTo(videoReport.getReporter().getEmail());
                     simpleMessage.setSubject(simpleMessage.getSubject() + " (%s)".formatted(referee.getEmail()));
                 } else {
                     simpleMessage.setTo(referee.getEmail());
+                    simpleMessage.setCc(videoReport.getReporter().getEmail());
                 }
-                simpleMessage.setCc(videoReport.getReporter().getEmail());
-                simpleMessage.setReplyTo(videoReport.getReporter().getEmail());
 
                 simpleMessage.setText("Hi %s\nPlease visit: %s/#/view/%s".formatted(referee.getName(),
                                                                                     properties.getBaseUrl(),
