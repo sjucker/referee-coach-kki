@@ -1,7 +1,7 @@
 import {Injectable} from '@angular/core';
 import {HttpClient} from "@angular/common/http";
 import {Observable} from "rxjs";
-import {CreateVideoReportDTO, Federation, Reportee, VideoReportDTO} from "../rest";
+import {CopyVideoReportDTO, CreateVideoReportDTO, Federation, Reportee, VideoReportDTO} from "../rest";
 import {environment} from "../../environments/environment";
 
 @Injectable({
@@ -29,6 +29,14 @@ export class VideoReportService {
             federation: Federation.SBL
         };
         return this.httpClient.post<VideoReportDTO>(`${this.baseUrl}/video-report`, request);
+    }
+
+    copyVideoReport(sourceId: string, reportee: Reportee) {
+        const request: CopyVideoReportDTO = {
+            sourceId: sourceId,
+            reportee: reportee,
+        };
+        return this.httpClient.post<VideoReportDTO>(`${this.baseUrl}/video-report/copy`, request)
     }
 
     saveVideoReport(dto: VideoReportDTO): Observable<VideoReportDTO> {

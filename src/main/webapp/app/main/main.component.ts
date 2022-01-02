@@ -6,6 +6,8 @@ import {Router} from "@angular/router";
 import {MatTableDataSource} from "@angular/material/table";
 import {AuthenticationService} from "../service/authentication.service";
 import {MatSnackBar} from "@angular/material/snack-bar";
+import {MatDialog} from "@angular/material/dialog";
+import {VideoReportCopyDialogComponent} from "../video-report-copy-dialog/video-report-copy-dialog.component";
 
 interface ReporteeSelection {
     reportee: Reportee,
@@ -18,7 +20,7 @@ interface ReporteeSelection {
     styleUrls: ['./main.component.css']
 })
 export class MainComponent implements OnInit {
-    displayedColumns: string[] = ['date', 'gameNumber', 'competition', 'teams', 'coach', 'reportee', 'edit', 'view'];
+    displayedColumns: string[] = ['date', 'gameNumber', 'competition', 'teams', 'coach', 'reportee', 'edit', 'copy', 'view'];
     videoReportDtos: MatTableDataSource<VideoReportDTO> = new MatTableDataSource<VideoReportDTO>([]);
 
     gameNumberInput: string = '21-03520';
@@ -35,7 +37,8 @@ export class MainComponent implements OnInit {
                 private videoReportService: VideoReportService,
                 private authenticationService: AuthenticationService,
                 private router: Router,
-                private snackBar: MatSnackBar) {
+                private snackBar: MatSnackBar,
+                private dialog: MatDialog) {
     }
 
     ngOnInit(): void {
@@ -142,5 +145,24 @@ export class MainComponent implements OnInit {
 
     isEditable(report: VideoReportDTO) {
         return !report.finished && report.reporter.id === this.authenticationService.getUserId();
+    }
+
+    copy(report: VideoReportDTO) {
+        this.dialog.open(VideoReportCopyDialogComponent, {data: report}).afterClosed().subscribe((reportee: Reportee) => {
+            if (reportee) {
+                this.videoReportService.copyVideoReport(report.id, reportee).subscribe(
+                    response => {
+                        this.router.navigate(['/edit/' + response.id]);
+                    },
+                    error => {
+                        this.snackBar.open("An unexpected error occurred, video report could not be copied.", undefined, {
+                            duration: 3000,
+                            horizontalPosition: "center",
+                            verticalPosition: "top"
+                        })
+                    }
+                );
+            }
+        });
     }
 }

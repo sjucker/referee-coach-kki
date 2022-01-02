@@ -1,6 +1,7 @@
 package ch.stefanjucker.refereecoach.rest;
 
 import ch.stefanjucker.refereecoach.domain.repository.UserRepository;
+import ch.stefanjucker.refereecoach.dto.CopyVideoReportDTO;
 import ch.stefanjucker.refereecoach.dto.CreateVideoReportDTO;
 import ch.stefanjucker.refereecoach.dto.VideoReportDTO;
 import ch.stefanjucker.refereecoach.service.VideoReportService;
@@ -56,6 +57,15 @@ public class VideoReportResource {
         log.info("POST /video-report {} ({})", dto, user);
 
         return ResponseEntity.ok(videoReportService.create(dto.federation(), dto.gameNumber(), dto.reportee(), user));
+    }
+
+    @PostMapping(path = "/copy", consumes = APPLICATION_JSON_VALUE, produces = APPLICATION_JSON_VALUE)
+    public ResponseEntity<VideoReportDTO> copyVideoReport(@AuthenticationPrincipal UserDetails principal,
+                                                          @RequestBody @Valid CopyVideoReportDTO dto) {
+        var user = userRepository.findByEmail(principal.getUsername()).orElseThrow();
+        log.info("POST /video-report/copy {} ({})", dto, user);
+
+        return ResponseEntity.ok(videoReportService.copy(dto.sourceId(), dto.reportee(), user));
     }
 
     @PutMapping(path = "/{id}", consumes = APPLICATION_JSON_VALUE, produces = APPLICATION_JSON_VALUE)

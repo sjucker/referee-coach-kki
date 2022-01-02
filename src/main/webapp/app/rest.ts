@@ -19,6 +19,11 @@ export interface ChangePasswordRequestDTO {
     newPassword: string;
 }
 
+export interface CopyVideoReportDTO {
+    sourceId: string;
+    reportee: Reportee;
+}
+
 export interface CreateVideoReportDTO {
     federation: Federation;
     gameNumber: string;

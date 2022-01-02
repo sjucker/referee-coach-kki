@@ -120,7 +120,7 @@
             <mat-card-title>Video</mat-card-title>
         </mat-card-header>
         <mat-card-content>
-            <div fxLayout="row">
+            <div fxLayout="column" fxLayout.gt-sm="row">
                 <div fxLayout="column">
                     <youtube-player #youtubePlayer
                                     [videoId]="report.basketplanGame.youtubeId"></youtube-player>

@@ -11,6 +11,7 @@ import ch.stefanjucker.refereecoach.dto.ReporterDTO;
 import ch.stefanjucker.refereecoach.dto.VideoCommentDTO;
 import ch.stefanjucker.refereecoach.dto.VideoReportDTO;
 import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
 import org.mapstruct.factory.Mappers;
 
 import java.util.ArrayList;
@@ -27,6 +28,12 @@ public interface DTOMapper {
     ReporterDTO toDTO(User user);
 
     VideoReportDTO toDTO(VideoReport videoReport);
+
+    @Mapping(target = "id", ignore = true)
+    @Mapping(target = "reporter", ignore = true)
+    @Mapping(target = "reportee", ignore = true)
+    @Mapping(target = "finished", ignore = true)
+    VideoReport copy(VideoReport videoReport);
 
     BasketplanGameDTO toDTO(BasketplanGame basketplanGame);
 

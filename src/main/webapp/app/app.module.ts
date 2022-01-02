@@ -28,6 +28,7 @@ import {SettingsComponent} from './settings/settings.component';
 import {MatSidenavModule} from "@angular/material/sidenav";
 import {MatDialogModule} from "@angular/material/dialog";
 import {VideoReportFinishDialogComponent} from "./video-report-finish-dialog/video-report-finish-dialog.component";
+import { VideoReportCopyDialogComponent } from './video-report-copy-dialog/video-report-copy-dialog.component';
 
 @NgModule({
     declarations: [
@@ -37,7 +38,8 @@ import {VideoReportFinishDialogComponent} from "./video-report-finish-dialog/vid
         VideoReportFinishDialogComponent,
         ViewVideoReportComponent,
         LoginComponent,
-        SettingsComponent
+        SettingsComponent,
+        VideoReportCopyDialogComponent,
     ],
     imports: [
         BrowserModule,

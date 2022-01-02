@@ -62,8 +62,12 @@ export class VideoReportComponent implements OnInit {
                     });
                 },
                 error => {
-                    this.snackBar.open("An unexpected error occurred, video report could not be saved.")
-                })
+                    this.snackBar.open("An unexpected error occurred, video report could not be saved.", undefined, {
+                        duration: 4000,
+                        verticalPosition: "top",
+                        horizontalPosition: "center"
+                    });
+                });
         }
     }
 

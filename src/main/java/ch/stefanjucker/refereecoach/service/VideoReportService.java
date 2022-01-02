@@ -59,9 +59,19 @@ public class VideoReportService {
         videoReport.setVideoComments(new ArrayList<>());
         videoReport.setFinished(false);
 
-        videoReport = videoReportRepository.save(videoReport);
+        return DTO_MAPPER.toDTO(videoReportRepository.save(videoReport));
+    }
 
-        return DTO_MAPPER.toDTO(videoReport);
+    public VideoReportDTO copy(String sourceId, Reportee reportee, User user) {
+        var source = videoReportRepository.findById(sourceId).orElseThrow();
+
+        var copy = DTO_MAPPER.copy(source);
+        copy.setId(getUuid());
+        copy.setReporter(user);
+        copy.setReportee(reportee);
+        copy.setFinished(false);
+
+        return DTO_MAPPER.toDTO(videoReportRepository.save(copy));
     }
 
     private String getUuid() {
@@ -107,8 +117,8 @@ public class VideoReportService {
                 }
 
                 simpleMessage.setText("Hi %s\n\nYour video report is ready.\nPlease visit: %s/#/view/%s".formatted(referee.getName(),
-                                                                                                                 properties.getBaseUrl(),
-                                                                                                                 dto.id()));
+                                                                                                                   properties.getBaseUrl(),
+                                                                                                                   dto.id()));
 
                 mailSender.send(simpleMessage);
             } catch (MailException e) {
