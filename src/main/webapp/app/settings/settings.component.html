@@ -8,9 +8,14 @@
     </mat-toolbar>
 
     <mat-card>
-        <mat-card-title>
-            Change Password
-        </mat-card-title>
+        <mat-card-title>Help / Questions</mat-card-title>
+        <mat-card-content>
+            Do you have a question, found a bug or want a new feature: info@referee-coach.ch
+        </mat-card-content>
+    </mat-card>
+
+    <mat-card>
+        <mat-card-title>Change Password</mat-card-title>
         <mat-card-content>
             <form role="form" (ngSubmit)="changePassword()" [formGroup]="changePasswordForm">
                 <mat-form-field appearance="outline" color="accent">
@@ -49,9 +54,7 @@
     </mat-card>
 
     <mat-card>
-        <mat-card-title>
-            Manual
-        </mat-card-title>
+        <mat-card-title>Manual</mat-card-title>
         <mat-card-content>
             <h2>Start Video Report</h2>
             <p>Copy the game number from Basketplan. Make sure that the game has the video-icon set, otherwise it will
