@@ -106,9 +106,9 @@ public class VideoReportService {
                     simpleMessage.setCc(videoReport.getReporter().getEmail());
                 }
 
-                simpleMessage.setText("Hi %s\nPlease visit: %s/#/view/%s".formatted(referee.getName(),
-                                                                                    properties.getBaseUrl(),
-                                                                                    dto.id()));
+                simpleMessage.setText("Hi %s\n\nYour video report is ready.\nPlease visit: %s/#/view/%s".formatted(referee.getName(),
+                                                                                                                 properties.getBaseUrl(),
+                                                                                                                 dto.id()));
 
                 mailSender.send(simpleMessage);
             } catch (MailException e) {
