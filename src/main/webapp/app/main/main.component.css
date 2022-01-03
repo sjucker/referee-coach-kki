@@ -5,3 +5,7 @@ table {
 .spacer {
     flex: 1 1 auto;
 }
+
+.current-user {
+    color: #c2185b; /* TODO: use material primary color */
+}

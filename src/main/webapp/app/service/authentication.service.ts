@@ -9,6 +9,10 @@ import {Observable} from "rxjs";
 })
 export class AuthenticationService {
 
+    private readonly token = 'token';
+    private readonly userId = 'user-id';
+    private readonly admin = 'admin';
+
     private baseUrl = environment.baseUrl;
 
     constructor(private readonly httpClient: HttpClient) {
@@ -28,20 +32,25 @@ export class AuthenticationService {
             oldPassword: oldPassword,
             newPassword: newPassword
         }
-        return this.httpClient.post(`${this.baseUrl}/authenticate/change-password`, request);
+        return this.httpClient.post<any>(`${this.baseUrl}/authenticate/change-password`, request);
     }
 
     setCredentials(dto: LoginResponseDTO): void {
-        sessionStorage.setItem('token', dto.jwt);
-        sessionStorage.setItem('user-id', String(dto.id));
+        sessionStorage.setItem(this.token, dto.jwt);
+        sessionStorage.setItem(this.userId, String(dto.id));
+        if (dto.admin) {
+            sessionStorage.setItem(this.admin, "1");
+        } else {
+            sessionStorage.removeItem(this.admin);
+        }
     }
 
     getAuthorizationToken(): string | null {
-        return sessionStorage.getItem('token');
+        return sessionStorage.getItem(this.token);
     }
 
     getUserId(): number | null {
-        const userId = sessionStorage.getItem('user-id');
+        const userId = sessionStorage.getItem(this.userId);
         if (userId) {
             return parseInt(userId);
         }
@@ -49,7 +58,11 @@ export class AuthenticationService {
     }
 
     isLoggedIn(): boolean {
-        return sessionStorage.getItem('token') !== null;
+        return sessionStorage.getItem(this.token) !== null;
+    }
+
+    isAdmin(): boolean {
+        return this.isLoggedIn() && sessionStorage.getItem(this.admin) !== null;
     }
 
 }

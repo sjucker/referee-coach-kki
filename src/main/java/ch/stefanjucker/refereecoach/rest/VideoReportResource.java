@@ -9,6 +9,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -75,6 +76,16 @@ public class VideoReportResource {
         var user = userRepository.findByEmail(principal.getUsername()).orElseThrow();
         log.info("PUT /video-report/{} {} ({})", id, dto, user);
         return ResponseEntity.ok(videoReportService.update(id, dto, user));
+    }
+
+    @DeleteMapping(path = "/{id}")
+    public ResponseEntity<?> deleteVideoReport(@AuthenticationPrincipal UserDetails principal,
+                                               @PathVariable String id) {
+        var user = userRepository.findByEmail(principal.getUsername()).orElseThrow();
+        log.info("DELETE /video-report/{} ({})", id, user);
+
+        videoReportService.delete(id, user);
+        return ResponseEntity.ok().build();
     }
 
 }

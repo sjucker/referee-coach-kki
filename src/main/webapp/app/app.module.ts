@@ -28,7 +28,9 @@ import {SettingsComponent} from './settings/settings.component';
 import {MatSidenavModule} from "@angular/material/sidenav";
 import {MatDialogModule} from "@angular/material/dialog";
 import {VideoReportFinishDialogComponent} from "./video-report-finish-dialog/video-report-finish-dialog.component";
-import { VideoReportCopyDialogComponent } from './video-report-copy-dialog/video-report-copy-dialog.component';
+import {VideoReportCopyDialogComponent} from './video-report-copy-dialog/video-report-copy-dialog.component';
+import {VideoReportDeleteDialogComponent} from './video-report-delete-dialog/video-report-delete-dialog.component';
+import {MatProgressSpinnerModule} from "@angular/material/progress-spinner";
 
 @NgModule({
     declarations: [
@@ -40,6 +42,7 @@ import { VideoReportCopyDialogComponent } from './video-report-copy-dialog/video
         LoginComponent,
         SettingsComponent,
         VideoReportCopyDialogComponent,
+        VideoReportDeleteDialogComponent,
     ],
     imports: [
         BrowserModule,
@@ -62,7 +65,8 @@ import { VideoReportCopyDialogComponent } from './video-report-copy-dialog/video
         MatSnackBarModule,
         ReactiveFormsModule,
         MatSidenavModule,
-        MatDialogModule
+        MatDialogModule,
+        MatProgressSpinnerModule,
     ],
     providers: [{provide: HTTP_INTERCEPTORS, useClass: AuthenticationInterceptor, multi: true}],
     bootstrap: [AppComponent]

@@ -1,6 +1,6 @@
 import {Component, OnInit} from '@angular/core';
-import {BasketplanGameDTO, OfficiatingMode, Reportee, VideoReportDTO} from "../rest";
-import {VideoReportService} from "../service/video-report.service";
+import {BasketplanGameDTO, OfficiatingMode, Reportee, ReporterDTO, VideoReportDTO} from "../rest";
+import {getReferee, VideoReportService} from "../service/video-report.service";
 import {BasketplanService} from "../service/basketplan.service";
 import {Router} from "@angular/router";
 import {MatTableDataSource} from "@angular/material/table";
@@ -8,6 +8,7 @@ import {AuthenticationService} from "../service/authentication.service";
 import {MatSnackBar} from "@angular/material/snack-bar";
 import {MatDialog} from "@angular/material/dialog";
 import {VideoReportCopyDialogComponent} from "../video-report-copy-dialog/video-report-copy-dialog.component";
+import {VideoReportDeleteDialogComponent} from "../video-report-delete-dialog/video-report-delete-dialog.component";
 
 interface ReporteeSelection {
     reportee: Reportee,
@@ -20,10 +21,10 @@ interface ReporteeSelection {
     styleUrls: ['./main.component.css']
 })
 export class MainComponent implements OnInit {
-    displayedColumns: string[] = ['date', 'gameNumber', 'competition', 'teams', 'coach', 'reportee', 'edit', 'copy', 'view'];
+    displayedColumns: string[] = ['date', 'gameNumber', 'competition', 'teams', 'coach', 'reportee', 'edit', 'copy', 'view', 'delete'];
     videoReportDtos: MatTableDataSource<VideoReportDTO> = new MatTableDataSource<VideoReportDTO>([]);
 
-    gameNumberInput: string = '21-03520';
+    gameNumberInput: string = '';
 
     // whether we are ready to start with video-report
     ready = false;
@@ -42,19 +43,31 @@ export class MainComponent implements OnInit {
     }
 
     ngOnInit(): void {
-        this.videoReportService.getAllVideoReports().subscribe(value => {
-            this.videoReportDtos = new MatTableDataSource<VideoReportDTO>(value);
-            this.videoReportDtos.filterPredicate = (data, filter) => {
-                // default filter cannot handle nested objects, so handle each column specifically
-                return data.basketplanGame.gameNumber.toLowerCase().indexOf(filter) != -1
-                    || data.basketplanGame.competition.toLowerCase().indexOf(filter) != -1
-                    || data.basketplanGame.teamA.toLowerCase().indexOf(filter) != -1
-                    || data.basketplanGame.teamB.toLowerCase().indexOf(filter) != -1
-                    || data.basketplanGame.teamB.toLowerCase().indexOf(filter) != -1
-                    || data.reporter.name.toLowerCase().indexOf(filter) != -1
-                    || this.getReportee(data).toLowerCase().indexOf(filter) != -1;
-            }
-        });
+        this.loadVideoReports();
+    }
+
+    private loadVideoReports() {
+        this.videoReportService.getAllVideoReports().subscribe(
+            value => {
+                this.videoReportDtos = new MatTableDataSource<VideoReportDTO>(value);
+                this.videoReportDtos.filterPredicate = (data, filter) => {
+                    // default filter cannot handle nested objects, so handle each column specifically
+                    return data.basketplanGame.gameNumber.toLowerCase().indexOf(filter) != -1
+                        || data.basketplanGame.competition.toLowerCase().indexOf(filter) != -1
+                        || data.basketplanGame.teamA.toLowerCase().indexOf(filter) != -1
+                        || data.basketplanGame.teamB.toLowerCase().indexOf(filter) != -1
+                        || data.basketplanGame.teamB.toLowerCase().indexOf(filter) != -1
+                        || data.reporter.name.toLowerCase().indexOf(filter) != -1
+                        || this.getReportee(data).toLowerCase().indexOf(filter) != -1;
+                }
+            },
+            error => {
+                this.snackBar.open("An unexpected error occurred, video reports could not be loaded.", undefined, {
+                    duration: 3000,
+                    horizontalPosition: "center",
+                    verticalPosition: "top"
+                })
+            });
     }
 
     searchGame(): void {
@@ -128,14 +141,7 @@ export class MainComponent implements OnInit {
     }
 
     getReportee(report: VideoReportDTO): string {
-        switch (report.reportee) {
-            case Reportee.FIRST_REFEREE:
-                return report.basketplanGame.referee1!.name;
-            case Reportee.SECOND_REFEREE:
-                return report.basketplanGame.referee2!.name;
-            case Reportee.THIRD_REFEREE:
-                return report.basketplanGame.referee3!.name;
-        }
+        return getReferee(report);
     }
 
     applyFilter(event: Event) {
@@ -144,7 +150,11 @@ export class MainComponent implements OnInit {
     }
 
     isEditable(report: VideoReportDTO) {
-        return !report.finished && report.reporter.id === this.authenticationService.getUserId();
+        return !report.finished && this.isCurrentUser(report.reporter);
+    }
+
+    isCurrentUser(reporter: ReporterDTO): boolean {
+        return reporter.id === this.authenticationService.getUserId();
     }
 
     copy(report: VideoReportDTO) {
@@ -165,4 +175,33 @@ export class MainComponent implements OnInit {
             }
         });
     }
+
+    isDeletable(report: VideoReportDTO): boolean {
+        return this.isEditable(report) || this.authenticationService.isAdmin();
+    }
+
+    delete(report: VideoReportDTO) {
+        this.dialog.open(VideoReportDeleteDialogComponent, {data: report}).afterClosed().subscribe((confirm: boolean) => {
+            if (confirm) {
+                this.videoReportService.deleteVideoReport(report).subscribe(
+                    success => {
+                        this.loadVideoReports();
+                        this.snackBar.open("Video report successfully deleted", undefined, {
+                            duration: 3000,
+                            horizontalPosition: "center",
+                            verticalPosition: "top"
+                        });
+                    },
+                    error => {
+                        this.snackBar.open("Video report could not be deleted", undefined, {
+                            duration: 3000,
+                            horizontalPosition: "center",
+                            verticalPosition: "top"
+                        });
+                    }
+                );
+            }
+        });
+    }
+
 }

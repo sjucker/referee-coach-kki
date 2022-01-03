@@ -133,6 +133,21 @@ public class VideoReportService {
                                     .map(DTO_MAPPER::toDTO);
     }
 
+    public void delete(String id, User user) {
+        // verify, that us is allowed to delete this video report
+        var videoReport = videoReportRepository.findById(id).orElseThrow();
+        if (user.isAdmin() || isUnfinishedReportOwnedByUser(videoReport, user)) {
+            videoReportRepository.delete(videoReport);
+        } else {
+            log.error("user ({}) tried to delete video report ({}), but is not authorized to do so", user, videoReport);
+            throw new IllegalStateException("user is not allowed to delete this video-report!");
+        }
+    }
+
+    private boolean isUnfinishedReportOwnedByUser(VideoReport videoReport, User user) {
+        return !videoReport.isFinished() && videoReport.getReporter().getEmail().equals(user.getEmail());
+    }
+
     public List<VideoReportDTO> findAll() {
         return videoReportRepository.findAll(by(desc("basketplanGame.date")))
                                     .stream()

@@ -4,6 +4,17 @@ import {Observable} from "rxjs";
 import {CopyVideoReportDTO, CreateVideoReportDTO, Federation, Reportee, VideoReportDTO} from "../rest";
 import {environment} from "../../environments/environment";
 
+export function getReferee(report: VideoReportDTO): string {
+    switch (report.reportee) {
+        case Reportee.FIRST_REFEREE:
+            return report.basketplanGame.referee1!.name;
+        case Reportee.SECOND_REFEREE:
+            return report.basketplanGame.referee2!.name;
+        case Reportee.THIRD_REFEREE:
+            return report.basketplanGame.referee3!.name;
+    }
+}
+
 @Injectable({
     providedIn: 'root'
 })
@@ -41,6 +52,10 @@ export class VideoReportService {
 
     saveVideoReport(dto: VideoReportDTO): Observable<VideoReportDTO> {
         return this.httpClient.put<VideoReportDTO>(`${this.baseUrl}/video-report/${dto.id}`, dto);
+    }
+
+    deleteVideoReport(dto: VideoReportDTO): Observable<any> {
+        return this.httpClient.delete<any>(`${this.baseUrl}/video-report/${dto.id}`);
     }
 
 }
