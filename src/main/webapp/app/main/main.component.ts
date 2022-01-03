@@ -157,6 +157,10 @@ export class MainComponent implements OnInit {
         return reporter.id === this.authenticationService.getUserId();
     }
 
+    edit(report: VideoReportDTO) {
+        this.router.navigate(['edit', report.id]);
+    }
+
     copy(report: VideoReportDTO) {
         this.dialog.open(VideoReportCopyDialogComponent, {data: report}).afterClosed().subscribe((reportee: Reportee) => {
             if (reportee) {
@@ -174,6 +178,10 @@ export class MainComponent implements OnInit {
                 );
             }
         });
+    }
+
+    view(report: VideoReportDTO) {
+        this.router.navigate(['view', report.id]);
     }
 
     isDeletable(report: VideoReportDTO): boolean {
