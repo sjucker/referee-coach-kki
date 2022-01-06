@@ -63,23 +63,27 @@
                 <mat-card-content><p>{{dto.pointsToImproveComment}}</p></mat-card-content>
             </mat-card>
         </div>
-        <div fxLayout="column" fxLayout.gt-md="row">
-            <div style="margin: 10px;">
-                <youtube-player #youtubePlayer [videoId]="dto.basketplanGame.youtubeId"></youtube-player>
-            </div>
-            <div fxFlex="stretch">
-                <mat-card *ngFor="let videoComment of dto.videoComments; index as i;">
-                    <mat-card-title>Video Comment #{{i + 1}}</mat-card-title>
-                    <mat-card-content>
-                        <p>{{videoComment.comment}}</p>
-                    </mat-card-content>
-                    <mat-card-actions>
-                        <button (click)="play(videoComment.timestamp)" color="accent" mat-stroked-button>
-                            Jump to Scene
-                        </button>
-                    </mat-card-actions>
-                </mat-card>
-            </div>
-        </div>
+        <mat-card>
+            <mat-card-content>
+                <div fxLayout="column" fxLayout.gt-md="row">
+                    <div>
+                        <youtube-player #youtubePlayer [videoId]="dto.basketplanGame.youtubeId"></youtube-player>
+                    </div>
+                    <div fxFlex="stretch" id="video-comments-container">
+                        <mat-card *ngFor="let videoComment of dto.videoComments; index as i;">
+                            <mat-card-title>Video Comment #{{i + 1}}</mat-card-title>
+                            <mat-card-content>
+                                <p>{{videoComment.comment}}</p>
+                            </mat-card-content>
+                            <mat-card-actions>
+                                <button (click)="play(videoComment.timestamp)" color="accent" mat-stroked-button>
+                                    Jump to Scene
+                                </button>
+                            </mat-card-actions>
+                        </mat-card>
+                    </div>
+                </div>
+            </mat-card-content>
+        </mat-card>
     </div>
 </div>
