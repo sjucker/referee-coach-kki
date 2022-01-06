@@ -3,8 +3,7 @@ p {
 }
 
 .reportee {
-    font-weight: bold;
-    font-style: italic;
+    color: #c2185b;
 }
 
 .spacer {

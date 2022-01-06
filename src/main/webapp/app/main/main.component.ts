@@ -22,7 +22,7 @@ interface ReporteeSelection {
     styleUrls: ['./main.component.css']
 })
 export class MainComponent implements OnInit {
-    displayedColumns: string[] = ['date', 'gameNumber', 'competition', 'teams', 'coach', 'reportee', 'edit', 'copy', 'view', 'delete'];
+    displayedColumns: string[] = ['finished', 'date', 'gameNumber', 'competition', 'teams', 'coach', 'reportee', 'edit', 'view', 'copy', 'delete'];
     videoReportDtos: MatTableDataSource<VideoReportDTO> = new MatTableDataSource<VideoReportDTO>([]);
 
     gameNumberInput: string = '';
