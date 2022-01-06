@@ -20,6 +20,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Stream;
 
 import static org.springframework.data.domain.Sort.Order.desc;
 import static org.springframework.data.domain.Sort.by;
@@ -116,12 +117,13 @@ public class VideoReportService {
                     simpleMessage.setSubject(simpleMessage.getSubject() + " (%s)".formatted(referee.getEmail()));
                 } else {
                     simpleMessage.setTo(referee.getEmail());
-                    simpleMessage.setCc(videoReport.getReporter().getEmail(),
-                                        "fabrizio.pizio@swissbasketball.ch",
-                                        "fergar273@gmail.com");
+                    // make sure Fabrizio does not receive mail twice when he is the reporter
+                    simpleMessage.setCc(Stream.of(videoReport.getReporter().getEmail(), "fabrizio.pizio@swissbasketball.ch")
+                                              .distinct()
+                                              .toArray(String[]::new));
                 }
 
-                simpleMessage.setText("Hi %s\n\nYour video report is ready.\nPlease visit: %s/#/view/%s".formatted(referee.getName(),
+                simpleMessage.setText("Hi %s%n%nYour video report is ready.%nPlease visit: %s/#/view/%s".formatted(referee.getName(),
                                                                                                                    properties.getBaseUrl(),
                                                                                                                    dto.id()));
 
