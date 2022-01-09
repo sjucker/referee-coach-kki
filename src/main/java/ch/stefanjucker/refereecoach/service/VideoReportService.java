@@ -156,7 +156,9 @@ public class VideoReportService {
     }
 
     public List<VideoReportDTO> findAll() {
-        return videoReportRepository.findAll(by(desc("basketplanGame.date")))
+        return videoReportRepository.findAll(by(desc("basketplanGame.date"),
+                                                desc("basketplanGame.gameNumber"),
+                                                desc("reportee")))
                                     .stream()
                                     .map(DTO_MAPPER::toDTO)
                                     .toList();
