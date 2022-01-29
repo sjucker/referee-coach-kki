@@ -4,19 +4,19 @@ import ch.stefanjucker.refereecoach.domain.BasketplanGame;
 import ch.stefanjucker.refereecoach.domain.Referee;
 import ch.stefanjucker.refereecoach.domain.User;
 import ch.stefanjucker.refereecoach.domain.VideoComment;
+import ch.stefanjucker.refereecoach.domain.VideoCommentReply;
 import ch.stefanjucker.refereecoach.domain.VideoReport;
 import ch.stefanjucker.refereecoach.dto.BasketplanGameDTO;
 import ch.stefanjucker.refereecoach.dto.RefereeDTO;
 import ch.stefanjucker.refereecoach.dto.ReporterDTO;
 import ch.stefanjucker.refereecoach.dto.VideoCommentDTO;
+import ch.stefanjucker.refereecoach.dto.VideoCommentReplyDTO;
 import ch.stefanjucker.refereecoach.dto.VideoReportDTO;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.factory.Mappers;
 
-import java.util.ArrayList;
-
-import static java.util.stream.Collectors.toCollection;
+import java.util.List;
 
 @Mapper
 public interface DTOMapper {
@@ -27,7 +27,25 @@ public interface DTOMapper {
 
     ReporterDTO toDTO(User user);
 
-    VideoReportDTO toDTO(VideoReport videoReport);
+    default VideoReportDTO toDTO(VideoReport videoReport) {
+        return toDTO(videoReport, List.of());
+    }
+
+    @Mapping(target = "videoComments", source = "videoCommentDTOs")
+    VideoReportDTO toDTO(VideoReport videoReport, List<VideoCommentDTO> videoCommentDTOs);
+
+    default VideoCommentDTO toDTO(VideoComment videoComment) {
+        return toDTO(videoComment, List.of());
+    }
+
+    @Mapping(target = "replies", source = "replyDTOs")
+    VideoCommentDTO toDTO(VideoComment videoComment, List<VideoCommentReplyDTO> replyDTOs);
+
+    VideoComment fromDTO(VideoCommentDTO dto, String videoReportId);
+
+    VideoCommentReplyDTO toDTO(VideoCommentReply videoCommentReply);
+
+    List<VideoCommentReplyDTO> toDTO(List<VideoCommentReply> videoCommentReply);
 
     @Mapping(target = "id", ignore = true)
     @Mapping(target = "reporter", ignore = true)
@@ -35,11 +53,17 @@ public interface DTOMapper {
     @Mapping(target = "finished", ignore = true)
     VideoReport copy(VideoReport videoReport);
 
+    @Mapping(target = "id", ignore = true)
+    @Mapping(target = "videoReportId", ignore = true)
+    VideoComment copy(VideoComment videoComment);
+
     BasketplanGameDTO toDTO(BasketplanGame basketplanGame);
 
     BasketplanGame fromDTO(BasketplanGameDTO dto);
 
-    VideoComment fromDTO(VideoCommentDTO dto);
+    @Mapping(target = "email", ignore = true)
+    @Mapping(target = "level", ignore = true)
+    Referee fromDTO(RefereeDTO refereeDTO);
 
     default void update(VideoReportDTO dto, VideoReport videoReport) {
         videoReport.setImageComment(dto.imageComment());
@@ -48,12 +72,6 @@ public interface DTOMapper {
         videoReport.setGameManagementComment(dto.gameManagementComment());
         videoReport.setPointsToKeepComment(dto.pointsToKeepComment());
         videoReport.setPointsToImproveComment(dto.pointsToImproveComment());
-
-        videoReport.setVideoComments(dto.videoComments()
-                                        .stream()
-                                        .map(this::fromDTO)
-                                        .collect(toCollection(ArrayList::new)));
-
         videoReport.setFinished(dto.finished());
     }
 

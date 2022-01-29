@@ -117,12 +117,15 @@ export class VideoReportComponent implements OnInit, AfterViewInit, OnDestroy {
 
     addVideoComment(): void {
         this.report!.videoComments.push({
+            id: undefined,
             comment: '',
-            timestamp: Math.round(this.youtube!.getCurrentTime())
+            timestamp: Math.round(this.youtube!.getCurrentTime()),
+            replies: []
         })
     }
 
     deleteComment(videoComment: VideoCommentDTO) {
+        this.onChange();
         this.report!.videoComments.splice(this.report!.videoComments.indexOf(videoComment), 1);
     }
 

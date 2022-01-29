@@ -59,8 +59,17 @@ export interface UserDTO {
 }
 
 export interface VideoCommentDTO {
+    id?: number;
     timestamp: number;
     comment: string;
+    replies: VideoCommentReplyDTO[];
+}
+
+export interface VideoCommentReplyDTO {
+    id: number;
+    repliedBy: string;
+    repliedAt: Date;
+    reply: string;
 }
 
 export interface VideoReportDTO {
