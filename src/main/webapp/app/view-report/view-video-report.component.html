@@ -80,7 +80,7 @@
                                 <div *ngFor="let reply of videoComment.replies">
                                     <div>
                                         <span class="repliedBy">{{reply.repliedBy}}</span>
-                                        <span class="repliedAt">{{reply.repliedAt | date:'dd.MM.yyyy HH:mm'}}</span>
+                                        <span class="repliedAt">{{reply.repliedAt | date:'dd.MM.yyyy'}}</span>
                                     </div>
                                     <p class="reply">{{reply.reply}}</p>
                                 </div>
