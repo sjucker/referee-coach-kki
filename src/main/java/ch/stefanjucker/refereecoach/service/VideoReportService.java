@@ -2,9 +2,15 @@ package ch.stefanjucker.refereecoach.service;
 
 import ch.stefanjucker.refereecoach.configuration.RefereeCoachProperties;
 import ch.stefanjucker.refereecoach.domain.User;
+import ch.stefanjucker.refereecoach.domain.VideoComment;
+import ch.stefanjucker.refereecoach.domain.VideoCommentReply;
 import ch.stefanjucker.refereecoach.domain.VideoReport;
+import ch.stefanjucker.refereecoach.domain.repository.VideoCommentReplyRepository;
+import ch.stefanjucker.refereecoach.domain.repository.VideoCommentRepository;
 import ch.stefanjucker.refereecoach.domain.repository.VideoReportRepository;
 import ch.stefanjucker.refereecoach.dto.Reportee;
+import ch.stefanjucker.refereecoach.dto.VideoCommentDTO;
+import ch.stefanjucker.refereecoach.dto.VideoCommentReplyDTO;
 import ch.stefanjucker.refereecoach.dto.VideoReportDTO;
 import ch.stefanjucker.refereecoach.mapper.DTOMapper;
 import ch.stefanjucker.refereecoach.service.BasketplanService.Federation;
@@ -16,12 +22,17 @@ import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 import java.util.stream.Stream;
 
+import static java.util.stream.Collectors.toCollection;
 import static org.springframework.data.domain.Sort.Order.desc;
 import static org.springframework.data.domain.Sort.by;
 
@@ -32,17 +43,23 @@ public class VideoReportService {
     private static final DTOMapper DTO_MAPPER = DTOMapper.INSTANCE;
 
     private final VideoReportRepository videoReportRepository;
+    private final VideoCommentRepository videoCommentRepository;
+    private final VideoCommentReplyRepository videoCommentReplyRepository;
     private final BasketplanService basketplanService;
     private final JavaMailSender mailSender;
     private final RefereeCoachProperties properties;
     private final Environment environment;
 
     public VideoReportService(VideoReportRepository videoReportRepository,
+                              VideoCommentRepository videoCommentRepository,
+                              VideoCommentReplyRepository videoCommentReplyRepository,
                               BasketplanService basketplanService,
                               JavaMailSender mailSender,
                               RefereeCoachProperties properties,
                               Environment environment) {
         this.videoReportRepository = videoReportRepository;
+        this.videoCommentRepository = videoCommentRepository;
+        this.videoCommentReplyRepository = videoCommentReplyRepository;
         this.basketplanService = basketplanService;
         this.mailSender = mailSender;
         this.properties = properties;
@@ -59,7 +76,6 @@ public class VideoReportService {
         videoReport.setBasketplanGame(basketplanGame);
         videoReport.setReportee(reportee);
         videoReport.setReporter(user);
-        videoReport.setVideoComments(new ArrayList<>());
         videoReport.setFinished(false);
 
         return DTO_MAPPER.toDTO(videoReportRepository.save(videoReport));
@@ -73,8 +89,16 @@ public class VideoReportService {
         copy.setReporter(user);
         copy.setReportee(reportee);
         copy.setFinished(false);
+        var newVideoReport = videoReportRepository.save(copy);
 
-        return DTO_MAPPER.toDTO(videoReportRepository.save(copy));
+        List<VideoCommentDTO> newComments = new ArrayList<>();
+        for (var videoComment : videoCommentRepository.findByVideoReportId(sourceId)) {
+            var commentCopy = DTO_MAPPER.copy(videoComment);
+            commentCopy.setVideoReportId(newVideoReport.getId());
+            newComments.add(DTO_MAPPER.toDTO(videoCommentRepository.save(commentCopy)));
+        }
+
+        return DTO_MAPPER.toDTO(newVideoReport, newComments);
     }
 
     private String getUuid() {
@@ -86,6 +110,7 @@ public class VideoReportService {
         return uuid;
     }
 
+    @Transactional
     public VideoReportDTO update(String id, VideoReportDTO dto, User user) {
         var videoReport = videoReportRepository.findById(id).orElseThrow();
         if (!videoReport.getReporter().getEmail().equals(user.getEmail())) {
@@ -100,6 +125,17 @@ public class VideoReportService {
 
         DTO_MAPPER.update(dto, videoReport);
         videoReport = videoReportRepository.save(videoReport);
+        Set<Long> existingVideoCommentIds = videoCommentRepository.findByVideoReportId(id).stream()
+                                                                  .map(VideoComment::getId)
+                                                                  .collect(toCollection(HashSet::new));
+
+        List<VideoCommentDTO> comments = new ArrayList<>();
+        for (var videoCommentDTO : dto.videoComments()) {
+            var videoComment = videoCommentRepository.save(DTO_MAPPER.fromDTO(videoCommentDTO, dto.id()));
+            comments.add(DTO_MAPPER.toDTO(videoComment));
+            existingVideoCommentIds.remove(videoComment.getId());
+        }
+        videoCommentRepository.deleteAllById(existingVideoCommentIds);
 
         if (videoReport.isFinished()) {
             SimpleMailMessage simpleMessage = new SimpleMailMessage();
@@ -132,12 +168,19 @@ public class VideoReportService {
                 log.error("could not send email to: " + Arrays.toString(simpleMessage.getTo()), e);
             }
         }
-        return dto;
+        return DTO_MAPPER.toDTO(videoReport, comments);
     }
 
     public Optional<VideoReportDTO> find(String id) {
+
+        List<VideoCommentDTO> videoCommentDTOs = new ArrayList<>();
+        for (var videoComment : videoCommentRepository.findByVideoReportId(id)) {
+            var replies = videoCommentReplyRepository.findByVideoCommentIdOrderByRepliedAt(videoComment.getId());
+            videoCommentDTOs.add(DTO_MAPPER.toDTO(videoComment, DTO_MAPPER.toDTO(replies)));
+        }
+
         return videoReportRepository.findById(id)
-                                    .map(DTO_MAPPER::toDTO);
+                                    .map(videoReport -> DTO_MAPPER.toDTO(videoReport, videoCommentDTOs));
     }
 
     public void delete(String id, User user) {
@@ -151,6 +194,19 @@ public class VideoReportService {
         }
     }
 
+    public VideoCommentReplyDTO reply(String videoReportId, Long videoCommentId, String reply, User user) {
+
+        String repliedBy;
+        if (user != null) {
+            repliedBy = user.getName();
+        } else {
+            var videoReport = videoReportRepository.findById(videoReportId).orElseThrow();
+            repliedBy = videoReport.relevantReferee().getName();
+        }
+
+        return DTO_MAPPER.toDTO(videoCommentReplyRepository.save(new VideoCommentReply(null, repliedBy, LocalDateTime.now(), reply, videoCommentId)));
+    }
+
     private boolean isUnfinishedReportOwnedByUser(VideoReport videoReport, User user) {
         return !videoReport.isFinished() && videoReport.getReporter().getEmail().equals(user.getEmail());
     }
@@ -160,7 +216,7 @@ public class VideoReportService {
                                                 desc("basketplanGame.gameNumber"),
                                                 desc("reportee")))
                                     .stream()
-                                    .map(DTO_MAPPER::toDTO)
+                                    .map(DTO_MAPPER::toDTO) // no need to fill the comments as well, not needed in report overview
                                     .toList();
     }
 

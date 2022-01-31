@@ -6,9 +6,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
-import javax.persistence.CollectionTable;
 import javax.persistence.Column;
-import javax.persistence.ElementCollection;
 import javax.persistence.Embedded;
 import javax.persistence.Entity;
 import javax.persistence.Enumerated;
@@ -16,10 +14,8 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
-import java.util.List;
 
 import static javax.persistence.EnumType.STRING;
-import static javax.persistence.FetchType.EAGER;
 
 @Entity
 @Table(name = "video_report")
@@ -57,12 +53,7 @@ public class VideoReport {
     @Column(length = 1024, name = "points_to_improve_comment")
     private String pointsToImproveComment;
 
-    @ElementCollection(fetch = EAGER)
-    @CollectionTable(name = "video_report_comment", joinColumns = @JoinColumn(name = "video_report_id"))
-    private List<VideoComment> videoComments;
-
     @Column(nullable = false)
-    @CollectionTable()
     private boolean finished;
 
     public Referee relevantReferee() {

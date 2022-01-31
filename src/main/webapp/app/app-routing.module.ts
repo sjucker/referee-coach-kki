@@ -8,6 +8,11 @@ import {AuthenticationGuard} from "./service/authentication.guard";
 import {SettingsComponent} from "./settings/settings.component";
 import {UnsavedChangesGuard} from "./service/unsaved-changes.guard";
 
+export const LOGIN_PATH = 'login'
+export const EDIT_PATH = 'edit'
+export const VIEW_PATH = 'view'
+export const SETTINGS_PATH = 'settings'
+
 const routes: Routes = [
     {
         path: '',
@@ -15,22 +20,22 @@ const routes: Routes = [
         canActivate: [AuthenticationGuard]
     },
     {
-        path: 'view/:id',
+        path: VIEW_PATH + '/:id',
         component: ViewVideoReportComponent
         // allowed without being logged in, anonymous user only needs to know the report's ID (which should be hard to guess)
     },
     {
-        path: 'edit/:id',
+        path: EDIT_PATH + '/:id',
         component: VideoReportComponent,
         canActivate: [AuthenticationGuard],
         canDeactivate: [UnsavedChangesGuard]
     },
     {
-        path: 'login',
+        path: LOGIN_PATH,
         component: LoginComponent
     },
     {
-        path: 'settings',
+        path: SETTINGS_PATH,
         component: SettingsComponent,
         canActivate: [AuthenticationGuard]
     }

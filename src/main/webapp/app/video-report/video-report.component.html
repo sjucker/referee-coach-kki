@@ -122,9 +122,7 @@
     </mat-card>
 
     <mat-card *ngIf="report && report.basketplanGame.youtubeId">
-        <mat-card-header>
-            <mat-card-title>Video</mat-card-title>
-        </mat-card-header>
+        <mat-card-title>Video</mat-card-title>
         <mat-card-content>
             <div fxLayout="column" fxLayout.gt-sm="row">
                 <div fxLayout="column">
@@ -166,9 +164,10 @@
     </mat-card>
 
     <mat-card *ngIf="notFound">
-        <mat-card-header>
-            <mat-card-title>Video report not found</mat-card-title>
-        </mat-card-header>
+        <mat-card-title>Not found</mat-card-title>
+        <mat-card-content>
+            Video Report was not found...
+        </mat-card-content>
     </mat-card>
 
     <!-- here so we know the current width of the window and can resize the YouTube video accordingly -->

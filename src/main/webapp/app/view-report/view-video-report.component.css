@@ -14,3 +14,12 @@ p {
     max-height: 440px;
     overflow-y: auto;
 }
+
+.reply {
+    margin-left: 10px;
+}
+
+.repliedAt {
+    margin-left: 10px;
+    font-size: 12px;
+}

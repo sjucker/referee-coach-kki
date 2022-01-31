@@ -1,8 +1,11 @@
 package ch.stefanjucker.refereecoach.rest;
 
+import ch.stefanjucker.refereecoach.domain.User;
 import ch.stefanjucker.refereecoach.domain.repository.UserRepository;
 import ch.stefanjucker.refereecoach.dto.CopyVideoReportDTO;
+import ch.stefanjucker.refereecoach.dto.CreateCommentReplyDTO;
 import ch.stefanjucker.refereecoach.dto.CreateVideoReportDTO;
+import ch.stefanjucker.refereecoach.dto.VideoCommentReplyDTO;
 import ch.stefanjucker.refereecoach.dto.VideoReportDTO;
 import ch.stefanjucker.refereecoach.service.VideoReportService;
 import lombok.extern.slf4j.Slf4j;
@@ -76,6 +79,20 @@ public class VideoReportResource {
         var user = userRepository.findByEmail(principal.getUsername()).orElseThrow();
         log.info("PUT /video-report/{} {} ({})", id, dto, user);
         return ResponseEntity.ok(videoReportService.update(id, dto, user));
+    }
+
+    @PostMapping(path = "/{id}/comment/{commentId}/reply")
+    public ResponseEntity<VideoCommentReplyDTO> postReply(@AuthenticationPrincipal UserDetails principal,
+                                                          @PathVariable String id,
+                                                          @PathVariable Long commentId,
+                                                          @RequestBody @Valid CreateCommentReplyDTO dto) {
+        User user = null;
+        if (principal != null) {
+            user = userRepository.findByEmail(principal.getUsername()).orElseThrow();
+        }
+        log.info("POST /video-report/{}/comment/{}/reply {} {}", id, commentId, dto, user);
+
+        return ResponseEntity.ok(videoReportService.reply(id, commentId, dto.reply(), user));
     }
 
     @DeleteMapping(path = "/{id}")

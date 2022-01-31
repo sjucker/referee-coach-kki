@@ -2,8 +2,11 @@ import {AfterViewInit, Component, ElementRef, OnDestroy, OnInit, ViewChild} from
 import {ActivatedRoute} from "@angular/router";
 import {VideoReportService} from "../service/video-report.service";
 import {YouTubePlayer} from "@angular/youtube-player";
-import {OfficiatingMode, Reportee, VideoReportDTO} from "../rest";
+import {OfficiatingMode, Reportee, VideoCommentDTO, VideoReportDTO} from "../rest";
 import {AuthenticationService} from "../service/authentication.service";
+import {MatDialog} from "@angular/material/dialog";
+import {VideoReportReplyDialogComponent} from "../video-report-reply-dialog/video-report-reply-dialog.component";
+import {MatSnackBar} from "@angular/material/snack-bar";
 
 @Component({
     selector: 'app-view-video-report',
@@ -19,10 +22,13 @@ export class ViewVideoReportComponent implements OnInit, AfterViewInit, OnDestro
     videoHeight?: number;
 
     dto?: VideoReportDTO;
+    notFound = false;
 
     constructor(private route: ActivatedRoute,
                 private videoReportService: VideoReportService,
-                private authenticationService: AuthenticationService) {
+                private authenticationService: AuthenticationService,
+                public dialog: MatDialog,
+                public snackBar: MatSnackBar) {
     }
 
     ngOnInit(): void {
@@ -35,6 +41,9 @@ export class ViewVideoReportComponent implements OnInit, AfterViewInit, OnDestro
         this.videoReportService.getVideoReport(this.route.snapshot.paramMap.get('id')!).subscribe(
             result => {
                 this.dto = result;
+            },
+            error => {
+                this.notFound = true;
             }
         );
     }
@@ -85,4 +94,28 @@ export class ViewVideoReportComponent implements OnInit, AfterViewInit, OnDestro
         return this.authenticationService.isLoggedIn();
     }
 
+    reply(comment: VideoCommentDTO): void {
+        this.dialog.open(VideoReportReplyDialogComponent, {
+            data: this.dto,
+            disableClose: true,
+            hasBackdrop: true,
+        }).afterClosed().subscribe(reply => {
+            if (reply) {
+                this.videoReportService.replyToComment(this.dto!, comment, reply).subscribe(reply => {
+                        comment.replies.push(reply);
+                    },
+                    error => {
+                        this.showMessage("Could not save reply...");
+                    })
+            }
+        });
+    }
+
+    private showMessage(message: string) {
+        this.snackBar.open(message, undefined, {
+            duration: 3000,
+            verticalPosition: "top",
+            horizontalPosition: "center"
+        });
+    }
 }

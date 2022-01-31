@@ -24,6 +24,10 @@ export interface CopyVideoReportDTO {
     reportee: Reportee;
 }
 
+export interface CreateCommentReplyDTO {
+    reply: string;
+}
+
 export interface CreateVideoReportDTO {
     federation: Federation;
     gameNumber: string;
@@ -59,8 +63,17 @@ export interface UserDTO {
 }
 
 export interface VideoCommentDTO {
+    id?: number;
     timestamp: number;
     comment: string;
+    replies: VideoCommentReplyDTO[];
+}
+
+export interface VideoCommentReplyDTO {
+    id: number;
+    repliedBy: string;
+    repliedAt: Date;
+    reply: string;
 }
 
 export interface VideoReportDTO {
