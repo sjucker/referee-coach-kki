@@ -24,6 +24,10 @@ export interface CopyVideoReportDTO {
     reportee: Reportee;
 }
 
+export interface CreateCommentReplyDTO {
+    reply: string;
+}
+
 export interface CreateVideoReportDTO {
     federation: Federation;
     gameNumber: string;

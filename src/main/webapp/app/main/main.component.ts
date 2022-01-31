@@ -11,6 +11,7 @@ import {VideoReportCopyDialogComponent} from "../video-report-copy-dialog/video-
 import {VideoReportDeleteDialogComponent} from "../video-report-delete-dialog/video-report-delete-dialog.component";
 import getVideoId from "get-video-id";
 import {MatPaginator} from "@angular/material/paginator";
+import {EDIT_PATH, LOGIN_PATH, VIEW_PATH} from "../app-routing.module";
 
 interface ReporteeSelection {
     reportee: Reportee,
@@ -143,7 +144,7 @@ export class MainComponent implements OnInit {
         if (this.game && this.youtubeId && this.reportee) {
             this.videoReportService.createVideoReport(this.game.gameNumber, this.youtubeId, this.reportee).subscribe(
                 response => {
-                    this.router.navigate(['/edit/' + response.id]);
+                    this.edit(response);
                 },
                 error => {
                     this.snackBar.open("An unexpected error occurred, video report could not be created.", undefined, {
@@ -179,7 +180,7 @@ export class MainComponent implements OnInit {
     }
 
     edit(report: VideoReportDTO) {
-        this.router.navigate(['edit', report.id]);
+        this.router.navigate([EDIT_PATH, report.id]);
     }
 
     copy(report: VideoReportDTO) {
@@ -187,7 +188,7 @@ export class MainComponent implements OnInit {
             if (reportee) {
                 this.videoReportService.copyVideoReport(report.id, reportee).subscribe(
                     response => {
-                        this.router.navigate(['/edit/' + response.id]);
+                        this.edit(response);
                     },
                     error => {
                         this.snackBar.open("An unexpected error occurred, video report could not be copied.", undefined, {
@@ -202,7 +203,7 @@ export class MainComponent implements OnInit {
     }
 
     view(report: VideoReportDTO) {
-        this.router.navigate(['view', report.id]);
+        this.router.navigate([VIEW_PATH, report.id]);
     }
 
     isDeletable(report: VideoReportDTO): boolean {
@@ -233,4 +234,8 @@ export class MainComponent implements OnInit {
         });
     }
 
+    logout() {
+        this.authenticationService.logout();
+        this.router.navigate([LOGIN_PATH])
+    }
 }

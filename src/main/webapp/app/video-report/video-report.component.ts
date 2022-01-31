@@ -9,6 +9,7 @@ import {VideoReportFinishDialogComponent} from "../video-report-finish-dialog/vi
 import {MatSnackBar} from "@angular/material/snack-bar";
 import {Observable, of} from "rxjs";
 import {VideoReportUnsavedChangesDialogComponent} from "../video-report-unsaved-changes-dialog/video-report-unsaved-changes-dialog.component";
+import {VIEW_PATH} from "../app-routing.module";
 
 @Component({
     selector: 'app-video-report',
@@ -47,7 +48,7 @@ export class VideoReportComponent implements OnInit, AfterViewInit, OnDestroy {
             this.videoReportService.getVideoReport(id).subscribe(
                 dto => {
                     if (dto.finished) {
-                        this.router.navigate(['/view/' + dto.id]);
+                        this.router.navigate([VIEW_PATH, dto.id]);
                     }
                     this.report = dto;
                 },
@@ -103,7 +104,7 @@ export class VideoReportComponent implements OnInit, AfterViewInit, OnDestroy {
                         response => {
                             this.unsavedChanges = false;
                             if (response.finished) {
-                                this.router.navigate(['/view/' + response.id]);
+                                this.router.navigate([VIEW_PATH, response.id]);
                             }
                         },
                         error => {

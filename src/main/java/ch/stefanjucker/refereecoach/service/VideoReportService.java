@@ -3,12 +3,14 @@ package ch.stefanjucker.refereecoach.service;
 import ch.stefanjucker.refereecoach.configuration.RefereeCoachProperties;
 import ch.stefanjucker.refereecoach.domain.User;
 import ch.stefanjucker.refereecoach.domain.VideoComment;
+import ch.stefanjucker.refereecoach.domain.VideoCommentReply;
 import ch.stefanjucker.refereecoach.domain.VideoReport;
 import ch.stefanjucker.refereecoach.domain.repository.VideoCommentReplyRepository;
 import ch.stefanjucker.refereecoach.domain.repository.VideoCommentRepository;
 import ch.stefanjucker.refereecoach.domain.repository.VideoReportRepository;
 import ch.stefanjucker.refereecoach.dto.Reportee;
 import ch.stefanjucker.refereecoach.dto.VideoCommentDTO;
+import ch.stefanjucker.refereecoach.dto.VideoCommentReplyDTO;
 import ch.stefanjucker.refereecoach.dto.VideoReportDTO;
 import ch.stefanjucker.refereecoach.mapper.DTOMapper;
 import ch.stefanjucker.refereecoach.service.BasketplanService.Federation;
@@ -21,6 +23,7 @@ import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
@@ -189,6 +192,19 @@ public class VideoReportService {
             log.error("user ({}) tried to delete video report ({}), but is not authorized to do so", user, videoReport);
             throw new IllegalStateException("user is not allowed to delete this video-report!");
         }
+    }
+
+    public VideoCommentReplyDTO reply(String videoReportId, Long videoCommentId, String reply, User user) {
+
+        String repliedBy;
+        if (user != null) {
+            repliedBy = user.getName();
+        } else {
+            var videoReport = videoReportRepository.findById(videoReportId).orElseThrow();
+            repliedBy = videoReport.relevantReferee().getName();
+        }
+
+        return DTO_MAPPER.toDTO(videoCommentReplyRepository.save(new VideoCommentReply(null, repliedBy, LocalDateTime.now(), reply, videoCommentId)));
     }
 
     private boolean isUnfinishedReportOwnedByUser(VideoReport videoReport, User user) {

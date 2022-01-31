@@ -80,8 +80,10 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .antMatchers(GET, "/*").permitAll()
                 .antMatchers(OPTIONS, "/api/**").permitAll()
                 .antMatchers(POST, "/api/authenticate").permitAll()
-                //  read-only report also available for anonymous users
+                // read-only report also available for anonymous users
                 .antMatchers(GET, "/api/video-report/*").permitAll()
+                // referees are allowed to reply to comments without login
+                .antMatchers(POST, "/api/video-report/*/comment/*/reply").permitAll()
                 .antMatchers("/api/**").authenticated()
             .and().exceptionHandling()
             .and().sessionManagement().sessionCreationPolicy(STATELESS);

@@ -1,7 +1,16 @@
 import {Injectable} from '@angular/core';
 import {HttpClient} from "@angular/common/http";
 import {Observable} from "rxjs";
-import {CopyVideoReportDTO, CreateVideoReportDTO, Federation, Reportee, VideoReportDTO} from "../rest";
+import {
+    CopyVideoReportDTO,
+    CreateCommentReplyDTO,
+    CreateVideoReportDTO,
+    Federation,
+    Reportee,
+    VideoCommentDTO,
+    VideoCommentReplyDTO,
+    VideoReportDTO
+} from "../rest";
 import {environment} from "../../environments/environment";
 
 export function getReferee(report: VideoReportDTO): string {
@@ -59,4 +68,10 @@ export class VideoReportService {
         return this.httpClient.delete<any>(`${this.baseUrl}/video-report/${dto.id}`);
     }
 
+    replyToComment(dto: VideoReportDTO, comment: VideoCommentDTO, reply: string): Observable<VideoCommentReplyDTO> {
+        const request: CreateCommentReplyDTO = {
+            reply: reply
+        };
+        return this.httpClient.post<VideoCommentReplyDTO>(`${this.baseUrl}/video-report/${dto.id}/comment/${comment.id}/reply`, request);
+    }
 }

@@ -27,6 +27,10 @@ export class AuthenticationService {
         return this.httpClient.post<LoginResponseDTO>(`${this.baseUrl}/authenticate`, request);
     }
 
+    logout(): void {
+        localStorage.clear();
+    }
+
     changePassword(oldPassword: string, newPassword: string): Observable<any> {
         const request: ChangePasswordRequestDTO = {
             oldPassword: oldPassword,
@@ -36,21 +40,21 @@ export class AuthenticationService {
     }
 
     setCredentials(dto: LoginResponseDTO): void {
-        sessionStorage.setItem(this.token, dto.jwt);
-        sessionStorage.setItem(this.userId, String(dto.id));
+        localStorage.setItem(this.token, dto.jwt);
+        localStorage.setItem(this.userId, String(dto.id));
         if (dto.admin) {
-            sessionStorage.setItem(this.admin, "1");
+            localStorage.setItem(this.admin, "1");
         } else {
-            sessionStorage.removeItem(this.admin);
+            localStorage.removeItem(this.admin);
         }
     }
 
     getAuthorizationToken(): string | null {
-        return sessionStorage.getItem(this.token);
+        return localStorage.getItem(this.token);
     }
 
     getUserId(): number | null {
-        const userId = sessionStorage.getItem(this.userId);
+        const userId = localStorage.getItem(this.userId);
         if (userId) {
             return parseInt(userId);
         }
@@ -58,11 +62,11 @@ export class AuthenticationService {
     }
 
     isLoggedIn(): boolean {
-        return sessionStorage.getItem(this.token) !== null;
+        return localStorage.getItem(this.token) !== null;
     }
 
     isAdmin(): boolean {
-        return this.isLoggedIn() && sessionStorage.getItem(this.admin) !== null;
+        return this.isLoggedIn() && localStorage.getItem(this.admin) !== null;
     }
 
 }
