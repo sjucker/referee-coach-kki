@@ -2,13 +2,13 @@ import {Injectable} from '@angular/core';
 import {HttpClient} from "@angular/common/http";
 import {Observable} from "rxjs";
 import {
+    CommentReplyDTO,
     CopyVideoReportDTO,
-    CreateCommentReplyDTO,
+    CreateRepliesDTO,
     CreateVideoReportDTO,
     Federation,
     Reportee,
-    VideoCommentDTO,
-    VideoCommentReplyDTO,
+    VideoReportDiscussionDTO,
     VideoReportDTO
 } from "../rest";
 import {environment} from "../../environments/environment";
@@ -68,10 +68,14 @@ export class VideoReportService {
         return this.httpClient.delete<any>(`${this.baseUrl}/video-report/${dto.id}`);
     }
 
-    replyToComment(dto: VideoReportDTO, comment: VideoCommentDTO, reply: string): Observable<VideoCommentReplyDTO> {
-        const request: CreateCommentReplyDTO = {
-            reply: reply
+    getVideoReportDiscussion(id: string): Observable<VideoReportDiscussionDTO> {
+        return this.httpClient.get<VideoReportDiscussionDTO>(`${this.baseUrl}/video-report/${id}/discussion`);
+    }
+
+    reply(id: string, replies: CommentReplyDTO[]): Observable<any> {
+        const request: CreateRepliesDTO = {
+            replies: replies
         };
-        return this.httpClient.post<VideoCommentReplyDTO>(`${this.baseUrl}/video-report/${dto.id}/comment/${comment.id}/reply`, request);
+        return this.httpClient.post<CreateRepliesDTO>(`${this.baseUrl}/video-report/${id}/discussion`, request);
     }
 }

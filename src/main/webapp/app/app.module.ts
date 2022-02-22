@@ -36,6 +36,9 @@ import {MatPaginatorModule} from "@angular/material/paginator";
 import {MatProgressBarModule} from "@angular/material/progress-bar";
 import {VideoReportReplyDialogComponent} from './video-report-reply-dialog/video-report-reply-dialog.component';
 import {MatTooltipModule} from "@angular/material/tooltip";
+import { DiscussVideoReportComponent } from './discuss-report/discuss-video-report.component';
+import { DiscussVideoReportUnsavedRepliesDialogComponent } from './discuss-video-report-unsaved-replies-dialog/discuss-video-report-unsaved-replies-dialog.component';
+import { DiscussVideoReportFinishDialogComponent } from './discuss-video-report-finish-dialog/discuss-video-report-finish-dialog.component';
 
 @NgModule({
     declarations: [
@@ -50,6 +53,9 @@ import {MatTooltipModule} from "@angular/material/tooltip";
         VideoReportDeleteDialogComponent,
         VideoReportUnsavedChangesDialogComponent,
         VideoReportReplyDialogComponent,
+        DiscussVideoReportComponent,
+        DiscussVideoReportUnsavedRepliesDialogComponent,
+        DiscussVideoReportFinishDialogComponent,
     ],
     imports: [
         BrowserModule,

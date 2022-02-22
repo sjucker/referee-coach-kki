@@ -7,10 +7,13 @@ import {LoginComponent} from "./login/login.component";
 import {AuthenticationGuard} from "./service/authentication.guard";
 import {SettingsComponent} from "./settings/settings.component";
 import {UnsavedChangesGuard} from "./service/unsaved-changes.guard";
+import {DiscussVideoReportComponent} from "./discuss-report/discuss-video-report.component";
+import {UnsavedRepliesGuard} from "./service/unsaved-replies.guard";
 
 export const LOGIN_PATH = 'login'
 export const EDIT_PATH = 'edit'
 export const VIEW_PATH = 'view'
+export const DISCUSS_PATH = 'discuss'
 export const SETTINGS_PATH = 'settings'
 
 const routes: Routes = [
@@ -23,6 +26,12 @@ const routes: Routes = [
         path: VIEW_PATH + '/:id',
         component: ViewVideoReportComponent
         // allowed without being logged in, anonymous user only needs to know the report's ID (which should be hard to guess)
+    },
+    {
+        path: DISCUSS_PATH + '/:id',
+        component: DiscussVideoReportComponent,
+        // allowed without being logged in, anonymous user only needs to know the report's ID (which should be hard to guess)
+        canDeactivate: [UnsavedRepliesGuard]
     },
     {
         path: EDIT_PATH + '/:id',

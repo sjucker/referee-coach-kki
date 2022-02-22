@@ -8,10 +8,11 @@ import ch.stefanjucker.refereecoach.domain.VideoReport;
 import ch.stefanjucker.refereecoach.domain.repository.VideoCommentReplyRepository;
 import ch.stefanjucker.refereecoach.domain.repository.VideoCommentRepository;
 import ch.stefanjucker.refereecoach.domain.repository.VideoReportRepository;
+import ch.stefanjucker.refereecoach.dto.CreateRepliesDTO;
 import ch.stefanjucker.refereecoach.dto.Reportee;
 import ch.stefanjucker.refereecoach.dto.VideoCommentDTO;
-import ch.stefanjucker.refereecoach.dto.VideoCommentReplyDTO;
 import ch.stefanjucker.refereecoach.dto.VideoReportDTO;
+import ch.stefanjucker.refereecoach.dto.VideoReportDiscussionDTO;
 import ch.stefanjucker.refereecoach.mapper.DTOMapper;
 import ch.stefanjucker.refereecoach.service.BasketplanService.Federation;
 import lombok.extern.slf4j.Slf4j;
@@ -159,9 +160,12 @@ public class VideoReportService {
                                               .toArray(String[]::new));
                 }
 
-                simpleMessage.setText("Hi %s%n%nYour video report is ready.%nPlease visit: %s/#/view/%s".formatted(referee.getName(),
-                                                                                                                   properties.getBaseUrl(),
-                                                                                                                   dto.id()));
+                simpleMessage.setText(("Hi %s%n%nYour video report is ready.%nPlease visit: %s/#/view/%s" +
+                        "%nFor discussion of the comments, use the following: %s/#/discuss/%s").formatted(referee.getName(),
+                                                                                                          properties.getBaseUrl(),
+                                                                                                          dto.id(),
+                                                                                                          properties.getBaseUrl(),
+                                                                                                          dto.id()));
 
                 mailSender.send(simpleMessage);
             } catch (MailException e) {
@@ -194,17 +198,22 @@ public class VideoReportService {
         }
     }
 
-    public VideoCommentReplyDTO reply(String videoReportId, Long videoCommentId, String reply, User user) {
+    public VideoReportDiscussionDTO getVideoReportDiscussion(String videoReportId) {
+        var videoReport = videoReportRepository.findById(videoReportId).orElseThrow();
 
-        String repliedBy;
-        if (user != null) {
-            repliedBy = user.getName();
-        } else {
-            var videoReport = videoReportRepository.findById(videoReportId).orElseThrow();
-            repliedBy = videoReport.relevantReferee().getName();
+        List<VideoCommentDTO> videoCommentDTOs = new ArrayList<>();
+        for (var videoComment : videoCommentRepository.findVideoCommentsByGameNumberAndReporter(videoReport.getBasketplanGame()
+                                                                                                           .getGameNumber(), videoReport.getReporter()
+                                                                                                                                        .getId())) {
+            var replies = videoCommentReplyRepository.findByVideoCommentIdOrderByRepliedAt(videoComment.getId());
+            videoCommentDTOs.add(DTO_MAPPER.toDTO(videoComment, DTO_MAPPER.toDTO(replies)));
         }
 
-        return DTO_MAPPER.toDTO(videoCommentReplyRepository.save(new VideoCommentReply(null, repliedBy, LocalDateTime.now(), reply, videoCommentId)));
+        return new VideoReportDiscussionDTO(videoReport.getId(),
+                                            DTO_MAPPER.toDTO(videoReport.getBasketplanGame()),
+                                            DTO_MAPPER.toDTO(videoReport.getReporter()),
+                                            videoReport.relevantReferee().getName(),
+                                            videoCommentDTOs);
     }
 
     private boolean isUnfinishedReportOwnedByUser(VideoReport videoReport, User user) {
@@ -220,4 +229,53 @@ public class VideoReportService {
                                     .toList();
     }
 
+    public void addReplies(User user, String id, CreateRepliesDTO dto) {
+        var videoReport = videoReportRepository.findById(id).orElseThrow();
+
+        String repliedBy;
+        if (user != null) {
+            repliedBy = user.getName();
+        } else {
+            repliedBy = videoReport.relevantReferee().getName();
+        }
+
+        for (var reply : dto.replies()) {
+            videoCommentReplyRepository.save(new VideoCommentReply(null, repliedBy, LocalDateTime.now(), reply.comment(), reply.commentId()));
+        }
+
+        for (var report : videoReportRepository.findByBasketplanGameGameNumberAndReporterId(videoReport.getBasketplanGame().getGameNumber(),
+                                                                                            videoReport.getReporter().getId())) {
+
+            if (user != null || !report.getId().equals(id)) {
+                sendDiscussionEmail(repliedBy, report.relevantReferee().getEmail(), report.getId());
+            }
+        }
+
+        if (user == null) {
+            sendDiscussionEmail(repliedBy, videoReport.getReporter().getEmail(), videoReport.getId());
+        }
+    }
+
+    private void sendDiscussionEmail(String repliedBy, String recipient, String reportId) {
+        SimpleMailMessage simpleMessage = new SimpleMailMessage();
+        try {
+            simpleMessage.setSubject("[Referee Coach] New Video Report Discussion");
+            simpleMessage.setFrom(environment.getRequiredProperty("spring.mail.username"));
+            simpleMessage.setBcc("stefan.jucker@gmail.com");
+
+            if (properties.isOverrideRecipient()) {
+                simpleMessage.setTo("stefan.jucker@gmail.com");
+                simpleMessage.setSubject(simpleMessage.getSubject() + " (%s)".formatted(recipient));
+            } else {
+                simpleMessage.setTo(recipient);
+            }
+            simpleMessage.setText(("Hi%n%s added new replies for a video report.%nPlease visit: %s/#/discuss/%s").formatted(
+                    repliedBy,
+                    properties.getBaseUrl(),
+                    reportId));
+
+        } catch (MailException e) {
+            log.error("could not send email to: " + Arrays.toString(simpleMessage.getTo()), e);
+        }
+    }
 }
