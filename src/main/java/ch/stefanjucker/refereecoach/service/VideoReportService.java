@@ -43,6 +43,9 @@ public class VideoReportService {
 
     private static final DTOMapper DTO_MAPPER = DTOMapper.INSTANCE;
 
+    private static final String STEFAN_JUCKER_EMAIL = "stefan.jucker@gmail.com";
+    private static final String FABRIZIO_PIZIO_EMAIL = "fabrizio.pizio@swissbasketball.ch";
+
     private final VideoReportRepository videoReportRepository;
     private final VideoCommentRepository videoCommentRepository;
     private final VideoCommentReplyRepository videoCommentReplyRepository;
@@ -147,7 +150,7 @@ public class VideoReportService {
                 simpleMessage.setSubject("[Referee Coach] New Video Report");
                 simpleMessage.setFrom(environment.getRequiredProperty("spring.mail.username"));
                 simpleMessage.setReplyTo(videoReport.getReporter().getEmail());
-                simpleMessage.setBcc("stefan.jucker@gmail.com");
+                simpleMessage.setBcc(STEFAN_JUCKER_EMAIL);
 
                 if (properties.isOverrideRecipient()) {
                     simpleMessage.setTo(videoReport.getReporter().getEmail());
@@ -155,7 +158,7 @@ public class VideoReportService {
                 } else {
                     simpleMessage.setTo(referee.getEmail());
                     // make sure Fabrizio does not receive mail twice when he is the reporter
-                    simpleMessage.setCc(Stream.of(videoReport.getReporter().getEmail(), "fabrizio.pizio@swissbasketball.ch")
+                    simpleMessage.setCc(Stream.of(videoReport.getReporter().getEmail(), FABRIZIO_PIZIO_EMAIL)
                                               .distinct()
                                               .toArray(String[]::new));
                 }
@@ -264,10 +267,10 @@ public class VideoReportService {
         try {
             simpleMessage.setSubject("[Referee Coach] New Video Report Discussion");
             simpleMessage.setFrom(environment.getRequiredProperty("spring.mail.username"));
-            simpleMessage.setBcc("stefan.jucker@gmail.com");
+            simpleMessage.setBcc(STEFAN_JUCKER_EMAIL);
 
             if (properties.isOverrideRecipient()) {
-                simpleMessage.setTo("stefan.jucker@gmail.com");
+                simpleMessage.setTo(STEFAN_JUCKER_EMAIL);
                 simpleMessage.setSubject(simpleMessage.getSubject() + " (%s)".formatted(recipient));
             } else {
                 simpleMessage.setTo(recipient);
