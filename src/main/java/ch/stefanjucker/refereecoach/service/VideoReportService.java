@@ -251,7 +251,10 @@ public class VideoReportService {
             }
         }
 
-        if (user == null) {
+        // user == null => one of the referees replied
+        // user != reporter => another coach replied
+        // in both cases send the reporter
+        if (user == null || !user.getId().equals(videoReport.getReporter().getId())) {
             sendDiscussionEmail(repliedBy, videoReport.getReporter().getEmail(), videoReport.getId());
         }
     }
@@ -269,11 +272,12 @@ public class VideoReportService {
             } else {
                 simpleMessage.setTo(recipient);
             }
-            simpleMessage.setText(("Hi%n%s added new replies for a video report.%nPlease visit: %s/#/discuss/%s").formatted(
-                    repliedBy,
-                    properties.getBaseUrl(),
-                    reportId));
+            simpleMessage.setText("Hi%n%s added new replies to a video report.%nPlease visit: %s/#/discuss/%s".formatted(
+                    repliedBy, properties.getBaseUrl(), reportId));
 
+            log.info("sending email to {}, text: {}", recipient, simpleMessage.getText());
+
+            mailSender.send(simpleMessage);
         } catch (MailException e) {
             log.error("could not send email to: " + Arrays.toString(simpleMessage.getTo()), e);
         }
