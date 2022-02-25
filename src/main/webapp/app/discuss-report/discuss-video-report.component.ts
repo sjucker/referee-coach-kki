@@ -4,7 +4,7 @@ import {VideoReportService} from "../service/video-report.service";
 import {AuthenticationService} from "../service/authentication.service";
 import {MatDialog} from "@angular/material/dialog";
 import {MatSnackBar} from "@angular/material/snack-bar";
-import {CommentReplyDTO, OfficiatingMode, VideoCommentDTO, VideoReportDiscussionDTO} from "../rest";
+import {CommentReplyDTO, OfficiatingMode, VideoCommentDTO, VideoCommentReplyDTO, VideoReportDiscussionDTO} from "../rest";
 import {YouTubePlayer} from "@angular/youtube-player";
 import {VideoReportReplyDialogComponent} from "../video-report-reply-dialog/video-report-reply-dialog.component";
 import {Observable, of} from "rxjs";
@@ -148,4 +148,8 @@ export class DiscussVideoReportComponent implements OnInit, AfterViewInit, OnDes
         }
     }
 
+    deleteReply(videoComment: VideoCommentDTO, reply: VideoCommentReplyDTO) {
+        videoComment.replies.splice(videoComment.replies.indexOf(reply), 1)
+        this.replies = this.replies.filter(r => r.comment !== reply.reply && r.commentId !== videoComment.id);
+    }
 }

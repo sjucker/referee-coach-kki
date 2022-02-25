@@ -59,6 +59,9 @@
                                     <div [class]="reply.id == 0 ? 'new-reply' : ''">
                                         <span class="repliedBy">{{reply.repliedBy}}</span>
                                         <span class="repliedAt">{{reply.repliedAt | date:'dd.MM.yyyy'}}</span>
+                                        <button mat-icon-button (click)="deleteReply(videoComment, reply)" *ngIf="reply.id == 0">
+                                            <mat-icon color="primary">delete</mat-icon>
+                                        </button>
                                     </div>
                                     <p class="reply">{{reply.reply}}</p>
                                 </div>
