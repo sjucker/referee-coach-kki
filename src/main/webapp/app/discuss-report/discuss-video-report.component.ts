@@ -150,6 +150,6 @@ export class DiscussVideoReportComponent implements OnInit, AfterViewInit, OnDes
 
     deleteReply(videoComment: VideoCommentDTO, reply: VideoCommentReplyDTO) {
         videoComment.replies.splice(videoComment.replies.indexOf(reply), 1)
-        this.replies = this.replies.filter(r => r.comment !== reply.reply && r.commentId !== videoComment.id);
+        this.replies = this.replies.filter(r => !(r.comment === reply.reply && r.commentId === videoComment.id));
     }
 }

@@ -1,6 +1,7 @@
 package ch.stefanjucker.refereecoach.service;
 
 import ch.stefanjucker.refereecoach.configuration.RefereeCoachProperties;
+import ch.stefanjucker.refereecoach.domain.HasNameEmail;
 import ch.stefanjucker.refereecoach.domain.User;
 import ch.stefanjucker.refereecoach.domain.VideoComment;
 import ch.stefanjucker.refereecoach.domain.VideoCommentReply;
@@ -250,19 +251,19 @@ public class VideoReportService {
                                                                                             videoReport.getReporter().getId())) {
 
             if (user != null || !report.getId().equals(id)) {
-                sendDiscussionEmail(repliedBy, report.relevantReferee().getEmail(), report.getId());
+                sendDiscussionEmail(repliedBy, report.relevantReferee(), report.getId());
             }
         }
 
         // user == null => one of the referees replied
         // user != reporter => another coach replied
-        // in both cases send the reporter
+        // in both cases send to the reporter
         if (user == null || !user.getId().equals(videoReport.getReporter().getId())) {
-            sendDiscussionEmail(repliedBy, videoReport.getReporter().getEmail(), videoReport.getId());
+            sendDiscussionEmail(repliedBy, videoReport.getReporter(), videoReport.getId());
         }
     }
 
-    private void sendDiscussionEmail(String repliedBy, String recipient, String reportId) {
+    private void sendDiscussionEmail(String repliedBy, HasNameEmail recipient, String reportId) {
         SimpleMailMessage simpleMessage = new SimpleMailMessage();
         try {
             simpleMessage.setSubject("[Referee Coach] New Video Report Discussion");
@@ -271,14 +272,14 @@ public class VideoReportService {
 
             if (properties.isOverrideRecipient()) {
                 simpleMessage.setTo(STEFAN_JUCKER_EMAIL);
-                simpleMessage.setSubject(simpleMessage.getSubject() + " (%s)".formatted(recipient));
+                simpleMessage.setSubject(simpleMessage.getSubject() + " (%s)".formatted(recipient.getEmail()));
             } else {
-                simpleMessage.setTo(recipient);
+                simpleMessage.setTo(recipient.getEmail());
             }
-            simpleMessage.setText("Hi%n%s added new replies to a video report.%nPlease visit: %s/#/discuss/%s".formatted(
-                    repliedBy, properties.getBaseUrl(), reportId));
+            simpleMessage.setText("Hi %s%n%n%s added new replies to a video report.%nPlease visit: %s/#/discuss/%s".formatted(
+                    recipient.getName(), repliedBy, properties.getBaseUrl(), reportId));
 
-            log.info("sending email to {}, text: {}", recipient, simpleMessage.getText());
+            log.info("sending email to {}, text: {}", recipient.getEmail(), simpleMessage.getText());
 
             mailSender.send(simpleMessage);
         } catch (MailException e) {
