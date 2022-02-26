@@ -1,3 +1,9 @@
 .info {
-    font-size: 11px;
+    font-size: 12px;
+}
+
+.info mat-icon {
+    font-size: 15px;
+    width: 15px;
+    height: 15px;
 }
