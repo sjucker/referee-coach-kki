@@ -4,9 +4,14 @@
         <button *ngIf="dto" mat-icon-button (click)="finishReply()" [disabled]="!hasUnsavedReplies()">
             <mat-icon>save</mat-icon>
         </button>
-        <div *ngIf="hasUnsavedReplies()" class="unsaved-hint">
+        <div *ngIf="hasUnsavedReplies()" class="unsaved-hint" fxHide fxShow.gt-sm>
             You have unsaved replies, please save them before leaving this page
         </div>
+        <mat-icon *ngIf="hasUnsavedReplies()"
+                  fxShow fxHide.gt-sm
+                  matTooltip="You have unsaved replies, please save them before leaving this page">
+            info_outline
+        </mat-icon>
         <span class="spacer"></span>
         <a routerLink="/" mat-icon-button *ngIf="isLoggedIn()">
             <mat-icon>home</mat-icon>
