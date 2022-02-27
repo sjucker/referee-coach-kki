@@ -34,6 +34,11 @@ import {MatProgressSpinnerModule} from "@angular/material/progress-spinner";
 import {VideoReportUnsavedChangesDialogComponent} from './video-report-unsaved-changes-dialog/video-report-unsaved-changes-dialog.component';
 import {MatPaginatorModule} from "@angular/material/paginator";
 import {MatProgressBarModule} from "@angular/material/progress-bar";
+import {VideoReportReplyDialogComponent} from './video-report-reply-dialog/video-report-reply-dialog.component';
+import {MatTooltipModule} from "@angular/material/tooltip";
+import { DiscussVideoReportComponent } from './discuss-report/discuss-video-report.component';
+import { DiscussVideoReportUnsavedRepliesDialogComponent } from './discuss-video-report-unsaved-replies-dialog/discuss-video-report-unsaved-replies-dialog.component';
+import { DiscussVideoReportFinishDialogComponent } from './discuss-video-report-finish-dialog/discuss-video-report-finish-dialog.component';
 
 @NgModule({
     declarations: [
@@ -47,6 +52,10 @@ import {MatProgressBarModule} from "@angular/material/progress-bar";
         VideoReportCopyDialogComponent,
         VideoReportDeleteDialogComponent,
         VideoReportUnsavedChangesDialogComponent,
+        VideoReportReplyDialogComponent,
+        DiscussVideoReportComponent,
+        DiscussVideoReportUnsavedRepliesDialogComponent,
+        DiscussVideoReportFinishDialogComponent,
     ],
     imports: [
         BrowserModule,
@@ -73,6 +82,7 @@ import {MatProgressBarModule} from "@angular/material/progress-bar";
         MatProgressSpinnerModule,
         MatPaginatorModule,
         MatProgressBarModule,
+        MatTooltipModule,
     ],
     providers: [{provide: HTTP_INTERCEPTORS, useClass: AuthenticationInterceptor, multi: true}],
     bootstrap: [AppComponent]

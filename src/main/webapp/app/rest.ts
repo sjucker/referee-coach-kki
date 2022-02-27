@@ -19,9 +19,18 @@ export interface ChangePasswordRequestDTO {
     newPassword: string;
 }
 
+export interface CommentReplyDTO {
+    commentId: number;
+    comment: string;
+}
+
 export interface CopyVideoReportDTO {
     sourceId: string;
     reportee: Reportee;
+}
+
+export interface CreateRepliesDTO {
+    replies: CommentReplyDTO[];
 }
 
 export interface CreateVideoReportDTO {
@@ -59,8 +68,17 @@ export interface UserDTO {
 }
 
 export interface VideoCommentDTO {
+    id?: number;
     timestamp: number;
     comment: string;
+    replies: VideoCommentReplyDTO[];
+}
+
+export interface VideoCommentReplyDTO {
+    id: number;
+    repliedBy: string;
+    repliedAt: Date;
+    reply: string;
 }
 
 export interface VideoReportDTO {
@@ -76,6 +94,14 @@ export interface VideoReportDTO {
     pointsToImproveComment?: string;
     videoComments: VideoCommentDTO[];
     finished: boolean;
+}
+
+export interface VideoReportDiscussionDTO {
+    videoReportId: string;
+    basketplanGame: BasketplanGameDTO;
+    reporter: ReporterDTO;
+    referee: string;
+    videoComments: VideoCommentDTO[];
 }
 
 export enum OfficiatingMode {

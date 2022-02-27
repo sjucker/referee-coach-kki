@@ -18,7 +18,7 @@ import static javax.persistence.EnumType.STRING;
 @Setter
 @ToString
 @NoArgsConstructor
-public class Referee {
+public class Referee implements HasNameEmail {
     @Id
     @GeneratedValue
     private Long id;

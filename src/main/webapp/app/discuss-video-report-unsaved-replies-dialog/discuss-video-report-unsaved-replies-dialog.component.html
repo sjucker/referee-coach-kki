@@ -1,0 +1,12 @@
+<h2 mat-dialog-title>Discard Replies?</h2>
+<mat-dialog-content>
+    <p>You have unsaved replies. Do you really want to discard them?</p>
+    <p>Use the
+        <mat-icon>save</mat-icon>
+        icon in the upper left corner to save your replies.
+    </p>
+</mat-dialog-content>
+<mat-dialog-actions align="end">
+    <button mat-flat-button [mat-dialog-close]="true">Discard replies and leave this page</button>
+    <button color="primary" mat-flat-button [mat-dialog-close]="false">Stay on this page</button>
+</mat-dialog-actions>

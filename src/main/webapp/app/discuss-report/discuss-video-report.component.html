@@ -1,9 +1,17 @@
 <div>
     <mat-toolbar color="primary">
-        <h1>Video Report</h1>
-        <button mat-icon-button (click)="navigateToDiscussion()" matTooltip="Switch to video comments discussion">
-            <mat-icon>message</mat-icon>
+        <h1>Video Report Discussion</h1>
+        <button *ngIf="dto" mat-icon-button (click)="finishReply()" [disabled]="!hasUnsavedReplies()">
+            <mat-icon>save</mat-icon>
         </button>
+        <div *ngIf="hasUnsavedReplies()" class="unsaved-hint" fxHide fxShow.gt-sm>
+            You have unsaved replies, please save them before leaving this page
+        </div>
+        <mat-icon *ngIf="hasUnsavedReplies()"
+                  fxShow fxHide.gt-sm
+                  matTooltip="You have unsaved replies, please save them before leaving this page">
+            info_outline
+        </mat-icon>
         <span class="spacer"></span>
         <a routerLink="/" mat-icon-button *ngIf="isLoggedIn()">
             <mat-icon>home</mat-icon>
@@ -25,46 +33,18 @@
                     <span>Coach: {{dto.reporter.name}}</span>
                 </div>
                 <div fxLayout="column" fxLayout.gt-sm="row" fxLayoutGap.gt-sm="20px" *ngIf="is3PO()">
-                    <span [ngClass]="isFirstUmpire() ? 'reportee' : ''">Crew Chief: {{dto.basketplanGame.referee1!.name}}</span>
-                    <span [ngClass]="isSecondUmpire() ? 'reportee' : ''">Umpire 1: {{dto.basketplanGame.referee2!.name}}</span>
-                    <span [ngClass]="isThirdUmpire() ? 'reportee' : ''">Umpire 2: {{dto.basketplanGame.referee3!.name}}</span>
+                    <span>Crew Chief: {{dto.basketplanGame.referee1!.name}}</span>
+                    <span>Umpire 1: {{dto.basketplanGame.referee2!.name}}</span>
+                    <span>Umpire 2: {{dto.basketplanGame.referee3!.name}}</span>
                 </div>
                 <div fxLayout="column" fxLayout.gt-sm="row" fxLayoutGap.gt-sm="20px" *ngIf="is2PO()">
-                    <span [ngClass]="isFirstUmpire() ? 'reportee' : ''">Umpire 1: {{dto.basketplanGame.referee1!.name}}</span>
-                    <span [ngClass]="isSecondUmpire() ? 'reportee' : ''">Umpire 2: {{dto.basketplanGame.referee2!.name}}</span>
+                    <span>Umpire 1: {{dto.basketplanGame.referee1!.name}}</span>
+                    <span>Umpire 2: {{dto.basketplanGame.referee2!.name}}</span>
                 </div>
             </mat-card-content>
         </mat-card>
 
-        <div fxLayout="column" fxLayout.gt-md="row" fxLayoutAlign="space-around stretch">
-            <mat-card fxFlex.gt-md="33%">
-                <mat-card-title>Image, Approach, Fitness Condition</mat-card-title>
-                <mat-card-content><p>{{dto.imageComment}}</p></mat-card-content>
-            </mat-card>
-            <mat-card fxFlex.gt-md="33%">
-                <mat-card-title *ngIf="is2PO()">2PO Mechanics & Individual Officiating Techniques</mat-card-title>
-                <mat-card-title *ngIf="is3PO()">3PO Mechanics & Individual Officiating Techniques</mat-card-title>
-                <mat-card-content><p>{{dto.mechanicsComment}}</p></mat-card-content>
-            </mat-card>
-            <mat-card fxFlex.gt-md="33%">
-                <mat-card-title>Critera: Fouls & Violations</mat-card-title>
-                <mat-card-content><p>{{dto.foulsComment}}</p></mat-card-content>
-            </mat-card>
-        </div>
-        <div fxLayout="column" fxLayout.gt-md="row" fxLayoutAlign="space-around stretch">
-            <mat-card fxFlex.gt-md="33%">
-                <mat-card-title>Game Control and Management</mat-card-title>
-                <mat-card-content><p>{{dto.gameManagementComment}}</p></mat-card-content>
-            </mat-card>
-            <mat-card fxFlex.gt-md="33%">
-                <mat-card-title>Points to Keep</mat-card-title>
-                <mat-card-content><p>{{dto.pointsToKeepComment}}</p></mat-card-content>
-            </mat-card>
-            <mat-card fxFlex.gt-md="33%">
-                <mat-card-title>Points to Improve</mat-card-title>
-                <mat-card-content><p>{{dto.pointsToImproveComment}}</p></mat-card-content>
-            </mat-card>
-        </div>
+
         <mat-card>
             <mat-card-content>
                 <div fxLayout="column" fxLayout.gt-md="row">
@@ -79,10 +59,24 @@
                             <mat-card-title>Video Comment #{{i + 1}}</mat-card-title>
                             <mat-card-content>
                                 <p>{{videoComment.comment}}</p>
+                                <hr *ngIf="videoComment.replies.length > 0">
+                                <div *ngFor="let reply of videoComment.replies">
+                                    <div [class]="reply.id == 0 ? 'new-reply' : ''">
+                                        <span class="repliedBy">{{reply.repliedBy}}</span>
+                                        <span class="repliedAt">{{reply.repliedAt | date:'dd.MM.yyyy'}}</span>
+                                        <button mat-icon-button (click)="deleteReply(videoComment, reply)" *ngIf="reply.id == 0">
+                                            <mat-icon color="primary">delete</mat-icon>
+                                        </button>
+                                    </div>
+                                    <p class="reply">{{reply.reply}}</p>
+                                </div>
                             </mat-card-content>
                             <mat-card-actions>
                                 <button (click)="play(videoComment.timestamp)" color="accent" mat-stroked-button>
                                     Jump to Scene
+                                </button>
+                                <button (click)="reply(videoComment)" color="accent" mat-stroked-button>
+                                    Reply
                                 </button>
                             </mat-card-actions>
                         </mat-card>

@@ -1,9 +1,13 @@
 package ch.stefanjucker.refereecoach.rest;
 
+import ch.stefanjucker.refereecoach.domain.User;
 import ch.stefanjucker.refereecoach.domain.repository.UserRepository;
 import ch.stefanjucker.refereecoach.dto.CopyVideoReportDTO;
+import ch.stefanjucker.refereecoach.dto.CreateRepliesDTO;
 import ch.stefanjucker.refereecoach.dto.CreateVideoReportDTO;
+import ch.stefanjucker.refereecoach.dto.VideoCommentReplyDTO;
 import ch.stefanjucker.refereecoach.dto.VideoReportDTO;
+import ch.stefanjucker.refereecoach.dto.VideoReportDiscussionDTO;
 import ch.stefanjucker.refereecoach.service.VideoReportService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
@@ -76,6 +80,29 @@ public class VideoReportResource {
         var user = userRepository.findByEmail(principal.getUsername()).orElseThrow();
         log.info("PUT /video-report/{} {} ({})", id, dto, user);
         return ResponseEntity.ok(videoReportService.update(id, dto, user));
+    }
+
+    @GetMapping(path = "/{id}/discussion")
+    public ResponseEntity<VideoReportDiscussionDTO> getDiscussion(@PathVariable String id) {
+        log.info("GET /video-report/{}/discussion", id);
+
+        return ResponseEntity.ok(videoReportService.getVideoReportDiscussion(id));
+    }
+
+    @PostMapping(path = "/{id}/discussion")
+    public ResponseEntity<VideoCommentReplyDTO> postDiscussion(@AuthenticationPrincipal UserDetails principal,
+                                                               @PathVariable String id,
+                                                               @RequestBody @Valid CreateRepliesDTO dto) {
+
+        User user = null;
+        if (principal != null) {
+            user = userRepository.findByEmail(principal.getUsername()).orElseThrow();
+        }
+        log.info("POST /video-report/{}/discussion {} {}", id, dto, user);
+
+        videoReportService.addReplies(user, id, dto);
+
+        return ResponseEntity.ok().build();
     }
 
     @DeleteMapping(path = "/{id}")

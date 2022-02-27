@@ -11,31 +11,32 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.Table;
-import javax.validation.constraints.PositiveOrZero;
+import java.time.LocalDateTime;
 
 import static javax.persistence.GenerationType.IDENTITY;
 
 @Entity
-@Table(name = "video_report_comment")
+@Table(name = "video_report_comment_reply")
 @Getter
 @Setter
 @ToString
 @AllArgsConstructor
 @NoArgsConstructor
-public class VideoComment {
+public class VideoCommentReply {
 
     @Id
     @GeneratedValue(strategy = IDENTITY)
     private Long id;
 
-    @PositiveOrZero
     @Column(nullable = false)
-    private Integer timestamp;
+    private String repliedBy;
+
+    @Column(nullable = false)
+    private LocalDateTime repliedAt;
 
     @Column(nullable = false, length = 1024)
-    private String comment;
+    private String reply;
 
-    @Column(name = "video_report_id", nullable = false)
-    private String videoReportId;
-
+    @Column(name = "video_report_comment_id", nullable = false)
+    private Long videoCommentId;
 }

@@ -16,7 +16,7 @@ import java.time.LocalDateTime;
 @Setter
 @ToString
 @NoArgsConstructor
-public class User {
+public class User implements HasNameEmail {
 
     @Id
     @GeneratedValue
