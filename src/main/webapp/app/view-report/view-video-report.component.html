@@ -76,14 +76,6 @@
                             <mat-card-title>Video Comment #{{i + 1}}</mat-card-title>
                             <mat-card-content>
                                 <p>{{videoComment.comment}}</p>
-                                <hr *ngIf="videoComment.replies.length > 0">
-                                <div *ngFor="let reply of videoComment.replies">
-                                    <div>
-                                        <span class="repliedBy">{{reply.repliedBy}}</span>
-                                        <span class="repliedAt">{{reply.repliedAt | date:'dd.MM.yyyy'}}</span>
-                                    </div>
-                                    <p class="reply">{{reply.reply}}</p>
-                                </div>
                             </mat-card-content>
                             <mat-card-actions>
                                 <button (click)="play(videoComment.timestamp)" color="accent" mat-stroked-button>
