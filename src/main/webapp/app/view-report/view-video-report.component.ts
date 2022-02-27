@@ -1,11 +1,12 @@
 import {AfterViewInit, Component, ElementRef, OnDestroy, OnInit, ViewChild} from '@angular/core';
-import {ActivatedRoute} from "@angular/router";
+import {ActivatedRoute, Router} from "@angular/router";
 import {VideoReportService} from "../service/video-report.service";
 import {YouTubePlayer} from "@angular/youtube-player";
 import {OfficiatingMode, Reportee, VideoReportDTO} from "../rest";
 import {AuthenticationService} from "../service/authentication.service";
 import {MatDialog} from "@angular/material/dialog";
 import {MatSnackBar} from "@angular/material/snack-bar";
+import {DISCUSS_PATH} from "../app-routing.module";
 
 @Component({
     selector: 'app-view-video-report',
@@ -24,6 +25,7 @@ export class ViewVideoReportComponent implements OnInit, AfterViewInit, OnDestro
     notFound = false;
 
     constructor(private route: ActivatedRoute,
+                private router: Router,
                 private videoReportService: VideoReportService,
                 private authenticationService: AuthenticationService,
                 public dialog: MatDialog,
@@ -91,5 +93,9 @@ export class ViewVideoReportComponent implements OnInit, AfterViewInit, OnDestro
 
     isLoggedIn(): boolean {
         return this.authenticationService.isLoggedIn();
+    }
+
+    navigateToDiscussion(): void {
+        this.router.navigate([DISCUSS_PATH, this.dto?.id])
     }
 }

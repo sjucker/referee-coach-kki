@@ -1,6 +1,9 @@
 <div>
     <mat-toolbar color="primary">
         <h1>Video Report</h1>
+        <button mat-icon-button (click)="navigateToDiscussion()" matTooltip="Switch to video comments discussion">
+            <mat-icon>message</mat-icon>
+        </button>
         <span class="spacer"></span>
         <a routerLink="/" mat-icon-button *ngIf="isLoggedIn()">
             <mat-icon>home</mat-icon>
