@@ -12,6 +12,8 @@ import {VideoReportDeleteDialogComponent} from "../video-report-delete-dialog/vi
 import getVideoId from "get-video-id";
 import {MatPaginator} from "@angular/material/paginator";
 import {EDIT_PATH, LOGIN_PATH, VIEW_PATH} from "../app-routing.module";
+import {saveAs} from "file-saver";
+import {DateTime} from "luxon";
 
 interface ReporteeSelection {
     reportee: Reportee,
@@ -40,6 +42,11 @@ export class MainComponent implements OnInit {
     youtubeId?: string;
     youtubeIdInputNeeded = false;
 
+    from = this.getFrom();
+    to = this.getTo();
+
+    exporting = false;
+
     constructor(private basketplanService: BasketplanService,
                 private videoReportService: VideoReportService,
                 private authenticationService: AuthenticationService,
@@ -48,13 +55,31 @@ export class MainComponent implements OnInit {
                 private dialog: MatDialog) {
     }
 
+    private getFrom(): DateTime {
+        const now = DateTime.now();
+        if (now.month > 6) {
+            return DateTime.local(now.year, 9, 1);
+        } else {
+            return DateTime.local(now.year - 1, 9, 1);
+        }
+    }
+
+    private getTo(): DateTime {
+        const now = DateTime.now();
+        if (now.month > 6) {
+            return DateTime.local(now.year + 1, 6, 30);
+        } else {
+            return DateTime.local(now.year, 6, 30);
+        }
+    }
+
     ngOnInit(): void {
         this.loadVideoReports();
     }
 
     private loadVideoReports() {
-        this.videoReportService.getAllVideoReports().subscribe(
-            value => {
+        this.videoReportService.getAllVideoReports(this.from, this.to).subscribe({
+            next: value => {
                 this.reportsLoaded = true;
                 this.videoReportDtos = new MatTableDataSource<VideoReportDTO>(value);
                 if (this.paginator) {
@@ -71,13 +96,14 @@ export class MainComponent implements OnInit {
                         || this.getReportee(data).toLowerCase().indexOf(filter) != -1;
                 }
             },
-            error => {
+            error: _ => {
                 this.snackBar.open("An unexpected error occurred, video reports could not be loaded.", undefined, {
                     duration: 3000,
                     horizontalPosition: "center",
                     verticalPosition: "top"
                 })
-            });
+            }
+        });
     }
 
     searchGame(): void {
@@ -142,17 +168,18 @@ export class MainComponent implements OnInit {
 
     createVideoReport() {
         if (this.game && this.youtubeId && this.reportee) {
-            this.videoReportService.createVideoReport(this.game.gameNumber, this.youtubeId, this.reportee).subscribe(
-                response => {
+            this.videoReportService.createVideoReport(this.game.gameNumber, this.youtubeId, this.reportee).subscribe({
+                next: response => {
                     this.edit(response);
                 },
-                error => {
+                error: _ => {
                     this.snackBar.open("An unexpected error occurred, video report could not be created.", undefined, {
                         duration: 3000,
                         horizontalPosition: "center",
                         verticalPosition: "top"
                     })
-                })
+                }
+            })
         } else {
             this.snackBar.open("Please search for a game or select a referee", undefined, {
                 duration: 3000,
@@ -186,18 +213,18 @@ export class MainComponent implements OnInit {
     copy(report: VideoReportDTO) {
         this.dialog.open(VideoReportCopyDialogComponent, {data: report}).afterClosed().subscribe((reportee: Reportee) => {
             if (reportee) {
-                this.videoReportService.copyVideoReport(report.id, reportee).subscribe(
-                    response => {
+                this.videoReportService.copyVideoReport(report.id, reportee).subscribe({
+                    next: response => {
                         this.edit(response);
                     },
-                    error => {
+                    error: _ => {
                         this.snackBar.open("An unexpected error occurred, video report could not be copied.", undefined, {
                             duration: 3000,
                             horizontalPosition: "center",
                             verticalPosition: "top"
                         })
                     }
-                );
+                });
             }
         });
     }
@@ -213,8 +240,8 @@ export class MainComponent implements OnInit {
     delete(report: VideoReportDTO) {
         this.dialog.open(VideoReportDeleteDialogComponent, {data: report}).afterClosed().subscribe((confirm: boolean) => {
             if (confirm) {
-                this.videoReportService.deleteVideoReport(report).subscribe(
-                    success => {
+                this.videoReportService.deleteVideoReport(report).subscribe({
+                    next: _ => {
                         this.loadVideoReports();
                         this.snackBar.open("Video report successfully deleted", undefined, {
                             duration: 3000,
@@ -222,14 +249,14 @@ export class MainComponent implements OnInit {
                             verticalPosition: "top"
                         });
                     },
-                    error => {
+                    error: _ => {
                         this.snackBar.open("Video report could not be deleted", undefined, {
                             duration: 3000,
                             horizontalPosition: "center",
                             verticalPosition: "top"
                         });
                     }
-                );
+                });
             }
         });
     }
@@ -237,5 +264,29 @@ export class MainComponent implements OnInit {
     logout() {
         this.authenticationService.logout();
         this.router.navigate([LOGIN_PATH])
+    }
+
+    dateFilterChanged() {
+        this.reportsLoaded = false;
+        this.loadVideoReports();
+    }
+
+    export() {
+        this.exporting = true;
+        this.videoReportService.export().subscribe({
+            next: response => {
+                saveAs(response, "export.xlsx");
+            },
+            error: _ => {
+                this.snackBar.open("An unexpected error occurred, export could not be created!", undefined, {
+                    duration: 3000,
+                    horizontalPosition: "center",
+                    verticalPosition: "top"
+                })
+            },
+            complete: () => {
+                this.exporting = false;
+            }
+        })
     }
 }

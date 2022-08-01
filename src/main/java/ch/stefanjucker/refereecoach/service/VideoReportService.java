@@ -25,6 +25,7 @@ import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -34,9 +35,8 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Stream;
 
+import static ch.stefanjucker.refereecoach.domain.VideoReport.CURRENT_VERSION;
 import static java.util.stream.Collectors.toCollection;
-import static org.springframework.data.domain.Sort.Order.desc;
-import static org.springframework.data.domain.Sort.by;
 
 @Slf4j
 @Service
@@ -82,6 +82,7 @@ public class VideoReportService {
         videoReport.setReportee(reportee);
         videoReport.setReporter(user);
         videoReport.setFinished(false);
+        videoReport.setVersion(CURRENT_VERSION);
 
         return DTO_MAPPER.toDTO(videoReportRepository.save(videoReport));
     }
@@ -224,10 +225,8 @@ public class VideoReportService {
         return !videoReport.isFinished() && videoReport.getReporter().getEmail().equals(user.getEmail());
     }
 
-    public List<VideoReportDTO> findAll() {
-        return videoReportRepository.findAll(by(desc("basketplanGame.date"),
-                                                desc("basketplanGame.gameNumber"),
-                                                desc("reportee")))
+    public List<VideoReportDTO> findAll(LocalDate from, LocalDate to) {
+        return videoReportRepository.findAll(from, to)
                                     .stream()
                                     .map(DTO_MAPPER::toDTO) // no need to fill the comments as well, not needed in report overview
                                     .toList();

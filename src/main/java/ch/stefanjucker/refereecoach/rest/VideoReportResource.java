@@ -8,8 +8,12 @@ import ch.stefanjucker.refereecoach.dto.CreateVideoReportDTO;
 import ch.stefanjucker.refereecoach.dto.VideoCommentReplyDTO;
 import ch.stefanjucker.refereecoach.dto.VideoReportDTO;
 import ch.stefanjucker.refereecoach.dto.VideoReportDiscussionDTO;
+import ch.stefanjucker.refereecoach.service.ExportService;
 import ch.stefanjucker.refereecoach.service.VideoReportService;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.core.io.ByteArrayResource;
+import org.springframework.core.io.Resource;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -20,12 +24,20 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.validation.Valid;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.time.LocalDate;
 import java.util.List;
 
+import static org.springframework.format.annotation.DateTimeFormat.ISO.DATE;
+import static org.springframework.http.HttpHeaders.CONTENT_TYPE;
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
+import static org.springframework.http.MediaType.APPLICATION_OCTET_STREAM;
 
 @Slf4j
 @RestController
@@ -34,16 +46,19 @@ public class VideoReportResource {
 
     private final VideoReportService videoReportService;
     private final UserRepository userRepository;
+    private final ExportService exportService;
 
-    public VideoReportResource(VideoReportService videoReportService, UserRepository userRepository) {
+    public VideoReportResource(VideoReportService videoReportService, UserRepository userRepository, ExportService exportService) {
         this.videoReportService = videoReportService;
         this.userRepository = userRepository;
+        this.exportService = exportService;
     }
 
     @GetMapping
-    public ResponseEntity<List<VideoReportDTO>> getAllReports() {
-        log.info("GET /video-report");
-        return ResponseEntity.ok(videoReportService.findAll());
+    public ResponseEntity<List<VideoReportDTO>> getAllReports(@RequestParam @DateTimeFormat(iso = DATE) LocalDate from,
+                                                              @RequestParam @DateTimeFormat(iso = DATE) LocalDate to) {
+        log.info("GET /video-report?from={}&to={}", from, to);
+        return ResponseEntity.ok(videoReportService.findAll(from, to));
     }
 
     @GetMapping("/{id}")
@@ -113,6 +128,25 @@ public class VideoReportResource {
 
         videoReportService.delete(id, user);
         return ResponseEntity.ok().build();
+    }
+
+    @GetMapping(path = "/export")
+    public ResponseEntity<Resource> export() {
+        log.info("GET /video-report/export");
+        try {
+            var file = exportService.export();
+            var path = Paths.get(file.getAbsolutePath());
+            var resource = new ByteArrayResource(Files.readAllBytes(path));
+
+            return ResponseEntity.ok()
+                                 .header(CONTENT_TYPE, Files.probeContentType(path))
+                                 .contentLength(file.length())
+                                 .contentType(APPLICATION_OCTET_STREAM)
+                                 .body(resource);
+        } catch (RuntimeException | IOException e) {
+            log.error("Export failed", e);
+            return ResponseEntity.internalServerError().build();
+        }
     }
 
 }

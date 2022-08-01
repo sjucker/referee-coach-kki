@@ -12,6 +12,7 @@ import {
     VideoReportDTO
 } from "../rest";
 import {environment} from "../../environments/environment";
+import {DateTime} from "luxon";
 
 export function getReferee(report: VideoReportDTO): string {
     switch (report.reportee) {
@@ -38,8 +39,8 @@ export class VideoReportService {
         return this.httpClient.get<VideoReportDTO>(`${this.baseUrl}/video-report/${id}`);
     }
 
-    getAllVideoReports(): Observable<VideoReportDTO[]> {
-        return this.httpClient.get<VideoReportDTO[]>(`${this.baseUrl}/video-report`);
+    getAllVideoReports(from: DateTime, to: DateTime): Observable<VideoReportDTO[]> {
+        return this.httpClient.get<VideoReportDTO[]>(`${this.baseUrl}/video-report?from=${from.toFormat('yyyy-MM-dd')}&to=${to.toFormat('yyyy-MM-dd')}`);
     }
 
     createVideoReport(gameNumber: string, youtubeId: string, reportee: Reportee): Observable<VideoReportDTO> {
@@ -77,5 +78,11 @@ export class VideoReportService {
             replies: replies
         };
         return this.httpClient.post<CreateRepliesDTO>(`${this.baseUrl}/video-report/${id}/discussion`, request);
+    }
+
+    export(): Observable<Blob> {
+        return this.httpClient.get(`${this.baseUrl}/video-report/export`, {
+            responseType: 'blob'
+        });
     }
 }

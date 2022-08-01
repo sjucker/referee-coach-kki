@@ -45,14 +45,14 @@ export class DiscussVideoReportComponent implements OnInit, AfterViewInit, OnDes
         tag.src = 'https://www.youtube.com/iframe_api';
         document.body.appendChild(tag);
 
-        this.videoReportService.getVideoReportDiscussion(this.route.snapshot.paramMap.get('id')!).subscribe(
-            result => {
+        this.videoReportService.getVideoReportDiscussion(this.route.snapshot.paramMap.get('id')!).subscribe({
+            next: result => {
                 this.dto = result;
             },
-            error => {
+            error: _ => {
                 this.notFound = true;
             }
-        );
+        });
     }
 
     ngAfterViewInit(): void {
@@ -114,15 +114,15 @@ export class DiscussVideoReportComponent implements OnInit, AfterViewInit, OnDes
     finishReply(): void {
         this.dialog.open(DiscussVideoReportFinishDialogComponent).afterClosed().subscribe(decision => {
             if (decision && this.dto) {
-                this.videoReportService.reply(this.dto.videoReportId, this.replies).subscribe(
-                    success => {
+                this.videoReportService.reply(this.dto.videoReportId, this.replies).subscribe({
+                    next: _ => {
                         this.showMessage("Replies saved");
                         this.replies = [];
                     },
-                    error => {
+                    error: _ => {
                         this.showMessage("Replies could not be saved...")
                     }
-                );
+                });
             }
         })
 

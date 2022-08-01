@@ -47,10 +47,29 @@
 
     <mat-card>
         <mat-card-content>
-            <mat-form-field appearance="standard">
-                <mat-label>Filter</mat-label>
-                <input matInput (keyup)="applyFilter($event)">
-            </mat-form-field>
+            <div fxLayout="column" fxLayout.gt-sm="row" fxLayoutGap.gt-sm="20px">
+                <mat-form-field appearance="standard" fxFlex="70%">
+                    <mat-label>Filter</mat-label>
+                    <input matInput (keyup)="applyFilter($event)">
+                </mat-form-field>
+                <mat-form-field appearance="fill" fxFlex="13%">
+                    <mat-label>From</mat-label>
+                    <input matInput [matDatepicker]="pickerFrom" [(ngModel)]="from" (dateChange)="dateFilterChanged()">
+                    <mat-datepicker-toggle matSuffix [for]="pickerFrom"></mat-datepicker-toggle>
+                    <mat-datepicker #pickerFrom></mat-datepicker>
+                </mat-form-field>
+
+                <mat-form-field appearance="fill" fxFlex="13%">
+                    <mat-label>To</mat-label>
+                    <input matInput [matDatepicker]="pickerTo" [(ngModel)]="to" (dateChange)="dateFilterChanged()">
+                    <mat-datepicker-toggle matSuffix [for]="pickerTo"></mat-datepicker-toggle>
+                    <mat-datepicker #pickerTo></mat-datepicker>
+                </mat-form-field>
+
+                <button mat-icon-button (click)="export()" matTooltip="Excel Download"  fxFlex="4%" [disabled]="exporting">
+                    <mat-icon>cloud_download</mat-icon>
+                </button>
+            </div>
 
             <mat-progress-bar mode="indeterminate" *ngIf="!reportsLoaded"></mat-progress-bar>
 

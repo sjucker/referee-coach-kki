@@ -33,34 +33,79 @@
                     <span [ngClass]="isFirstUmpire() ? 'reportee' : ''">Umpire 1: {{dto.basketplanGame.referee1!.name}}</span>
                     <span [ngClass]="isSecondUmpire() ? 'reportee' : ''">Umpire 2: {{dto.basketplanGame.referee2!.name}}</span>
                 </div>
+                <div *ngIf="dto.version > 1">
+                    <p>Overall Rating: {{dto.overallRating}}</p>
+                </div>
+            </mat-card-content>
+        </mat-card>
+
+        <mat-card *ngIf="dto.version > 1">
+            <mat-card-title>General Comment</mat-card-title>
+            <mat-card-content>
+                <p>{{dto.generalComment}}</p>
             </mat-card-content>
         </mat-card>
 
         <div fxLayout="column" fxLayout.gt-md="row" fxLayoutAlign="space-around stretch">
             <mat-card fxFlex.gt-md="33%">
-                <mat-card-title>Image, Approach, Fitness Condition</mat-card-title>
-                <mat-card-content><p>{{dto.imageComment}}</p></mat-card-content>
+                <mat-card-title>Image, Approach</mat-card-title>
+                <mat-card-content>
+                    <p>{{dto.image.comment}}</p>
+                    <p *ngIf="dto.version > 1">Rating: {{dto.image.rating}}</p>
+                </mat-card-content>
             </mat-card>
+
+            <mat-card fxFlex.gt-md="33%">
+                <mat-card-title>Fitness Condition</mat-card-title>
+                <mat-card-content>
+                    <p>{{dto.fitness.comment}}</p>
+                    <p *ngIf="dto.version > 1">Rating: {{dto.fitness.rating}}</p>
+                </mat-card-content>
+            </mat-card>
+
             <mat-card fxFlex.gt-md="33%">
                 <mat-card-title *ngIf="is2PO()">2PO Mechanics & Individual Officiating Techniques</mat-card-title>
                 <mat-card-title *ngIf="is3PO()">3PO Mechanics & Individual Officiating Techniques</mat-card-title>
-                <mat-card-content><p>{{dto.mechanicsComment}}</p></mat-card-content>
-            </mat-card>
-            <mat-card fxFlex.gt-md="33%">
-                <mat-card-title>Critera: Fouls & Violations</mat-card-title>
-                <mat-card-content><p>{{dto.foulsComment}}</p></mat-card-content>
+                <mat-card-content>
+                    <p>{{dto.mechanics.comment}}</p>
+                    <p *ngIf="dto.version > 1">Rating: {{dto.mechanics.rating}}</p>
+                </mat-card-content>
             </mat-card>
         </div>
+
         <div fxLayout="column" fxLayout.gt-md="row" fxLayoutAlign="space-around stretch">
+
+            <mat-card fxFlex.gt-md="33%">
+                <mat-card-title>Critera: Fouls</mat-card-title>
+                <mat-card-content>
+                    <p>{{dto.fouls.comment}}</p>
+                    <p *ngIf="dto.version > 1">Rating: {{dto.fouls.rating}}</p>
+                </mat-card-content>
+            </mat-card>
+
+            <mat-card fxFlex.gt-md="33%">
+                <mat-card-title>Critera: Violations</mat-card-title>
+                <mat-card-content>
+                    <p>{{dto.violations.comment}}</p>
+                    <p *ngIf="dto.version > 1">Rating: {{dto.violations.rating}}</p>
+                </mat-card-content>
+            </mat-card>
+
             <mat-card fxFlex.gt-md="33%">
                 <mat-card-title>Game Control and Management</mat-card-title>
-                <mat-card-content><p>{{dto.gameManagementComment}}</p></mat-card-content>
+                <mat-card-content>
+                    <p>{{dto.gameManagement.comment}}</p>
+                    <p *ngIf="dto.version > 1">Rating: {{dto.gameManagement.rating}}</p>
+                </mat-card-content>
             </mat-card>
-            <mat-card fxFlex.gt-md="33%">
+        </div>
+
+        <div fxLayout="column" fxLayout.gt-md="row" fxLayoutAlign="space-around stretch">
+            <mat-card fxFlex.gt-md="50%">
                 <mat-card-title>Points to Keep</mat-card-title>
                 <mat-card-content><p>{{dto.pointsToKeepComment}}</p></mat-card-content>
             </mat-card>
-            <mat-card fxFlex.gt-md="33%">
+            <mat-card fxFlex.gt-md="50%">
                 <mat-card-title>Points to Improve</mat-card-title>
                 <mat-card-content><p>{{dto.pointsToImproveComment}}</p></mat-card-content>
             </mat-card>

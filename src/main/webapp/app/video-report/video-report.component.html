@@ -46,10 +46,10 @@
         <mat-card-title>Comments</mat-card-title>
 
         <mat-card-content>
-            <div fxLayout="column" fxLayout.gt-sm="row" fxLayoutGap="0" fxLayoutGap.gt-sm="10px">
+            <div>
                 <mat-form-field appearance="fill" color="accent">
-                    <mat-label>Image, Approach, Fitness Condition</mat-label>
-                    <textarea [(ngModel)]="report.imageComment"
+                    <mat-label>General Comment</mat-label>
+                    <textarea [(ngModel)]="report.generalComment"
                               (ngModelChange)="onChange()"
                               maxlength="1024"
                               cdkAutosizeMaxRows="5"
@@ -57,11 +57,32 @@
                               cdkTextareaAutosize
                               matInput></textarea>
                 </mat-form-field>
-
+            </div>
+            <div fxLayout="column" fxLayout.gt-sm="row" fxLayoutGap="0" fxLayoutGap.gt-sm="10px">
+                <mat-form-field appearance="fill" color="accent">
+                    <mat-label>Image, Approach</mat-label>
+                    <textarea [(ngModel)]="report.image.comment"
+                              (ngModelChange)="onChange()"
+                              maxlength="1024"
+                              cdkAutosizeMaxRows="5"
+                              cdkAutosizeMinRows="2"
+                              cdkTextareaAutosize
+                              matInput></textarea>
+                </mat-form-field>
+                <mat-form-field appearance="fill" color="accent">
+                    <mat-label> Fitness Condition</mat-label>
+                    <textarea [(ngModel)]="report.fitness.comment"
+                              (ngModelChange)="onChange()"
+                              maxlength="1024"
+                              cdkAutosizeMaxRows="5"
+                              cdkAutosizeMinRows="2"
+                              cdkTextareaAutosize
+                              matInput></textarea>
+                </mat-form-field>
                 <mat-form-field appearance="fill" color="accent">
                     <mat-label *ngIf="is3PO()">3PO Mechanics & Individual Officiating Techniques</mat-label>
                     <mat-label *ngIf="is2PO()">2PO Mechanics & Individual Officiating Techniques</mat-label>
-                    <textarea [(ngModel)]="report.mechanicsComment"
+                    <textarea [(ngModel)]="report.mechanics.comment"
                               (ngModelChange)="onChange()"
                               maxlength="1024"
                               cdkAutosizeMaxRows="5"
@@ -73,8 +94,19 @@
 
             <div fxLayout="column" fxLayout.gt-sm="row" fxLayoutGap="0" fxLayoutGap.gt-sm="10px">
                 <mat-form-field appearance="fill" color="accent">
-                    <mat-label>Critera: Fouls & Violations</mat-label>
-                    <textarea [(ngModel)]="report.foulsComment"
+                    <mat-label>Critera: Fouls</mat-label>
+                    <textarea [(ngModel)]="report.fouls.comment"
+                              (ngModelChange)="onChange()"
+                              maxlength="1024"
+                              cdkAutosizeMaxRows="5"
+                              cdkAutosizeMinRows="2"
+                              cdkTextareaAutosize
+                              matInput></textarea>
+                </mat-form-field>
+
+                <mat-form-field appearance="fill" color="accent">
+                    <mat-label>Critera: Violations</mat-label>
+                    <textarea [(ngModel)]="report.violations.comment"
                               (ngModelChange)="onChange()"
                               maxlength="1024"
                               cdkAutosizeMaxRows="5"
@@ -85,7 +117,7 @@
 
                 <mat-form-field appearance="fill" color="accent">
                     <mat-label>Game Control and Management</mat-label>
-                    <textarea [(ngModel)]="report.gameManagementComment"
+                    <textarea [(ngModel)]="report.gameManagement.comment"
                               (ngModelChange)="onChange()"
                               maxlength="1024"
                               cdkAutosizeMaxRows="5"
@@ -118,6 +150,41 @@
                               matInput></textarea>
                 </mat-form-field>
             </div>
+        </mat-card-content>
+    </mat-card>
+
+    <mat-card *ngIf="report">
+        <mat-card-title>Ratings</mat-card-title>
+
+        <mat-card-content>
+            <app-video-report-rating
+                    [title]="'Image, Approach'"
+                    [dto]="report.image"
+                    (changed)="onChange()"></app-video-report-rating>
+            <br/>
+            <app-video-report-rating
+                    [title]="'Fitness Condition'"
+                    [dto]="report.fitness"></app-video-report-rating>
+            <br/>
+            <app-video-report-rating
+                    [title]="is3PO() ? '3PO Mechanics' : '2PO Mechanics'"
+                    [dto]="report.mechanics"
+                    (changed)="onChange()"></app-video-report-rating>
+            <br/>
+            <app-video-report-rating
+                    [title]="'Critera: Fouls'"
+                    [dto]="report.fouls"
+                    (changed)="onChange()"></app-video-report-rating>
+            <br/>
+            <app-video-report-rating
+                    [title]="'Critera: Violations'"
+                    [dto]="report.violations"
+                    (changed)="onChange()"></app-video-report-rating>
+            <br/>
+            <app-video-report-rating
+                    [title]="'Game Control and Management'"
+                    [dto]="report.gameManagement"
+                    (changed)="onChange()"></app-video-report-rating>
         </mat-card-content>
     </mat-card>
 

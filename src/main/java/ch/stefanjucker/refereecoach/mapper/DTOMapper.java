@@ -1,6 +1,7 @@
 package ch.stefanjucker.refereecoach.mapper;
 
 import ch.stefanjucker.refereecoach.domain.BasketplanGame;
+import ch.stefanjucker.refereecoach.domain.CriteriaEvaluation;
 import ch.stefanjucker.refereecoach.domain.Referee;
 import ch.stefanjucker.refereecoach.domain.User;
 import ch.stefanjucker.refereecoach.domain.VideoComment;
@@ -66,12 +67,18 @@ public interface DTOMapper {
     Referee fromDTO(RefereeDTO refereeDTO);
 
     default void update(VideoReportDTO dto, VideoReport videoReport) {
-        videoReport.setImageComment(dto.imageComment());
-        videoReport.setMechanicsComment(dto.mechanicsComment());
-        videoReport.setFoulsComment(dto.foulsComment());
-        videoReport.setGameManagementComment(dto.gameManagementComment());
+        videoReport.setGeneralComment(dto.generalComment());
+
+        videoReport.setImage(new CriteriaEvaluation(dto.image().comment(), dto.image().score()));
+        videoReport.setFitness(new CriteriaEvaluation(dto.fitness().comment(), dto.fitness().score()));
+        videoReport.setMechanics(new CriteriaEvaluation(dto.mechanics().comment(), dto.mechanics().score()));
+        videoReport.setFouls(new CriteriaEvaluation(dto.fouls().comment(), dto.fouls().score()));
+        videoReport.setViolations(new CriteriaEvaluation(dto.violations().comment(), dto.violations().score()));
+        videoReport.setGameManagement(new CriteriaEvaluation(dto.gameManagement().comment(), dto.gameManagement().score()));
+
         videoReport.setPointsToKeepComment(dto.pointsToKeepComment());
         videoReport.setPointsToImproveComment(dto.pointsToImproveComment());
+
         videoReport.setFinished(dto.finished());
     }
 

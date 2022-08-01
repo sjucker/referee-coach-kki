@@ -40,6 +40,12 @@ export interface CreateVideoReportDTO {
     reportee: Reportee;
 }
 
+export interface CriteriaEvaluationDTO {
+    comment?: string;
+    score?: number;
+    rating?: string;
+}
+
 export interface LoginRequestDTO {
     email: string;
     password: string;
@@ -86,14 +92,20 @@ export interface VideoReportDTO {
     basketplanGame: BasketplanGameDTO;
     reporter: ReporterDTO;
     reportee: Reportee;
-    imageComment?: string;
-    mechanicsComment?: string;
-    foulsComment?: string;
-    gameManagementComment?: string;
+    overallScore: number;
+    overallRating: string;
+    generalComment?: string;
+    image: CriteriaEvaluationDTO;
+    fitness: CriteriaEvaluationDTO;
+    mechanics: CriteriaEvaluationDTO;
+    fouls: CriteriaEvaluationDTO;
+    violations: CriteriaEvaluationDTO;
+    gameManagement: CriteriaEvaluationDTO;
     pointsToKeepComment?: string;
     pointsToImproveComment?: string;
     videoComments: VideoCommentDTO[];
     finished: boolean;
+    version: number;
 }
 
 export interface VideoReportDiscussionDTO {

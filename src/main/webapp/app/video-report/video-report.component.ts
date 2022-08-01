@@ -45,17 +45,17 @@ export class VideoReportComponent implements OnInit, AfterViewInit, OnDestroy {
 
         const id = this.route.snapshot.paramMap.get('id');
         if (id) {
-            this.videoReportService.getVideoReport(id).subscribe(
-                dto => {
+            this.videoReportService.getVideoReport(id).subscribe({
+                next: dto => {
                     if (dto.finished) {
                         this.router.navigate([VIEW_PATH, dto.id]);
                     }
                     this.report = dto;
                 },
-                error => {
+                error: _ => {
                     this.notFound = true;
                 }
-            );
+            });
         }
     }
 
@@ -83,15 +83,16 @@ export class VideoReportComponent implements OnInit, AfterViewInit, OnDestroy {
 
     save() {
         if (this.report) {
-            this.videoReportService.saveVideoReport(this.report).subscribe(
-                response => {
+            this.videoReportService.saveVideoReport(this.report).subscribe({
+                next: response => {
                     this.report = response;
                     this.unsavedChanges = false;
                     this.showMessage("Successfully saved!");
                 },
-                error => {
+                error: _ => {
                     this.showMessage("An unexpected error occurred, video report could not be saved.");
-                });
+                }
+            });
         }
     }
 
@@ -100,17 +101,17 @@ export class VideoReportComponent implements OnInit, AfterViewInit, OnDestroy {
             this.dialog.open(VideoReportFinishDialogComponent).afterClosed().subscribe(decision => {
                 if (decision && this.report) {
                     this.report = {...this.report, finished: true}
-                    this.videoReportService.saveVideoReport(this.report).subscribe(
-                        response => {
+                    this.videoReportService.saveVideoReport(this.report).subscribe({
+                        next: response => {
                             this.unsavedChanges = false;
                             if (response.finished) {
                                 this.router.navigate([VIEW_PATH, response.id]);
                             }
                         },
-                        error => {
+                        error: _ => {
                             this.showMessage("An unexpected error occurred, video report could not be finished.");
                         }
-                    );
+                    });
                 }
             })
         }

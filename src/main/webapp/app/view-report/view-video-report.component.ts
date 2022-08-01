@@ -39,14 +39,14 @@ export class ViewVideoReportComponent implements OnInit, AfterViewInit, OnDestro
         tag.src = 'https://www.youtube.com/iframe_api';
         document.body.appendChild(tag);
 
-        this.videoReportService.getVideoReport(this.route.snapshot.paramMap.get('id')!).subscribe(
-            result => {
+        this.videoReportService.getVideoReport(this.route.snapshot.paramMap.get('id')!).subscribe({
+            next: result => {
                 this.dto = result;
             },
-            error => {
+            error: _ => {
                 this.notFound = true;
             }
-        );
+        });
     }
 
     ngAfterViewInit(): void {

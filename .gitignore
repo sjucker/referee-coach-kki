@@ -35,5 +35,6 @@ build/
 
 node
 node_modules
+.angular
 
 src/main/resources/application-local.properties

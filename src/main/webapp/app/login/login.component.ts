@@ -30,13 +30,15 @@ export class LoginComponent implements OnInit {
         if (this.loginForm.valid) {
             this.authenticationError = false;
             const val = this.loginForm.value;
-            this.authenticationService.login(val.email, val.password).subscribe(response => {
+            this.authenticationService.login(val.email!, val.password!).subscribe({
+                next: response => {
                     this.authenticationService.setCredentials(response);
                     this.router.navigate(['/']);
                 },
-                error => {
+                error: _ => {
                     this.authenticationError = true;
-                })
+                }
+            })
         }
     }
 
