@@ -1,5 +1,6 @@
 package ch.stefanjucker.refereecoach.dto;
 
+import org.apache.commons.lang3.StringUtils;
 import org.hibernate.validator.constraints.Length;
 
 import javax.validation.constraints.NotNull;
@@ -23,4 +24,7 @@ public record VideoReportDTO(@NotNull String id,
                              @NotNull List<VideoCommentDTO> videoComments,
                              boolean finished,
                              int version) {
+    public boolean isTextOnly() {
+        return StringUtils.isBlank(basketplanGame().youtubeId());
+    }
 }

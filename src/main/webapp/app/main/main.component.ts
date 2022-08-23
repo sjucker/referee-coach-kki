@@ -41,6 +41,7 @@ export class MainComponent implements OnInit {
     game?: BasketplanGameDTO;
     youtubeId?: string;
     youtubeIdInputNeeded = false;
+    textOnlyMode = false; // whether Youtube-Id is needed or not (text-only report)
 
     from = this.getFrom();
     to = this.getTo();
@@ -97,7 +98,7 @@ export class MainComponent implements OnInit {
                 }
             },
             error: _ => {
-                this.snackBar.open("An unexpected error occurred, video reports could not be loaded.", undefined, {
+                this.snackBar.open("An unexpected error occurred, reports could not be loaded.", undefined, {
                     duration: 3000,
                     horizontalPosition: "center",
                     verticalPosition: "top"
@@ -167,13 +168,13 @@ export class MainComponent implements OnInit {
     }
 
     createVideoReport() {
-        if (this.game && this.youtubeId && this.reportee) {
-            this.videoReportService.createVideoReport(this.game.gameNumber, this.youtubeId, this.reportee).subscribe({
+        if (this.game && (this.textOnlyMode || this.youtubeId) && this.reportee) {
+            this.videoReportService.createVideoReport(this.game.gameNumber, this.reportee, this.textOnlyMode ? undefined : this.youtubeId).subscribe({
                 next: response => {
                     this.edit(response);
                 },
                 error: _ => {
-                    this.snackBar.open("An unexpected error occurred, video report could not be created.", undefined, {
+                    this.snackBar.open("An unexpected error occurred, report could not be created.", undefined, {
                         duration: 3000,
                         horizontalPosition: "center",
                         verticalPosition: "top"
@@ -218,7 +219,7 @@ export class MainComponent implements OnInit {
                         this.edit(response);
                     },
                     error: _ => {
-                        this.snackBar.open("An unexpected error occurred, video report could not be copied.", undefined, {
+                        this.snackBar.open("An unexpected error occurred, report could not be copied.", undefined, {
                             duration: 3000,
                             horizontalPosition: "center",
                             verticalPosition: "top"
@@ -243,14 +244,14 @@ export class MainComponent implements OnInit {
                 this.videoReportService.deleteVideoReport(report).subscribe({
                     next: _ => {
                         this.loadVideoReports();
-                        this.snackBar.open("Video report successfully deleted", undefined, {
+                        this.snackBar.open("Report successfully deleted", undefined, {
                             duration: 3000,
                             horizontalPosition: "center",
                             verticalPosition: "top"
                         });
                     },
                     error: _ => {
-                        this.snackBar.open("Video report could not be deleted", undefined, {
+                        this.snackBar.open("Report could not be deleted", undefined, {
                             duration: 3000,
                             horizontalPosition: "center",
                             verticalPosition: "top"

@@ -1,6 +1,7 @@
 <div>
     <mat-toolbar color="primary">
-        <span>Video Report</span>
+        <span *ngIf="report && !report.textOnly">Video Report</span>
+        <span *ngIf="report && report.textOnly">Report</span>
         <button *ngIf="report" mat-icon-button (click)="save()" [disabled]="!unsavedChanges">
             <mat-icon>save</mat-icon>
         </button>
@@ -233,7 +234,7 @@
     <mat-card *ngIf="notFound">
         <mat-card-title>Not found</mat-card-title>
         <mat-card-content>
-            Video Report was not found...
+            Report was not found...
         </mat-card-content>
     </mat-card>
 

@@ -90,7 +90,7 @@ export class VideoReportComponent implements OnInit, AfterViewInit, OnDestroy {
                     this.showMessage("Successfully saved!");
                 },
                 error: _ => {
-                    this.showMessage("An unexpected error occurred, video report could not be saved.");
+                    this.showMessage("An unexpected error occurred, report could not be saved.");
                 }
             });
         }
@@ -109,7 +109,7 @@ export class VideoReportComponent implements OnInit, AfterViewInit, OnDestroy {
                             }
                         },
                         error: _ => {
-                            this.showMessage("An unexpected error occurred, video report could not be finished.");
+                            this.showMessage("An unexpected error occurred, report could not be finished.");
                         }
                     });
                 }

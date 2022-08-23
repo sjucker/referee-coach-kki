@@ -36,7 +36,7 @@ export interface CreateRepliesDTO {
 export interface CreateVideoReportDTO {
     federation: Federation;
     gameNumber: string;
-    youtubeId: string;
+    youtubeId?: string;
     reportee: Reportee;
 }
 
@@ -106,6 +106,7 @@ export interface VideoReportDTO {
     videoComments: VideoCommentDTO[];
     finished: boolean;
     version: number;
+    textOnly: boolean;
 }
 
 export interface VideoReportDiscussionDTO {

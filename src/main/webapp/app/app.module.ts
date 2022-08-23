@@ -44,6 +44,7 @@ import {VideoReportRatingComponent} from './video-report-rating/video-report-rat
 import {MatDatepickerModule} from "@angular/material/datepicker";
 import {MatLuxonDateModule} from "@angular/material-luxon-adapter";
 import {MAT_DATE_FORMATS} from "@angular/material/core";
+import {MatCheckboxModule} from "@angular/material/checkbox";
 
 @NgModule({
     declarations: [
@@ -91,7 +92,8 @@ import {MAT_DATE_FORMATS} from "@angular/material/core";
         MatTooltipModule,
         MatSliderModule,
         MatDatepickerModule,
-        MatLuxonDateModule
+        MatLuxonDateModule,
+        MatCheckboxModule
     ],
     providers: [
         {provide: HTTP_INTERCEPTORS, useClass: AuthenticationInterceptor, multi: true},

@@ -43,7 +43,7 @@ export class VideoReportService {
         return this.httpClient.get<VideoReportDTO[]>(`${this.baseUrl}/video-report?from=${from.toFormat('yyyy-MM-dd')}&to=${to.toFormat('yyyy-MM-dd')}`);
     }
 
-    createVideoReport(gameNumber: string, youtubeId: string, reportee: Reportee): Observable<VideoReportDTO> {
+    createVideoReport(gameNumber: string, reportee: Reportee, youtubeId?: string): Observable<VideoReportDTO> {
         const request: CreateVideoReportDTO = {
             gameNumber: gameNumber,
             youtubeId: youtubeId,

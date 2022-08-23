@@ -25,8 +25,11 @@
                 <div *ngIf="game && youtubeIdInputNeeded">
                     <mat-form-field appearance="outline" color="accent">
                         <mat-label>YouTube URL</mat-label>
-                        <input [(ngModel)]="youtubeUrlInput" (ngModelChange)="parseYouTubeUrl()" autocomplete="off" matInput name="youtubeUrl" type="text">
+                        <input [(ngModel)]="youtubeUrlInput" (ngModelChange)="parseYouTubeUrl()"
+                               [disabled]="textOnlyMode"
+                               autocomplete="off" matInput name="youtubeUrl" type="text">
                     </mat-form-field>
+                    <mat-checkbox [(ngModel)]="textOnlyMode">No Video Comments</mat-checkbox>
                 </div>
 
                 <form (ngSubmit)="createVideoReport()" role="form" *ngIf="game">
@@ -36,7 +39,7 @@
                             <mat-option *ngFor="let r of reportees" [value]="r.reportee">{{r.name}}</mat-option>
                         </mat-select>
                     </mat-form-field>
-                    <button color="primary" mat-flat-button [disabled]="!reportee || !youtubeId">Start</button>
+                    <button color="primary" mat-flat-button [disabled]="!reportee || (!youtubeId && !textOnlyMode)">Start</button>
                 </form>
                 <div *ngIf="problemDescription">
                     {{problemDescription}}
@@ -66,7 +69,7 @@
                     <mat-datepicker #pickerTo></mat-datepicker>
                 </mat-form-field>
 
-                <button mat-icon-button (click)="export()" matTooltip="Excel Download"  fxFlex="4%" [disabled]="exporting">
+                <button mat-icon-button (click)="export()" matTooltip="Excel Download" fxFlex="4%" [disabled]="exporting">
                     <mat-icon>cloud_download</mat-icon>
                 </button>
             </div>

@@ -149,7 +149,7 @@ public class VideoReportService {
                 var referee = videoReport.relevantReferee();
                 log.info("finishing {}, send email to {}", videoReport, referee.getEmail());
 
-                simpleMessage.setSubject("[Referee Coach] New Video Report");
+                simpleMessage.setSubject(dto.isTextOnly() ? "[Referee Coach] New Report" : "[Referee Coach] New Video Report");
                 simpleMessage.setFrom(environment.getRequiredProperty("spring.mail.username"));
                 simpleMessage.setReplyTo(videoReport.getReporter().getEmail());
                 simpleMessage.setBcc(STEFAN_JUCKER_EMAIL);
@@ -165,12 +165,22 @@ public class VideoReportService {
                                               .toArray(String[]::new));
                 }
 
-                simpleMessage.setText(("Hi %s%n%nYour video report is ready.%nPlease visit: %s/#/view/%s" +
-                        "%nFor discussion of the comments, use the following: %s/#/discuss/%s").formatted(referee.getName(),
-                                                                                                          properties.getBaseUrl(),
-                                                                                                          dto.id(),
-                                                                                                          properties.getBaseUrl(),
-                                                                                                          dto.id()));
+                if (dto.isTextOnly()) {
+                    // text-only report does not video comments discussion
+                    simpleMessage.setText(("Hi %s%n%nYour report is ready.%nPlease visit: %s/#/view/%s")
+                                                  .formatted(referee.getName(),
+                                                             properties.getBaseUrl(),
+                                                             dto.id()));
+
+                } else {
+                    simpleMessage.setText(("Hi %s%n%nYour video report is ready.%nPlease visit: %s/#/view/%s" +
+                            "%nFor discussion of the comments, use the following: %s/#/discuss/%s")
+                                                  .formatted(referee.getName(),
+                                                             properties.getBaseUrl(),
+                                                             dto.id(),
+                                                             properties.getBaseUrl(),
+                                                             dto.id()));
+                }
 
                 mailSender.send(simpleMessage);
             } catch (MailException e) {
