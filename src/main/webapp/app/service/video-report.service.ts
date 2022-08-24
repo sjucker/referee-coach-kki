@@ -8,6 +8,7 @@ import {
     CreateVideoReportDTO,
     Federation,
     Reportee,
+    VideoCommentDTO,
     VideoReportDiscussionDTO,
     VideoReportDTO
 } from "../rest";
@@ -73,9 +74,10 @@ export class VideoReportService {
         return this.httpClient.get<VideoReportDiscussionDTO>(`${this.baseUrl}/video-report/${id}/discussion`);
     }
 
-    reply(id: string, replies: CommentReplyDTO[]): Observable<any> {
+    reply(id: string, replies: CommentReplyDTO[], newComments: VideoCommentDTO[]): Observable<any> {
         const request: CreateRepliesDTO = {
-            replies: replies
+            replies: replies,
+            newComments: newComments
         };
         return this.httpClient.post<CreateRepliesDTO>(`${this.baseUrl}/video-report/${id}/discussion`, request);
     }

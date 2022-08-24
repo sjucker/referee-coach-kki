@@ -31,6 +31,7 @@ export interface CopyVideoReportDTO {
 
 export interface CreateRepliesDTO {
     replies: CommentReplyDTO[];
+    newComments: VideoCommentDTO[];
 }
 
 export interface CreateVideoReportDTO {

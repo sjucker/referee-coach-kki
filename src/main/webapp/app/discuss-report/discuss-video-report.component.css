@@ -20,7 +20,7 @@ p {
     font-size: 10px;
 }
 
-.new-reply {
+.new-reply, .new-comment {
     color: #c2185b;
 }
 

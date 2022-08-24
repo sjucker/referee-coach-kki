@@ -18,6 +18,7 @@ import ch.stefanjucker.refereecoach.mapper.DTOMapper;
 import ch.stefanjucker.refereecoach.service.BasketplanService.Federation;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.RandomStringUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.core.env.Environment;
 import org.springframework.mail.MailException;
 import org.springframework.mail.SimpleMailMessage;
@@ -256,11 +257,19 @@ public class VideoReportService {
             videoCommentReplyRepository.save(new VideoCommentReply(null, repliedBy, LocalDateTime.now(), reply.comment(), reply.commentId()));
         }
 
+        boolean newCommentsMade = false;
+        for (var newComment : dto.newComments()) {
+            if (StringUtils.isNotEmpty(newComment.comment())) {
+                videoCommentRepository.save(new VideoComment(null, newComment.timestamp(), "%s: %s".formatted(repliedBy, newComment.comment()), id));
+                newCommentsMade = true;
+            }
+        }
+
         for (var report : videoReportRepository.findByBasketplanGameGameNumberAndReporterId(videoReport.getBasketplanGame().getGameNumber(),
                                                                                             videoReport.getReporter().getId())) {
 
             if (user != null || !report.getId().equals(id)) {
-                sendDiscussionEmail(repliedBy, report.relevantReferee(), report.getId());
+                sendDiscussionEmail(repliedBy, report.relevantReferee(), report.getId(), newCommentsMade);
             }
         }
 
@@ -268,11 +277,11 @@ public class VideoReportService {
         // user != reporter => another coach replied
         // in both cases send to the reporter
         if (user == null || !user.getId().equals(videoReport.getReporter().getId())) {
-            sendDiscussionEmail(repliedBy, videoReport.getReporter(), videoReport.getId());
+            sendDiscussionEmail(repliedBy, videoReport.getReporter(), videoReport.getId(), newCommentsMade);
         }
     }
 
-    private void sendDiscussionEmail(String repliedBy, HasNameEmail recipient, String reportId) {
+    private void sendDiscussionEmail(String repliedBy, HasNameEmail recipient, String reportId, boolean newCommentsMade) {
         SimpleMailMessage simpleMessage = new SimpleMailMessage();
         try {
             simpleMessage.setSubject("[Referee Coach] New Video Report Discussion");
@@ -285,8 +294,13 @@ public class VideoReportService {
             } else {
                 simpleMessage.setTo(recipient.getEmail());
             }
-            simpleMessage.setText("Hi %s%n%n%s added new replies to a video report.%nPlease visit: %s/#/discuss/%s".formatted(
-                    recipient.getName(), repliedBy, properties.getBaseUrl(), reportId));
+            if (newCommentsMade) {
+                simpleMessage.setText("Hi %s%n%n%s added new replies to a video report.%nAlso, there are comments for new scenes.%nPlease visit: %s/#/discuss/%s".formatted(
+                        recipient.getName(), repliedBy, properties.getBaseUrl(), reportId));
+            } else {
+                simpleMessage.setText("Hi %s%n%n%s added new replies to a video report.%nPlease visit: %s/#/discuss/%s".formatted(
+                        recipient.getName(), repliedBy, properties.getBaseUrl(), reportId));
+            }
 
             log.info("sending email to {}, text: {}", recipient.getEmail(), simpleMessage.getText());
 

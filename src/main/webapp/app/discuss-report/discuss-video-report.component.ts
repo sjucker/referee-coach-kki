@@ -30,6 +30,7 @@ export class DiscussVideoReportComponent implements OnInit, AfterViewInit, OnDes
     notFound = false;
 
     replies: CommentReplyDTO[] = [];
+    newComments: VideoCommentDTO[] = [];
 
     constructor(private route: ActivatedRoute,
                 private videoReportService: VideoReportService,
@@ -114,10 +115,11 @@ export class DiscussVideoReportComponent implements OnInit, AfterViewInit, OnDes
     finishReply(): void {
         this.dialog.open(DiscussVideoReportFinishDialogComponent).afterClosed().subscribe(decision => {
             if (decision && this.dto) {
-                this.videoReportService.reply(this.dto.videoReportId, this.replies).subscribe({
+                this.videoReportService.reply(this.dto.videoReportId, this.replies, this.newComments).subscribe({
                     next: _ => {
                         this.showMessage("Replies saved");
                         this.replies = [];
+                        this.newComments = [];
                     },
                     error: _ => {
                         this.showMessage("Replies could not be saved...")
@@ -137,7 +139,7 @@ export class DiscussVideoReportComponent implements OnInit, AfterViewInit, OnDes
     }
 
     hasUnsavedReplies(): boolean {
-        return this.replies.length > 0;
+        return this.replies.length > 0 || this.newComments.length > 0;
     }
 
     canDeactivate(): Observable<boolean> {
@@ -151,5 +153,28 @@ export class DiscussVideoReportComponent implements OnInit, AfterViewInit, OnDes
     deleteReply(videoComment: VideoCommentDTO, reply: VideoCommentReplyDTO) {
         videoComment.replies.splice(videoComment.replies.indexOf(reply), 1)
         this.replies = this.replies.filter(r => !(r.comment === reply.reply && r.commentId === videoComment.id));
+    }
+
+    addVideoComment() {
+        const timestamp = Math.round(this.youtube!.getCurrentTime());
+
+        // check if there is already a comment in the same timestamp range +/-3 seconds
+        if (this.dto!.videoComments.some(comment => timestamp >= comment.timestamp - 3 && timestamp <= comment.timestamp + 3)) {
+            this.snackBar.open('There is already an existing comment around this timestamp', undefined, {
+                duration: 3000,
+                verticalPosition: "top",
+                horizontalPosition: "center"
+            });
+        } else {
+            const newComment = {
+                id: undefined,
+                comment: '',
+                timestamp: timestamp,
+                replies: []
+            };
+
+            this.dto!.videoComments.push(newComment);
+            this.newComments.push(newComment);
+        }
     }
 }
