@@ -46,8 +46,12 @@ public class VideoReport {
     @Embedded
     private BasketplanGame basketplanGame;
 
-    @Column(length = 1024, name = "general_comment")
-    private String generalComment;
+    @AttributeOverrides({
+            @AttributeOverride(name = "comment", column = @Column(name = "general_comment")),
+            @AttributeOverride(name = "score", column = @Column(name = "general_score"))
+    })
+    @Embedded
+    private CriteriaEvaluation general = new CriteriaEvaluation("", 7.0);
 
     @AttributeOverrides({
             @AttributeOverride(name = "comment", column = @Column(name = "image_comment")),
@@ -107,18 +111,6 @@ public class VideoReport {
             case SECOND_REFEREE -> basketplanGame.getReferee2();
             case THIRD_REFEREE -> basketplanGame.getReferee3();
         };
-    }
-
-    public double getOverallScore() {
-        return Stream.of(image.getScore(), fitness.getScore(), mechanics.getScore(), fouls.getScore(), violations.getScore(), gameManagement.getScore())
-                     .filter(Objects::nonNull)
-                     .mapToDouble(d -> d)
-                     .average()
-                     .orElse(0.0);
-    }
-
-    public String getOverallRating() {
-        return CriteriaEvaluation.getRating(getOverallScore());
     }
 
 }

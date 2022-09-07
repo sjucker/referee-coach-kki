@@ -67,7 +67,7 @@ public interface DTOMapper {
     Referee fromDTO(RefereeDTO refereeDTO);
 
     default void update(VideoReportDTO dto, VideoReport videoReport) {
-        videoReport.setGeneralComment(dto.generalComment());
+        videoReport.setGeneral(new CriteriaEvaluation(dto.general().comment(), dto.general().score()));
 
         videoReport.setImage(new CriteriaEvaluation(dto.image().comment(), dto.image().score()));
         videoReport.setFitness(new CriteriaEvaluation(dto.fitness().comment(), dto.fitness().score()));

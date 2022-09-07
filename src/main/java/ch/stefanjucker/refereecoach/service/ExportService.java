@@ -77,7 +77,7 @@ public class ExportService {
                     row.createCell(columnIndex++).setCellValue(videoReport.getFouls().getScore());
                     row.createCell(columnIndex++).setCellValue(videoReport.getViolations().getScore());
                     row.createCell(columnIndex++).setCellValue(videoReport.getGameManagement().getScore());
-                    row.createCell(columnIndex++).setCellValue(videoReport.getOverallScore());
+                    row.createCell(columnIndex++).setCellValue(videoReport.getGeneral().getScore());
                 }
 
             }

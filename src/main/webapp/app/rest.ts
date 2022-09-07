@@ -93,9 +93,7 @@ export interface VideoReportDTO {
     basketplanGame: BasketplanGameDTO;
     reporter: ReporterDTO;
     reportee: Reportee;
-    overallScore: number;
-    overallRating: string;
-    generalComment?: string;
+    general: CriteriaEvaluationDTO;
     image: CriteriaEvaluationDTO;
     fitness: CriteriaEvaluationDTO;
     mechanics: CriteriaEvaluationDTO;

@@ -35,7 +35,7 @@
                     <span [ngClass]="isSecondUmpire() ? 'reportee' : ''">Umpire 2: {{dto.basketplanGame.referee2!.name}}</span>
                 </div>
                 <div *ngIf="dto.version > 1">
-                    <p>Overall Rating: {{dto.overallRating}}</p>
+                    <p>Overall Rating: {{dto.general.rating}}</p>
                 </div>
             </mat-card-content>
         </mat-card>
@@ -43,7 +43,7 @@
         <mat-card *ngIf="dto.version > 1">
             <mat-card-title>General Comment</mat-card-title>
             <mat-card-content>
-                <p>{{dto.generalComment}}</p>
+                <p>{{dto.general.comment}}</p>
             </mat-card-content>
         </mat-card>
 

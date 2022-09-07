@@ -123,7 +123,7 @@ export class VideoReportComponent implements OnInit, AfterViewInit, OnDestroy {
 
     private isValid(): boolean {
         if (this.report) {
-            return this.isNotEmpty(this.report.generalComment) &&
+            return this.isNotEmpty(this.report.general.comment) &&
                 this.isNotEmpty(this.report.image.comment) &&
                 this.isNotEmpty(this.report.fitness.comment) &&
                 this.isNotEmpty(this.report.mechanics.comment) &&
@@ -193,5 +193,14 @@ export class VideoReportComponent implements OnInit, AfterViewInit, OnDestroy {
             verticalPosition: "top",
             horizontalPosition: "center"
         });
+    }
+
+    getAverage(): number | undefined {
+        return (this.report?.image.score!
+            + this.report?.fitness.score!
+            + this.report?.mechanics.score!
+            + this.report?.fouls.score!
+            + this.report?.violations.score!
+            + this.report?.gameManagement.score!) / 6;
     }
 }

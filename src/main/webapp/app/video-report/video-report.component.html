@@ -50,7 +50,7 @@
             <div>
                 <mat-form-field appearance="fill" color="accent">
                     <mat-label>General Comment</mat-label>
-                    <textarea [(ngModel)]="report.generalComment"
+                    <textarea [(ngModel)]="report.general.comment"
                               (ngModelChange)="onChange()"
                               maxlength="1024"
                               cdkAutosizeMaxRows="5"
@@ -186,6 +186,13 @@
                     [title]="'Game Control and Management'"
                     [dto]="report.gameManagement"
                     (changed)="onChange()"></app-video-report-rating>
+            <br/>
+            <br/>
+            <app-video-report-rating
+                    [title]="'Overall'"
+                    [dto]="report.general"
+                    (changed)="onChange()"></app-video-report-rating>
+            | Average of all critera: {{getAverage() | number: '1.1-1'}}
         </mat-card-content>
     </mat-card>
 
