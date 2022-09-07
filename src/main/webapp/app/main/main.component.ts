@@ -20,6 +20,12 @@ interface ReporteeSelection {
     name: string
 }
 
+const keyFrom = 'referee.coach.from';
+const keyTo = 'referee.coach.to';
+const keyFilter = 'referee.coach.filter';
+
+const dateFormat = 'yyyy-MM-dd';
+
 @Component({
     selector: 'app-main',
     templateUrl: './main.component.html',
@@ -45,6 +51,7 @@ export class MainComponent implements OnInit {
 
     from = this.getFrom();
     to = this.getTo();
+    filter = this.getFilter();
 
     exporting = false;
 
@@ -57,6 +64,11 @@ export class MainComponent implements OnInit {
     }
 
     private getFrom(): DateTime {
+        const item = sessionStorage.getItem(keyFrom);
+        if (item) {
+            return DateTime.fromFormat(item, dateFormat);
+        }
+
         const now = DateTime.now();
         if (now.month > 6) {
             return DateTime.local(now.year, 9, 1);
@@ -66,12 +78,21 @@ export class MainComponent implements OnInit {
     }
 
     private getTo(): DateTime {
+        const item = sessionStorage.getItem(keyTo);
+        if (item) {
+            return DateTime.fromFormat(item, dateFormat);
+        }
+
         const now = DateTime.now();
         if (now.month > 6) {
             return DateTime.local(now.year + 1, 6, 30);
         } else {
             return DateTime.local(now.year, 6, 30);
         }
+    }
+
+    private getFilter(): string | null {
+        return sessionStorage.getItem(keyFilter);
     }
 
     ngOnInit(): void {
@@ -95,6 +116,10 @@ export class MainComponent implements OnInit {
                         || data.basketplanGame.teamB.toLowerCase().indexOf(filter) != -1
                         || data.reporter.name.toLowerCase().indexOf(filter) != -1
                         || this.getReportee(data).toLowerCase().indexOf(filter) != -1;
+                }
+                const currentFilter = sessionStorage.getItem(keyFilter);
+                if (currentFilter) {
+                    this.videoReportDtos.filter = currentFilter;
                 }
             },
             error: _ => {
@@ -197,6 +222,7 @@ export class MainComponent implements OnInit {
     applyFilter(event: Event) {
         const filterValue = (event.target as HTMLInputElement).value;
         this.videoReportDtos.filter = filterValue.trim().toLowerCase();
+        sessionStorage.setItem(keyFilter, this.videoReportDtos.filter);
     }
 
     isEditable(report: VideoReportDTO) {
@@ -268,8 +294,12 @@ export class MainComponent implements OnInit {
     }
 
     dateFilterChanged() {
-        this.reportsLoaded = false;
-        this.loadVideoReports();
+        if (this.from && this.to) {
+            this.reportsLoaded = false;
+            sessionStorage.setItem(keyFrom, this.from.toFormat(dateFormat));
+            sessionStorage.setItem(keyTo, this.to.toFormat(dateFormat));
+            this.loadVideoReports();
+        }
     }
 
     export() {

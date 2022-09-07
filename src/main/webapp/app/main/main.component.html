@@ -53,7 +53,7 @@
             <div fxLayout="column" fxLayout.gt-sm="row" fxLayoutGap.gt-sm="20px">
                 <mat-form-field appearance="standard" fxFlex="70%">
                     <mat-label>Filter</mat-label>
-                    <input matInput (keyup)="applyFilter($event)">
+                    <input matInput (keyup)="applyFilter($event)" [(ngModel)]="filter">
                 </mat-form-field>
                 <mat-form-field appearance="fill" fxFlex="13%">
                     <mat-label>From</mat-label>
