@@ -233,6 +233,9 @@
                             <button (click)="deleteComment(videoComment)" color="accent" mat-stroked-button>
                                 Delete Comment
                             </button>
+                            <button (click)="copyComment(videoComment)" color="accent" mat-stroked-button *ngIf="isCopyCommentVisible(videoComment)">
+                                Copy Comment to other Report
+                            </button>
                         </mat-card-actions>
                     </mat-card>
                 </div>

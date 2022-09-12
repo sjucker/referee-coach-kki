@@ -7,7 +7,7 @@ import {MatTableDataSource} from "@angular/material/table";
 import {AuthenticationService} from "../service/authentication.service";
 import {MatSnackBar} from "@angular/material/snack-bar";
 import {MatDialog} from "@angular/material/dialog";
-import {VideoReportCopyDialogComponent} from "../video-report-copy-dialog/video-report-copy-dialog.component";
+import {VideoReportCopyDialogComponent, VideoReportCopyDialogData} from "../video-report-copy-dialog/video-report-copy-dialog.component";
 import {VideoReportDeleteDialogComponent} from "../video-report-delete-dialog/video-report-delete-dialog.component";
 import getVideoId from "get-video-id";
 import {MatPaginator} from "@angular/material/paginator";
@@ -238,7 +238,16 @@ export class MainComponent implements OnInit {
     }
 
     copy(report: VideoReportDTO) {
-        this.dialog.open(VideoReportCopyDialogComponent, {data: report}).afterClosed().subscribe((reportee: Reportee) => {
+        this.dialog.open(VideoReportCopyDialogComponent, {
+            data: {
+                reportee: report.reportee,
+                referee1: report.basketplanGame.referee1,
+                referee2: report.basketplanGame.referee2,
+                referee3: report.basketplanGame.referee3,
+                title: 'Copy Report',
+                description: 'A new report will be created containing all comments from the existing source report.'
+            } as VideoReportCopyDialogData
+        }).afterClosed().subscribe((reportee: Reportee) => {
             if (reportee) {
                 this.videoReportService.copyVideoReport(report.id, reportee).subscribe({
                     next: response => {

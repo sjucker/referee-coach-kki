@@ -24,6 +24,11 @@ export interface CommentReplyDTO {
     comment: string;
 }
 
+export interface CopyVideoCommentDTO {
+    sourceId: number;
+    reportee: Reportee;
+}
+
 export interface CopyVideoReportDTO {
     sourceId: string;
     reportee: Reportee;
@@ -124,6 +129,7 @@ export interface VideoReportDTO {
     pointsToKeepComment?: string;
     pointsToImproveComment?: string;
     videoComments: VideoCommentDTO[];
+    otherReportees: Reportee[];
     finished: boolean;
     version: number;
     textOnly: boolean;

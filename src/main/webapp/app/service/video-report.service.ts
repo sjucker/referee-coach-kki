@@ -3,6 +3,7 @@ import {HttpClient} from "@angular/common/http";
 import {Observable} from "rxjs";
 import {
     CommentReplyDTO,
+    CopyVideoCommentDTO,
     CopyVideoReportDTO,
     CreateRepliesDTO,
     CreateVideoReportDTO,
@@ -63,6 +64,14 @@ export class VideoReportService {
             reportee: reportee,
         };
         return this.httpClient.post<VideoReportDTO>(`${this.baseUrl}/video-report/copy`, request)
+    }
+
+    copyVideoComment(videoComment: VideoCommentDTO, reportee: Reportee) {
+        const request: CopyVideoCommentDTO = {
+            sourceId: videoComment.id!,
+            reportee: reportee,
+        };
+        return this.httpClient.post<VideoReportDTO>(`${this.baseUrl}/video-report/copy-comment`, request)
     }
 
     saveVideoReport(dto: VideoReportDTO): Observable<VideoReportDTO> {

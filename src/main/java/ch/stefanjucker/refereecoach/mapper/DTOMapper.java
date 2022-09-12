@@ -10,6 +10,7 @@ import ch.stefanjucker.refereecoach.domain.VideoCommentReply;
 import ch.stefanjucker.refereecoach.domain.VideoReport;
 import ch.stefanjucker.refereecoach.dto.BasketplanGameDTO;
 import ch.stefanjucker.refereecoach.dto.RefereeDTO;
+import ch.stefanjucker.refereecoach.dto.Reportee;
 import ch.stefanjucker.refereecoach.dto.ReporterDTO;
 import ch.stefanjucker.refereecoach.dto.TagDTO;
 import ch.stefanjucker.refereecoach.dto.VideoCommentDTO;
@@ -33,11 +34,12 @@ public interface DTOMapper {
     ReporterDTO toDTO(User user);
 
     default VideoReportDTO toDTO(VideoReport videoReport) {
-        return toDTO(videoReport, List.of());
+        return toDTO(videoReport, List.of(), List.of());
     }
 
     @Mapping(target = "videoComments", source = "videoCommentDTOs")
-    VideoReportDTO toDTO(VideoReport videoReport, List<VideoCommentDTO> videoCommentDTOs);
+    @Mapping(target = "otherReportees", source = "otherReportees")
+    VideoReportDTO toDTO(VideoReport videoReport, List<VideoCommentDTO> videoCommentDTOs, List<Reportee> otherReportees);
 
     default VideoCommentDTO toDTO(VideoComment videoComment) {
         return toDTO(videoComment, List.of());

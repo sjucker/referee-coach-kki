@@ -20,6 +20,7 @@ public record VideoReportDTO(@NotNull String id,
                              @Length(max = 1024) String pointsToKeepComment,
                              @Length(max = 1024) String pointsToImproveComment,
                              @NotNull List<VideoCommentDTO> videoComments,
+                             @NotNull List<Reportee> otherReportees,
                              boolean finished,
                              int version) {
     public boolean isTextOnly() {

@@ -10,6 +10,7 @@ import {MatSnackBar} from "@angular/material/snack-bar";
 import {Observable, of} from "rxjs";
 import {VideoReportUnsavedChangesDialogComponent} from "../video-report-unsaved-changes-dialog/video-report-unsaved-changes-dialog.component";
 import {VIEW_PATH} from "../app-routing.module";
+import {VideoReportCopyDialogComponent, VideoReportCopyDialogData} from "../video-report-copy-dialog/video-report-copy-dialog.component";
 
 @Component({
     selector: 'app-video-report',
@@ -154,6 +155,33 @@ export class VideoReportComponent implements OnInit, AfterViewInit, OnDestroy {
     deleteComment(videoComment: VideoCommentDTO) {
         this.onChange();
         this.report!.videoComments.splice(this.report!.videoComments.indexOf(videoComment), 1);
+    }
+
+    copyComment(videoComment: VideoCommentDTO) {
+        this.dialog.open(VideoReportCopyDialogComponent, {
+            data: {
+                reportee: this.report!.reportee,
+                referee1: this.report!.otherReportees.indexOf(Reportee.FIRST_REFEREE) >= 0 ? this.report!.basketplanGame.referee1 : null,
+                referee2: this.report!.otherReportees.indexOf(Reportee.SECOND_REFEREE) >= 0 ? this.report!.basketplanGame.referee2 : null,
+                referee3: this.report!.otherReportees.indexOf(Reportee.THIRD_REFEREE) >= 0 ? this.report!.basketplanGame.referee3 : null,
+
+                title: 'Copy Comment to other Report',
+                description: 'This will create the same comment in the report for selected referee.'
+            } as VideoReportCopyDialogData
+        }).afterClosed().subscribe((reportee: Reportee) => {
+            this.videoReportService.copyVideoComment(videoComment, reportee).subscribe({
+                next: _ => {
+                    this.showMessage("Successfully copied!");
+                },
+                error: _ => {
+                    this.showMessage("An unexpected error occurred, comment could not be copied.");
+                }
+            })
+        });
+    }
+
+    isCopyCommentVisible(videoComment: VideoCommentDTO): boolean {
+        return this.report!.otherReportees.length > 0 && !!videoComment.id
     }
 
     is2PO(): boolean {

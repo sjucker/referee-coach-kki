@@ -93,7 +93,16 @@ public class VideoReportService {
         videoReport.setFinished(false);
         videoReport.setVersion(CURRENT_VERSION);
 
-        return DTO_MAPPER.toDTO(videoReportRepository.save(videoReport));
+        return DTO_MAPPER.toDTO(videoReportRepository.save(videoReport), List.of(), getOtherReportees(videoReport));
+    }
+
+    private List<Reportee> getOtherReportees(VideoReport videoReport) {
+        return videoReportRepository.findByBasketplanGameGameNumberAndReporterId(videoReport.getBasketplanGame().getGameNumber(),
+                                                                                 videoReport.getReporter().getId())
+                                    .stream()
+                                    .map(VideoReport::getReportee)
+                                    .filter(reportee -> reportee != videoReport.getReportee())
+                                    .toList();
     }
 
     public VideoReportDTO copy(String sourceId, Reportee reportee, User user) {
@@ -113,7 +122,22 @@ public class VideoReportService {
             newComments.add(DTO_MAPPER.toDTO(videoCommentRepository.save(commentCopy)));
         }
 
-        return DTO_MAPPER.toDTO(newVideoReport, newComments);
+        return DTO_MAPPER.toDTO(newVideoReport, newComments, getOtherReportees(newVideoReport));
+    }
+
+    public void copyVideoComment(Long sourceId, Reportee reportee, User user) {
+        // TODO check that comment does not yet exists in other report
+        var source = videoCommentRepository.getReferenceById(sourceId);
+        var gameNumber = videoReportRepository.getReferenceById(source.getVideoReportId()).getBasketplanGame().getGameNumber();
+
+        var videoReport = videoReportRepository.findByBasketplanGameGameNumberAndReporterId(gameNumber, user.getId()).stream()
+                                               .filter(s -> s.getReportee() == reportee)
+                                               .findFirst()
+                                               .orElseThrow();
+
+        var copy = DTO_MAPPER.copy(source);
+        copy.setVideoReportId(videoReport.getId());
+        videoCommentRepository.save(copy);
     }
 
     private String getUuid() {
@@ -196,7 +220,7 @@ public class VideoReportService {
                 log.error("could not send email to: " + Arrays.toString(simpleMessage.getTo()), e);
             }
         }
-        return DTO_MAPPER.toDTO(videoReport, comments);
+        return DTO_MAPPER.toDTO(videoReport, comments, getOtherReportees(videoReport));
     }
 
     public Optional<VideoReportDTO> find(String id) {
@@ -208,7 +232,7 @@ public class VideoReportService {
         }
 
         return videoReportRepository.findById(id)
-                                    .map(videoReport -> DTO_MAPPER.toDTO(videoReport, videoCommentDTOs));
+                                    .map(videoReport -> DTO_MAPPER.toDTO(videoReport, videoCommentDTOs, getOtherReportees(videoReport)));
     }
 
     public void delete(String id, User user) {
