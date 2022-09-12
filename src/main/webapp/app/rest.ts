@@ -69,6 +69,19 @@ export interface ReporterDTO {
     name: string;
 }
 
+export interface SearchRequestDTO {
+    tags: TagDTO[];
+}
+
+export interface SearchResponseDTO {
+    results: VideoCommentDetailDTO[];
+}
+
+export interface TagDTO {
+    id: number;
+    name: string;
+}
+
 export interface UserDTO {
     email?: string;
     admin: boolean;
@@ -79,6 +92,14 @@ export interface VideoCommentDTO {
     timestamp: number;
     comment: string;
     replies: VideoCommentReplyDTO[];
+    tags: TagDTO[];
+}
+
+export interface VideoCommentDetailDTO {
+    basketplanGame: BasketplanGameDTO;
+    timestamp: number;
+    comment: string;
+    tags: TagDTO[];
 }
 
 export interface VideoCommentReplyDTO {

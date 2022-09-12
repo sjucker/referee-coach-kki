@@ -5,6 +5,9 @@ import ch.stefanjucker.refereecoach.domain.repository.UserRepository;
 import ch.stefanjucker.refereecoach.dto.CopyVideoReportDTO;
 import ch.stefanjucker.refereecoach.dto.CreateRepliesDTO;
 import ch.stefanjucker.refereecoach.dto.CreateVideoReportDTO;
+import ch.stefanjucker.refereecoach.dto.SearchRequestDTO;
+import ch.stefanjucker.refereecoach.dto.SearchResponseDTO;
+import ch.stefanjucker.refereecoach.dto.TagDTO;
 import ch.stefanjucker.refereecoach.dto.VideoCommentReplyDTO;
 import ch.stefanjucker.refereecoach.dto.VideoReportDTO;
 import ch.stefanjucker.refereecoach.dto.VideoReportDiscussionDTO;
@@ -147,6 +150,18 @@ public class VideoReportResource {
             log.error("Export failed", e);
             return ResponseEntity.internalServerError().build();
         }
+    }
+
+    @GetMapping(path = "/tags")
+    public ResponseEntity<List<TagDTO>> tags() {
+        log.info("GET /video-report/tags");
+        return ResponseEntity.ok(videoReportService.getAllAvailableTags());
+    }
+
+    @PostMapping(path = "/search")
+    public ResponseEntity<SearchResponseDTO> search(@RequestBody @Valid SearchRequestDTO dto) {
+        log.info("POST /video-report/search {}", dto);
+        return ResponseEntity.ok(new SearchResponseDTO(videoReportService.search(dto)));
     }
 
 }

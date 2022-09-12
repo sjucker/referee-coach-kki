@@ -170,7 +170,8 @@ export class DiscussVideoReportComponent implements OnInit, AfterViewInit, OnDes
                 id: undefined,
                 comment: '',
                 timestamp: timestamp,
-                replies: []
+                replies: [],
+                tags: []
             };
 
             this.dto!.videoComments.push(newComment);

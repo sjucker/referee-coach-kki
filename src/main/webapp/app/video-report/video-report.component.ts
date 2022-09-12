@@ -2,7 +2,7 @@ import {AfterViewInit, Component, ElementRef, OnDestroy, OnInit, ViewChild} from
 import {YouTubePlayer} from "@angular/youtube-player";
 import {BasketplanService} from "../service/basketplan.service";
 import {VideoReportService} from "../service/video-report.service";
-import {OfficiatingMode, Reportee, VideoCommentDTO, VideoReportDTO} from "../rest";
+import {OfficiatingMode, Reportee, TagDTO, VideoCommentDTO, VideoReportDTO} from "../rest";
 import {ActivatedRoute, Router} from "@angular/router";
 import {MatDialog} from "@angular/material/dialog";
 import {VideoReportFinishDialogComponent} from "../video-report-finish-dialog/video-report-finish-dialog.component";
@@ -146,7 +146,8 @@ export class VideoReportComponent implements OnInit, AfterViewInit, OnDestroy {
             id: undefined,
             comment: '',
             timestamp: Math.round(this.youtube!.getCurrentTime()),
-            replies: []
+            replies: [],
+            tags: []
         })
     }
 
@@ -202,5 +203,15 @@ export class VideoReportComponent implements OnInit, AfterViewInit, OnDestroy {
             + this.report?.fouls.score!
             + this.report?.violations.score!
             + this.report?.gameManagement.score!) / 6;
+    }
+
+    selectTag(videoComment: VideoCommentDTO, tag: TagDTO) {
+        this.onChange();
+        videoComment.tags.push(tag);
+    }
+
+    removeTag(videoComment: VideoCommentDTO, tag: TagDTO) {
+        this.onChange();
+        videoComment.tags.splice(videoComment.tags.indexOf(tag), 1);
     }
 }

@@ -6,12 +6,16 @@ import ch.stefanjucker.refereecoach.domain.User;
 import ch.stefanjucker.refereecoach.domain.VideoComment;
 import ch.stefanjucker.refereecoach.domain.VideoCommentReply;
 import ch.stefanjucker.refereecoach.domain.VideoReport;
+import ch.stefanjucker.refereecoach.domain.repository.TagsRepository;
 import ch.stefanjucker.refereecoach.domain.repository.VideoCommentReplyRepository;
 import ch.stefanjucker.refereecoach.domain.repository.VideoCommentRepository;
 import ch.stefanjucker.refereecoach.domain.repository.VideoReportRepository;
 import ch.stefanjucker.refereecoach.dto.CreateRepliesDTO;
 import ch.stefanjucker.refereecoach.dto.Reportee;
+import ch.stefanjucker.refereecoach.dto.SearchRequestDTO;
+import ch.stefanjucker.refereecoach.dto.TagDTO;
 import ch.stefanjucker.refereecoach.dto.VideoCommentDTO;
+import ch.stefanjucker.refereecoach.dto.VideoCommentDetailDTO;
 import ch.stefanjucker.refereecoach.dto.VideoReportDTO;
 import ch.stefanjucker.refereecoach.dto.VideoReportDiscussionDTO;
 import ch.stefanjucker.refereecoach.mapper.DTOMapper;
@@ -38,6 +42,7 @@ import java.util.stream.Stream;
 
 import static ch.stefanjucker.refereecoach.domain.VideoReport.CURRENT_VERSION;
 import static java.util.stream.Collectors.toCollection;
+import static java.util.stream.Collectors.toSet;
 
 @Slf4j
 @Service
@@ -51,6 +56,7 @@ public class VideoReportService {
     private final VideoReportRepository videoReportRepository;
     private final VideoCommentRepository videoCommentRepository;
     private final VideoCommentReplyRepository videoCommentReplyRepository;
+    private final TagsRepository tagsRepository;
     private final BasketplanService basketplanService;
     private final JavaMailSender mailSender;
     private final RefereeCoachProperties properties;
@@ -59,6 +65,7 @@ public class VideoReportService {
     public VideoReportService(VideoReportRepository videoReportRepository,
                               VideoCommentRepository videoCommentRepository,
                               VideoCommentReplyRepository videoCommentReplyRepository,
+                              TagsRepository tagsRepository,
                               BasketplanService basketplanService,
                               JavaMailSender mailSender,
                               RefereeCoachProperties properties,
@@ -66,6 +73,7 @@ public class VideoReportService {
         this.videoReportRepository = videoReportRepository;
         this.videoCommentRepository = videoCommentRepository;
         this.videoCommentReplyRepository = videoCommentReplyRepository;
+        this.tagsRepository = tagsRepository;
         this.basketplanService = basketplanService;
         this.mailSender = mailSender;
         this.properties = properties;
@@ -260,7 +268,7 @@ public class VideoReportService {
         boolean newCommentsMade = false;
         for (var newComment : dto.newComments()) {
             if (StringUtils.isNotEmpty(newComment.comment())) {
-                videoCommentRepository.save(new VideoComment(null, newComment.timestamp(), "%s: %s".formatted(repliedBy, newComment.comment()), id));
+                videoCommentRepository.save(new VideoComment(null, newComment.timestamp(), "%s: %s".formatted(repliedBy, newComment.comment()), id, new HashSet<>()));
                 newCommentsMade = true;
             }
         }
@@ -308,5 +316,23 @@ public class VideoReportService {
         } catch (MailException e) {
             log.error("could not send email to: " + Arrays.toString(simpleMessage.getTo()), e);
         }
+    }
+
+    public List<TagDTO> getAllAvailableTags() {
+        return tagsRepository.findAll().stream()
+                             .map(DTO_MAPPER::toDTO)
+                             .toList();
+
+    }
+
+    public List<VideoCommentDetailDTO> search(SearchRequestDTO dto) {
+        List<VideoComment> commentsHavingTags = videoCommentRepository.findCommentsHavingTags(dto.tags().stream()
+                                                                                                 .map(TagDTO::id)
+                                                                                                 .collect(toSet()));
+        return commentsHavingTags.stream()
+                                 .map(comment -> DTO_MAPPER.toDTO(videoReportRepository.getReferenceById(comment.getVideoReportId())
+                                                                                       .getBasketplanGame(), comment))
+                                 .toList();
+
     }
 }

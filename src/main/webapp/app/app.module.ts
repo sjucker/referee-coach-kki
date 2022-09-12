@@ -45,6 +45,10 @@ import {MatDatepickerModule} from "@angular/material/datepicker";
 import {MatLuxonDateModule} from "@angular/material-luxon-adapter";
 import {MAT_DATE_FORMATS} from "@angular/material/core";
 import {MatCheckboxModule} from "@angular/material/checkbox";
+import {MatChipsModule} from "@angular/material/chips";
+import {MatAutocompleteModule} from "@angular/material/autocomplete";
+import {ReportSearchComponent} from './report-search/report-search.component';
+import {TagsSelectionComponent} from './tags-selection/tags-selection.component';
 
 @NgModule({
     declarations: [
@@ -63,6 +67,8 @@ import {MatCheckboxModule} from "@angular/material/checkbox";
         DiscussVideoReportUnsavedRepliesDialogComponent,
         DiscussVideoReportFinishDialogComponent,
         VideoReportRatingComponent,
+        ReportSearchComponent,
+        TagsSelectionComponent,
     ],
     imports: [
         BrowserModule,
@@ -93,7 +99,9 @@ import {MatCheckboxModule} from "@angular/material/checkbox";
         MatSliderModule,
         MatDatepickerModule,
         MatLuxonDateModule,
-        MatCheckboxModule
+        MatCheckboxModule,
+        MatChipsModule,
+        MatAutocompleteModule
     ],
     providers: [
         {provide: HTTP_INTERCEPTORS, useClass: AuthenticationInterceptor, multi: true},

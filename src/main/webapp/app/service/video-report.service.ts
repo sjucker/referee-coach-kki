@@ -8,6 +8,9 @@ import {
     CreateVideoReportDTO,
     Federation,
     Reportee,
+    SearchRequestDTO,
+    SearchResponseDTO,
+    TagDTO,
     VideoCommentDTO,
     VideoReportDiscussionDTO,
     VideoReportDTO
@@ -86,5 +89,13 @@ export class VideoReportService {
         return this.httpClient.get(`${this.baseUrl}/video-report/export`, {
             responseType: 'blob'
         });
+    }
+
+    getAllAvailableTags(): Observable<TagDTO[]> {
+        return this.httpClient.get<TagDTO[]>(`${this.baseUrl}/video-report/tags`)
+    }
+
+    search(request: SearchRequestDTO): Observable<SearchResponseDTO> {
+        return this.httpClient.post<SearchResponseDTO>(`${this.baseUrl}/video-report/search`, request);
     }
 }

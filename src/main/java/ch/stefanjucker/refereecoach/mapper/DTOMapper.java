@@ -3,6 +3,7 @@ package ch.stefanjucker.refereecoach.mapper;
 import ch.stefanjucker.refereecoach.domain.BasketplanGame;
 import ch.stefanjucker.refereecoach.domain.CriteriaEvaluation;
 import ch.stefanjucker.refereecoach.domain.Referee;
+import ch.stefanjucker.refereecoach.domain.Tags;
 import ch.stefanjucker.refereecoach.domain.User;
 import ch.stefanjucker.refereecoach.domain.VideoComment;
 import ch.stefanjucker.refereecoach.domain.VideoCommentReply;
@@ -10,7 +11,9 @@ import ch.stefanjucker.refereecoach.domain.VideoReport;
 import ch.stefanjucker.refereecoach.dto.BasketplanGameDTO;
 import ch.stefanjucker.refereecoach.dto.RefereeDTO;
 import ch.stefanjucker.refereecoach.dto.ReporterDTO;
+import ch.stefanjucker.refereecoach.dto.TagDTO;
 import ch.stefanjucker.refereecoach.dto.VideoCommentDTO;
+import ch.stefanjucker.refereecoach.dto.VideoCommentDetailDTO;
 import ch.stefanjucker.refereecoach.dto.VideoCommentReplyDTO;
 import ch.stefanjucker.refereecoach.dto.VideoReportDTO;
 import org.mapstruct.Mapper;
@@ -18,6 +21,7 @@ import org.mapstruct.Mapping;
 import org.mapstruct.factory.Mappers;
 
 import java.util.List;
+import java.util.Set;
 
 @Mapper
 public interface DTOMapper {
@@ -65,6 +69,12 @@ public interface DTOMapper {
     @Mapping(target = "email", ignore = true)
     @Mapping(target = "level", ignore = true)
     Referee fromDTO(RefereeDTO refereeDTO);
+
+    TagDTO toDTO(Tags tags);
+
+    Set<TagDTO> toDTO(Set<Tags> tags);
+
+    VideoCommentDetailDTO toDTO(BasketplanGame basketplanGame, VideoComment videoComment);
 
     default void update(VideoReportDTO dto, VideoReport videoReport) {
         videoReport.setGeneral(new CriteriaEvaluation(dto.general().comment(), dto.general().score()));

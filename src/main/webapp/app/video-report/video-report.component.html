@@ -223,6 +223,8 @@
                                           cdkTextareaAutosize
                                           matInput></textarea>
                             </mat-form-field>
+                            <app-tags-selection (removed)="removeTag(videoComment, $event)"
+                                                (selected)="selectTag(videoComment, $event)"></app-tags-selection>
                         </mat-card-content>
                         <mat-card-actions>
                             <button (click)="jumpTo(videoComment.timestamp)" color="accent" mat-stroked-button>
