@@ -1,4 +1,4 @@
-import {Component, ElementRef, EventEmitter, OnInit, Output, ViewChild} from '@angular/core';
+import {Component, ElementRef, EventEmitter, Input, OnInit, Output, ViewChild} from '@angular/core';
 import {TagDTO} from "../rest";
 import {FormControl} from "@angular/forms";
 import {MatAutocompleteSelectedEvent} from "@angular/material/autocomplete";
@@ -12,6 +12,9 @@ import {VideoReportService} from "../service/video-report.service";
 export class TagsSelectionComponent implements OnInit {
 
     @ViewChild('tagInput') tagInput?: ElementRef<HTMLInputElement>;
+
+    @Input()
+    initialSelectedTags: TagDTO[] = [];
 
     selectedTags: TagDTO[] = [];
 
@@ -40,7 +43,9 @@ export class TagsSelectionComponent implements OnInit {
             } else {
                 this.filteredTags = this.tags.slice();
             }
-        })
+        });
+
+        this.selectedTags = [...this.initialSelectedTags];
     }
 
     removeTag(tag: TagDTO) {
