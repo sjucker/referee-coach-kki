@@ -24,6 +24,11 @@ export interface CommentReplyDTO {
     comment: string;
 }
 
+export interface CopyVideoCommentDTO {
+    sourceId: number;
+    reportee: Reportee;
+}
+
 export interface CopyVideoReportDTO {
     sourceId: string;
     reportee: Reportee;
@@ -31,13 +36,20 @@ export interface CopyVideoReportDTO {
 
 export interface CreateRepliesDTO {
     replies: CommentReplyDTO[];
+    newComments: VideoCommentDTO[];
 }
 
 export interface CreateVideoReportDTO {
     federation: Federation;
     gameNumber: string;
-    youtubeId: string;
+    youtubeId?: string;
     reportee: Reportee;
+}
+
+export interface CriteriaEvaluationDTO {
+    comment?: string;
+    score?: number;
+    rating?: string;
 }
 
 export interface LoginRequestDTO {
@@ -62,6 +74,19 @@ export interface ReporterDTO {
     name: string;
 }
 
+export interface SearchRequestDTO {
+    tags: TagDTO[];
+}
+
+export interface SearchResponseDTO {
+    results: VideoCommentDetailDTO[];
+}
+
+export interface TagDTO {
+    id: number;
+    name: string;
+}
+
 export interface UserDTO {
     email?: string;
     admin: boolean;
@@ -72,6 +97,14 @@ export interface VideoCommentDTO {
     timestamp: number;
     comment: string;
     replies: VideoCommentReplyDTO[];
+    tags: TagDTO[];
+}
+
+export interface VideoCommentDetailDTO {
+    basketplanGame: BasketplanGameDTO;
+    timestamp: number;
+    comment: string;
+    tags: TagDTO[];
 }
 
 export interface VideoCommentReplyDTO {
@@ -86,14 +119,20 @@ export interface VideoReportDTO {
     basketplanGame: BasketplanGameDTO;
     reporter: ReporterDTO;
     reportee: Reportee;
-    imageComment?: string;
-    mechanicsComment?: string;
-    foulsComment?: string;
-    gameManagementComment?: string;
+    general: CriteriaEvaluationDTO;
+    image: CriteriaEvaluationDTO;
+    fitness: CriteriaEvaluationDTO;
+    mechanics: CriteriaEvaluationDTO;
+    fouls: CriteriaEvaluationDTO;
+    violations: CriteriaEvaluationDTO;
+    gameManagement: CriteriaEvaluationDTO;
     pointsToKeepComment?: string;
     pointsToImproveComment?: string;
     videoComments: VideoCommentDTO[];
+    otherReportees: Reportee[];
     finished: boolean;
+    version: number;
+    textOnly: boolean;
 }
 
 export interface VideoReportDiscussionDTO {

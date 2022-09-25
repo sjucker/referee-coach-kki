@@ -36,9 +36,19 @@ import {MatPaginatorModule} from "@angular/material/paginator";
 import {MatProgressBarModule} from "@angular/material/progress-bar";
 import {VideoReportReplyDialogComponent} from './video-report-reply-dialog/video-report-reply-dialog.component';
 import {MatTooltipModule} from "@angular/material/tooltip";
-import { DiscussVideoReportComponent } from './discuss-report/discuss-video-report.component';
-import { DiscussVideoReportUnsavedRepliesDialogComponent } from './discuss-video-report-unsaved-replies-dialog/discuss-video-report-unsaved-replies-dialog.component';
-import { DiscussVideoReportFinishDialogComponent } from './discuss-video-report-finish-dialog/discuss-video-report-finish-dialog.component';
+import {DiscussVideoReportComponent} from './discuss-report/discuss-video-report.component';
+import {DiscussVideoReportUnsavedRepliesDialogComponent} from './discuss-video-report-unsaved-replies-dialog/discuss-video-report-unsaved-replies-dialog.component';
+import {DiscussVideoReportFinishDialogComponent} from './discuss-video-report-finish-dialog/discuss-video-report-finish-dialog.component';
+import {MatSliderModule} from "@angular/material/slider";
+import {VideoReportRatingComponent} from './video-report-rating/video-report-rating.component';
+import {MatDatepickerModule} from "@angular/material/datepicker";
+import {MatLuxonDateModule} from "@angular/material-luxon-adapter";
+import {MAT_DATE_FORMATS} from "@angular/material/core";
+import {MatCheckboxModule} from "@angular/material/checkbox";
+import {MatChipsModule} from "@angular/material/chips";
+import {MatAutocompleteModule} from "@angular/material/autocomplete";
+import {ReportSearchComponent} from './report-search/report-search.component';
+import {TagsSelectionComponent} from './tags-selection/tags-selection.component';
 
 @NgModule({
     declarations: [
@@ -56,6 +66,9 @@ import { DiscussVideoReportFinishDialogComponent } from './discuss-video-report-
         DiscussVideoReportComponent,
         DiscussVideoReportUnsavedRepliesDialogComponent,
         DiscussVideoReportFinishDialogComponent,
+        VideoReportRatingComponent,
+        ReportSearchComponent,
+        TagsSelectionComponent,
     ],
     imports: [
         BrowserModule,
@@ -83,8 +96,28 @@ import { DiscussVideoReportFinishDialogComponent } from './discuss-video-report-
         MatPaginatorModule,
         MatProgressBarModule,
         MatTooltipModule,
+        MatSliderModule,
+        MatDatepickerModule,
+        MatLuxonDateModule,
+        MatCheckboxModule,
+        MatChipsModule,
+        MatAutocompleteModule
     ],
-    providers: [{provide: HTTP_INTERCEPTORS, useClass: AuthenticationInterceptor, multi: true}],
+    providers: [
+        {provide: HTTP_INTERCEPTORS, useClass: AuthenticationInterceptor, multi: true},
+        {
+            provide: MAT_DATE_FORMATS, useValue: {
+                parse: {
+                    dateInput: 'dd.MM.yyyy',
+                },
+                display: {
+                    dateInput: 'dd.MM.yyyy',
+                    monthYearLabel: 'MMM yyyy',
+                    dateA11yLabel: 'dd.MM.yyyy',
+                    monthYearA11yLabel: 'MMMM yyyy',
+                },
+            }
+        }],
     bootstrap: [AppComponent]
 })
 export class AppModule {

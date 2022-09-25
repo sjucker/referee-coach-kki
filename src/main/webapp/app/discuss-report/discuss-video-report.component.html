@@ -44,20 +44,22 @@
             </mat-card-content>
         </mat-card>
 
-
-        <mat-card>
+        <mat-card *ngIf="dto.basketplanGame.youtubeId">
             <mat-card-content>
                 <div fxLayout="column" fxLayout.gt-md="row">
-                    <div>
+                    <div fxLayout="column">
                         <youtube-player #youtubePlayer
                                         [videoId]="dto.basketplanGame.youtubeId"
                                         [width]="videoWidth"
                                         [height]="videoHeight"></youtube-player>
+                        <button (click)="addVideoComment()" color="primary" mat-flat-button *ngIf="!isLoggedIn()">
+                            Create additional comment for current timestamp
+                        </button>
                     </div>
                     <div fxFlex="stretch" id="video-comments-container">
                         <mat-card *ngFor="let videoComment of dto.videoComments; index as i;">
-                            <mat-card-title>Video Comment #{{i + 1}}</mat-card-title>
-                            <mat-card-content>
+                            <mat-card-title [ngClass]="videoComment.id ? '' : 'new-comment'">Video Comment #{{i + 1}}</mat-card-title>
+                            <mat-card-content *ngIf="videoComment.id">
                                 <p>{{videoComment.comment}}</p>
                                 <hr *ngIf="videoComment.replies.length > 0">
                                 <div *ngFor="let reply of videoComment.replies">
@@ -71,11 +73,22 @@
                                     <p class="reply">{{reply.reply}}</p>
                                 </div>
                             </mat-card-content>
+                            <mat-card-content *ngIf="!videoComment.id">
+                                <mat-form-field appearance="fill" color="accent">
+                                    <mat-label>Comment</mat-label>
+                                    <textarea [(ngModel)]="videoComment.comment"
+                                              maxlength="1024"
+                                              cdkAutosizeMaxRows="5"
+                                              cdkAutosizeMinRows="1"
+                                              cdkTextareaAutosize
+                                              matInput></textarea>
+                                </mat-form-field>
+                            </mat-card-content>
                             <mat-card-actions>
                                 <button (click)="play(videoComment.timestamp)" color="accent" mat-stroked-button>
                                     Jump to Scene
                                 </button>
-                                <button (click)="reply(videoComment)" color="accent" mat-stroked-button>
+                                <button (click)="reply(videoComment)" color="accent" mat-stroked-button *ngIf="videoComment.id">
                                     Reply
                                 </button>
                             </mat-card-actions>

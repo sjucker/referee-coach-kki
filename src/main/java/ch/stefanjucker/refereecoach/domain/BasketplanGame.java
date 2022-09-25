@@ -54,6 +54,7 @@ public class BasketplanGame {
     @JoinColumn(name = "referee3_id")
     private Referee referee3;
 
+    // can be null if report is done without video comments, text-only
     @Column(name = "youtube_id")
     private String youtubeId;
 }

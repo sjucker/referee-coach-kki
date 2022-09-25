@@ -35,15 +35,17 @@ export class SettingsComponent implements OnInit {
                 this.errorMessage = 'New password does not match'
             } else {
                 this.authenticationService.changePassword(
-                    this.changePasswordForm.value.oldPassword,
-                    this.changePasswordForm.value.newPassword1
-                ).subscribe(response => {
+                    this.changePasswordForm.value.oldPassword!,
+                    this.changePasswordForm.value.newPassword1!
+                ).subscribe({
+                    next: response => {
                         this.success = true;
                     },
-                    err => {
+                    error: err => {
                         this.error = true;
                         this.errorMessage = 'Could not change the existing password!'
-                    });
+                    }
+                });
             }
         }
     }

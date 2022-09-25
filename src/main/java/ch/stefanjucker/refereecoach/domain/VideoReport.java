@@ -6,6 +6,8 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
+import javax.persistence.AttributeOverride;
+import javax.persistence.AttributeOverrides;
 import javax.persistence.Column;
 import javax.persistence.Embedded;
 import javax.persistence.Entity;
@@ -14,6 +16,8 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
+import java.util.Objects;
+import java.util.stream.Stream;
 
 import static javax.persistence.EnumType.STRING;
 
@@ -24,6 +28,8 @@ import static javax.persistence.EnumType.STRING;
 @ToString
 @NoArgsConstructor
 public class VideoReport {
+
+    public static final int CURRENT_VERSION = 2;
 
     @Id
     @Column(nullable = false)
@@ -40,14 +46,55 @@ public class VideoReport {
     @Embedded
     private BasketplanGame basketplanGame;
 
-    @Column(length = 1024, name = "image_comment")
-    private String imageComment;
-    @Column(length = 1024, name = "mechanics_comment")
-    private String mechanicsComment;
-    @Column(length = 1024, name = "fouls_comment")
-    private String foulsComment;
-    @Column(length = 1024, name = "game_management_comment")
-    private String gameManagementComment;
+    @AttributeOverrides({
+            @AttributeOverride(name = "comment", column = @Column(name = "general_comment")),
+            @AttributeOverride(name = "score", column = @Column(name = "general_score"))
+    })
+    @Embedded
+    private CriteriaEvaluation general = new CriteriaEvaluation("", 7.0);
+
+    @AttributeOverrides({
+            @AttributeOverride(name = "comment", column = @Column(name = "image_comment")),
+            @AttributeOverride(name = "score", column = @Column(name = "image_score"))
+    })
+    @Embedded
+    private CriteriaEvaluation image = new CriteriaEvaluation("", 7.0);
+
+    @AttributeOverrides({
+            @AttributeOverride(name = "comment", column = @Column(name = "fitness_comment")),
+            @AttributeOverride(name = "score", column = @Column(name = "fitness_score"))
+    })
+    @Embedded
+    private CriteriaEvaluation fitness = new CriteriaEvaluation("", 7.0);
+
+    @AttributeOverrides({
+            @AttributeOverride(name = "comment", column = @Column(name = "mechanics_comment")),
+            @AttributeOverride(name = "score", column = @Column(name = "mechanics_score"))
+    })
+    @Embedded
+    private CriteriaEvaluation mechanics = new CriteriaEvaluation("", 7.0);
+
+    @AttributeOverrides({
+            @AttributeOverride(name = "comment", column = @Column(name = "fouls_comment")),
+            @AttributeOverride(name = "score", column = @Column(name = "fouls_score"))
+    })
+    @Embedded
+    private CriteriaEvaluation fouls = new CriteriaEvaluation("", 7.0);
+
+    @AttributeOverrides({
+            @AttributeOverride(name = "comment", column = @Column(name = "violations_comment")),
+            @AttributeOverride(name = "score", column = @Column(name = "violations_score"))
+    })
+    @Embedded
+    private CriteriaEvaluation violations = new CriteriaEvaluation("", 7.0);
+
+    @AttributeOverrides({
+            @AttributeOverride(name = "comment", column = @Column(name = "game_management_comment")),
+            @AttributeOverride(name = "score", column = @Column(name = "game_management_score"))
+    })
+    @Embedded
+    private CriteriaEvaluation gameManagement = new CriteriaEvaluation("", 7.0);
+
     @Column(length = 1024, name = "points_to_keep_comment")
     private String pointsToKeepComment;
     @Column(length = 1024, name = "points_to_improve_comment")
@@ -55,6 +102,8 @@ public class VideoReport {
 
     @Column(nullable = false)
     private boolean finished;
+
+    private int version;
 
     public Referee relevantReferee() {
         return switch (reportee) {

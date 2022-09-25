@@ -9,12 +9,14 @@ import {SettingsComponent} from "./settings/settings.component";
 import {UnsavedChangesGuard} from "./service/unsaved-changes.guard";
 import {DiscussVideoReportComponent} from "./discuss-report/discuss-video-report.component";
 import {UnsavedRepliesGuard} from "./service/unsaved-replies.guard";
+import {ReportSearchComponent} from "./report-search/report-search.component";
 
 export const LOGIN_PATH = 'login'
 export const EDIT_PATH = 'edit'
 export const VIEW_PATH = 'view'
 export const DISCUSS_PATH = 'discuss'
 export const SETTINGS_PATH = 'settings'
+export const SEARCH_PATH = 'search'
 
 const routes: Routes = [
     {
@@ -46,6 +48,11 @@ const routes: Routes = [
     {
         path: SETTINGS_PATH,
         component: SettingsComponent,
+        canActivate: [AuthenticationGuard]
+    },
+    {
+        path: SEARCH_PATH,
+        component: ReportSearchComponent,
         canActivate: [AuthenticationGuard]
     }
 ];
