@@ -356,6 +356,7 @@ public class VideoReportService {
         return commentsHavingTags.stream()
                                  .map(comment -> DTO_MAPPER.toDTO(videoReportRepository.getReferenceById(comment.getVideoReportId())
                                                                                        .getBasketplanGame(), comment))
+                                 .distinct()
                                  .toList();
 
     }
