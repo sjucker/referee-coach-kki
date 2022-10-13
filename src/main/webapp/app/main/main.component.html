@@ -22,7 +22,7 @@
                         <mat-label>Game Number (e.g., 21-03520)</mat-label>
                         <input [(ngModel)]="gameNumberInput" autocomplete="off" matInput name="gameNumber" type="text">
                     </mat-form-field>
-                    <button color="primary" mat-flat-button type="submit">Search</button>
+                    <button color="primary" mat-flat-button type="submit" [disabled]="searching">Search</button>
                 </form>
 
                 <div *ngIf="game && youtubeIdInputNeeded">
@@ -42,7 +42,7 @@
                             <mat-option *ngFor="let r of reportees" [value]="r.reportee">{{r.name}}</mat-option>
                         </mat-select>
                     </mat-form-field>
-                    <button color="primary" mat-flat-button [disabled]="!reportee || (!youtubeId && !textOnlyMode)">Start</button>
+                    <button color="primary" mat-flat-button [disabled]="!reportee || (!youtubeId && !textOnlyMode) || creating">Start</button>
                 </form>
                 <div *ngIf="problemDescription">
                     {{problemDescription}}

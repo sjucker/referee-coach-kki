@@ -53,6 +53,8 @@ export class MainComponent implements OnInit {
     to = this.getTo();
     filter = this.getFilter();
 
+    searching = false;
+    creating = false;
     exporting = false;
 
     constructor(private basketplanService: BasketplanService,
@@ -140,36 +142,40 @@ export class MainComponent implements OnInit {
             return;
         }
 
-        this.basketplanService.searchGame(this.gameNumberInput.trim()).subscribe(
-            dto => {
-                if (dto.referee1 && dto.referee2
-                    && (dto.officiatingMode === OfficiatingMode.OFFICIATING_2PO || dto.referee3)) {
+        this.searching = true;
+        this.basketplanService.searchGame(this.gameNumberInput.trim()).subscribe({
+                next: dto => {
+                    if (dto.referee1 && dto.referee2
+                        && (dto.officiatingMode === OfficiatingMode.OFFICIATING_2PO || dto.referee3)) {
 
-                    this.game = dto;
-                    this.youtubeId = this.game.youtubeId;
+                        this.game = dto;
+                        this.youtubeId = this.game.youtubeId;
 
-                    this.reportee = undefined;
-                    this.reportees = [
-                        {reportee: Reportee.FIRST_REFEREE, name: dto.referee1.name},
-                        {reportee: Reportee.SECOND_REFEREE, name: dto.referee2.name}
-                    ];
+                        this.reportee = undefined;
+                        this.reportees = [
+                            {reportee: Reportee.FIRST_REFEREE, name: dto.referee1.name},
+                            {reportee: Reportee.SECOND_REFEREE, name: dto.referee2.name}
+                        ];
 
-                    if (dto.officiatingMode === OfficiatingMode.OFFICIATING_3PO && dto.referee3) {
-                        this.reportees = [...this.reportees, {
-                            reportee: Reportee.THIRD_REFEREE,
-                            name: dto.referee3.name
-                        }];
+                        if (dto.officiatingMode === OfficiatingMode.OFFICIATING_3PO && dto.referee3) {
+                            this.reportees = [...this.reportees, {
+                                reportee: Reportee.THIRD_REFEREE,
+                                name: dto.referee3.name
+                            }];
+                        }
+                        this.youtubeIdInputNeeded = !this.youtubeId;
+                    } else {
+                        this.problemDescription = 'At least one referee not available in database';
                     }
-                    this.youtubeIdInputNeeded = !this.youtubeId;
-                } else {
-                    this.problemDescription = 'At least one referee not available in database';
-                }
-            },
-            error => {
-                if (error.status === 404) {
-                    this.problemDescription = 'No game found for given game number';
-                } else {
-                    this.problemDescription = 'An unexpected error occurred'
+                    this.searching = false;
+                },
+                error: error => {
+                    if (error.status === 404) {
+                        this.problemDescription = 'No game found for given game number';
+                    } else {
+                        this.problemDescription = 'An unexpected error occurred'
+                    }
+                    this.searching = false;
                 }
             }
         );
@@ -193,12 +199,15 @@ export class MainComponent implements OnInit {
     }
 
     createVideoReport() {
+        this.creating = true;
         if (this.game && (this.textOnlyMode || this.youtubeId) && this.reportee) {
             this.videoReportService.createVideoReport(this.game.gameNumber, this.reportee, this.textOnlyMode ? undefined : this.youtubeId).subscribe({
                 next: response => {
+                    this.creating = false;
                     this.edit(response);
                 },
                 error: _ => {
+                    this.creating = false;
                     this.snackBar.open("An unexpected error occurred, report could not be created.", undefined, {
                         duration: 3000,
                         horizontalPosition: "center",
