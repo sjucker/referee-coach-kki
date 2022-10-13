@@ -2,7 +2,7 @@
     <mat-toolbar color="primary">
         <h1 *ngIf="dto && !dto.textOnly">Video Report</h1>
         <h1 *ngIf="dto && dto.textOnly">Report</h1>
-        <button *ngIf="dto && dto.basketplanGame.youtubeId" mat-icon-button (click)="navigateToDiscussion()" matTooltip="Switch to video comments discussion">
+        <button *ngIf="dto && !dto.textOnly && dto.finished" mat-icon-button (click)="navigateToDiscussion()" matTooltip="Switch to video comments discussion">
             <mat-icon>message</mat-icon>
         </button>
         <span class="spacer"></span>
