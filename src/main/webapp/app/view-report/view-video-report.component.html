@@ -1,5 +1,6 @@
 <div>
     <mat-toolbar color="primary">
+        <mat-progress-spinner mode="indeterminate" *ngIf="!notFound && !dto" [diameter]="30" color="accent"></mat-progress-spinner>
         <h1 *ngIf="dto && !dto.textOnly">Video Report</h1>
         <h1 *ngIf="dto && dto.textOnly">Report</h1>
         <button *ngIf="dto && !dto.textOnly && dto.finished" mat-icon-button (click)="navigateToDiscussion()" matTooltip="Switch to video comments discussion">
