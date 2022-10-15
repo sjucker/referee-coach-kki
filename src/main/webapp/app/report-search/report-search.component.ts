@@ -3,6 +3,8 @@ import {VideoReportService} from "../service/video-report.service";
 import {TagDTO, VideoCommentDetailDTO} from "../rest";
 import {MatTableDataSource} from "@angular/material/table";
 import {YouTubePlayer} from "@angular/youtube-player";
+import {MatPaginator} from "@angular/material/paginator";
+import {MatSnackBar} from "@angular/material/snack-bar";
 
 @Component({
     selector: 'app-report-search',
@@ -18,6 +20,7 @@ export class ReportSearchComponent implements OnInit, AfterViewInit, OnDestroy {
 
     selectedTags: TagDTO[] = [];
     results: MatTableDataSource<VideoCommentDetailDTO> = new MatTableDataSource<VideoCommentDetailDTO>([]);
+    @ViewChild(MatPaginator) paginator: MatPaginator | undefined;
 
     currentVideoId?: string;
     videoWidth?: number;
@@ -25,7 +28,8 @@ export class ReportSearchComponent implements OnInit, AfterViewInit, OnDestroy {
 
     searching = false;
 
-    constructor(private readonly videoReportService: VideoReportService) {
+    constructor(private readonly videoReportService: VideoReportService,
+                private snackBar: MatSnackBar) {
     }
 
     ngOnInit(): void {
@@ -60,6 +64,17 @@ export class ReportSearchComponent implements OnInit, AfterViewInit, OnDestroy {
         }).subscribe({
             next: response => {
                 this.results = new MatTableDataSource<VideoCommentDetailDTO>(response.results);
+                if (this.paginator) {
+                    this.results.paginator = this.paginator
+                }
+            },
+            error: _ => {
+                this.searching = false;
+                this.snackBar.open("An unexpected error occurred", undefined, {
+                    duration: 3000,
+                    horizontalPosition: "center",
+                    verticalPosition: "top"
+                })
             },
             complete: () => {
                 this.searching = false;

@@ -36,12 +36,15 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
+import java.util.function.Function;
 import java.util.stream.Stream;
 
 import static ch.stefanjucker.refereecoach.domain.VideoReport.CURRENT_VERSION;
 import static java.util.stream.Collectors.toCollection;
+import static java.util.stream.Collectors.toMap;
 import static java.util.stream.Collectors.toSet;
 
 @Slf4j
@@ -353,9 +356,16 @@ public class VideoReportService {
         List<VideoComment> commentsHavingTags = videoCommentRepository.findCommentsHavingTags(dto.tags().stream()
                                                                                                  .map(TagDTO::id)
                                                                                                  .collect(toSet()));
+
+        Set<String> videoReportIds = commentsHavingTags.stream()
+                                                       .map(VideoComment::getVideoReportId)
+                                                       .collect(toSet());
+
+        Map<String, VideoReport> videoReports = videoReportRepository.findAllById(videoReportIds).stream()
+                                                                     .collect(toMap(VideoReport::getId, Function.identity()));
+
         return commentsHavingTags.stream()
-                                 .map(comment -> DTO_MAPPER.toDTO(videoReportRepository.getReferenceById(comment.getVideoReportId())
-                                                                                       .getBasketplanGame(), comment))
+                                 .map(comment -> DTO_MAPPER.toDTO(videoReports.get(comment.getVideoReportId()).getBasketplanGame(), comment))
                                  .distinct()
                                  .toList();
 

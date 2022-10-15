@@ -39,8 +39,8 @@
             <table mat-table [dataSource]="results" *ngIf="!searching">
 
                 <ng-container matColumnDef="date">
-                    <th mat-header-cell *matHeaderCellDef>Date</th>
-                    <td mat-cell *matCellDef="let element">{{element.basketplanGame.date | date: 'dd.MM.yyyy'}}</td>
+                    <th mat-header-cell *matHeaderCellDef fxHide fxShow.gt-xs>Date</th>
+                    <td mat-cell *matCellDef="let element" fxHide fxShow.gt-xs>{{element.basketplanGame.date | date: 'dd.MM.yyyy'}}</td>
                 </ng-container>
 
                 <ng-container matColumnDef="gameNumber">
@@ -49,8 +49,8 @@
                 </ng-container>
 
                 <ng-container matColumnDef="competition">
-                    <th mat-header-cell *matHeaderCellDef>Competition</th>
-                    <td mat-cell *matCellDef="let element">{{element.basketplanGame.competition}}</td>
+                    <th mat-header-cell *matHeaderCellDef fxHide fxShow.gt-xs>Competition</th>
+                    <td mat-cell *matCellDef="let element" fxHide fxShow.gt-xs>{{element.basketplanGame.competition}}</td>
                 </ng-container>
 
                 <ng-container matColumnDef="comment">
@@ -59,8 +59,8 @@
                 </ng-container>
 
                 <ng-container matColumnDef="tags">
-                    <th mat-header-cell *matHeaderCellDef>Tags</th>
-                    <td mat-cell *matCellDef="let element">{{tagsAsList(element.tags)}}</td>
+                    <th mat-header-cell *matHeaderCellDef fxHide fxShow.gt-xs>Tags</th>
+                    <td mat-cell *matCellDef="let element" fxHide fxShow.gt-xs>{{tagsAsList(element.tags)}}</td>
                 </ng-container>
 
                 <ng-container matColumnDef="play">
