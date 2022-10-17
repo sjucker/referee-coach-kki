@@ -24,7 +24,7 @@
 
             </div>
             <mat-card-actions>
-                <button (click)="search()" color="primary" mat-flat-button [disabled]="selectedTags.length === 0">
+                <button (click)="search()" color="primary" mat-flat-button [disabled]="selectedTags.length === 0 || searching">
                     Search
                 </button>
             </mat-card-actions>
