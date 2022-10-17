@@ -1,4 +1,4 @@
-import {Component, OnInit} from '@angular/core';
+import {Component} from '@angular/core';
 import {FormBuilder, Validators} from "@angular/forms";
 import {AuthenticationService} from "../service/authentication.service";
 
@@ -7,7 +7,7 @@ import {AuthenticationService} from "../service/authentication.service";
     templateUrl: './settings.component.html',
     styleUrls: ['./settings.component.css']
 })
-export class SettingsComponent implements OnInit {
+export class SettingsComponent {
 
     error = false;
     errorMessage = '';
@@ -21,9 +21,6 @@ export class SettingsComponent implements OnInit {
 
     constructor(private formBuilder: FormBuilder,
                 private authenticationService: AuthenticationService) {
-    }
-
-    ngOnInit(): void {
     }
 
     changePassword() {

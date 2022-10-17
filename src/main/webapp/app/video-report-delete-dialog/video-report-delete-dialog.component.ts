@@ -1,4 +1,4 @@
-import {Component, Inject, OnInit} from '@angular/core';
+import {Component, Inject} from '@angular/core';
 import {MAT_DIALOG_DATA} from "@angular/material/dialog";
 import {VideoReportDTO} from "../rest";
 import {getReferee} from "../service/video-report.service";
@@ -8,12 +8,9 @@ import {getReferee} from "../service/video-report.service";
     templateUrl: './video-report-delete-dialog.component.html',
     styleUrls: ['./video-report-delete-dialog.component.css']
 })
-export class VideoReportDeleteDialogComponent implements OnInit {
+export class VideoReportDeleteDialogComponent {
 
     constructor(@Inject(MAT_DIALOG_DATA) public dto: VideoReportDTO) {
-    }
-
-    ngOnInit(): void {
     }
 
     getReferee(): string {

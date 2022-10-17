@@ -1,4 +1,4 @@
-import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
+import {Component, EventEmitter, Input, Output} from '@angular/core';
 import {CriteriaEvaluationDTO} from "../rest";
 
 @Component({
@@ -6,7 +6,7 @@ import {CriteriaEvaluationDTO} from "../rest";
     templateUrl: './video-report-rating.component.html',
     styleUrls: ['./video-report-rating.component.css']
 })
-export class VideoReportRatingComponent implements OnInit {
+export class VideoReportRatingComponent {
 
     @Input()
     title = '';
@@ -22,9 +22,6 @@ export class VideoReportRatingComponent implements OnInit {
     changed = new EventEmitter<any>();
 
     constructor() {
-    }
-
-    ngOnInit(): void {
     }
 
     rating() {

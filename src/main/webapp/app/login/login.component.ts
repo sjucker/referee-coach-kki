@@ -1,4 +1,4 @@
-import {Component, OnInit} from '@angular/core';
+import {Component} from '@angular/core';
 import {FormBuilder, Validators} from '@angular/forms';
 import {AuthenticationService} from "../service/authentication.service";
 import {Router} from "@angular/router";
@@ -8,7 +8,7 @@ import {Router} from "@angular/router";
     templateUrl: './login.component.html',
     styleUrls: ['./login.component.css']
 })
-export class LoginComponent implements OnInit {
+export class LoginComponent {
 
     authenticationError = false;
 
@@ -21,9 +21,6 @@ export class LoginComponent implements OnInit {
     constructor(private formBuilder: FormBuilder,
                 private router: Router,
                 private authenticationService: AuthenticationService) {
-    }
-
-    ngOnInit(): void {
     }
 
     login(): void {
