@@ -28,7 +28,7 @@ export class AuthenticationInterceptor implements HttpInterceptor {
             this.router.navigate([LOGIN_PATH]);
             return of(err.message);
         }
-        return throwError(err);
+        return throwError(() => err);
     }
 
 

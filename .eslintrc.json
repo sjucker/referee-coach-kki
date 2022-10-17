@@ -3,6 +3,10 @@
   "ignorePatterns": [
     "projects/**/*"
   ],
+  "plugins": ["deprecation"],
+  "rules": {
+    "deprecation/deprecation": "error"
+  },
   "overrides": [
     {
       "files": [
