@@ -32,6 +32,6 @@ public class UserAuthService implements UserDetailsService {
             return new User(user.get().getEmail(), user.get().getPassword(), authorities);
         }
 
-        throw new UsernameNotFoundException("user not found for: " + user);
+        throw new UsernameNotFoundException("user not found for: " + username);
     }
 }
