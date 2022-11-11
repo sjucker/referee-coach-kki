@@ -53,7 +53,7 @@ public class VideoReportService {
 
     private static final DTOMapper DTO_MAPPER = DTOMapper.INSTANCE;
 
-    private static final String STEFAN_JUCKER_EMAIL = "stefan.jucker@gmail.com";
+    private static final String STEFAN_JUCKER_EMAIL = "reports@referee-coach.ch";
     private static final String FABRIZIO_PIZIO_EMAIL = "fabrizio.pizio@swissbasketball.ch";
 
     private final VideoReportRepository videoReportRepository;
