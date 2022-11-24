@@ -2,7 +2,7 @@
     <mat-toolbar color="primary">
         <span *ngIf="report && !report.textOnly">Video Report</span>
         <span *ngIf="report && report.textOnly">Report</span>
-        <button *ngIf="report" mat-icon-button (click)="save()" [disabled]="!unsavedChanges">
+        <button *ngIf="report" mat-icon-button (click)="save()" [disabled]="saving || !unsavedChanges">
             <mat-icon matTooltip="saves the current state of the report">save</mat-icon>
         </button>
         <button *ngIf="report" mat-icon-button (click)="finish()" [disabled]="unsavedChanges">
