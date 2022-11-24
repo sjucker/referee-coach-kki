@@ -28,6 +28,7 @@ export class VideoReportComponent implements OnInit, AfterViewInit, OnDestroy {
     report?: VideoReportDTO;
     notFound = false;
     unsavedChanges = false;
+    saving = false;
 
     constructor(private readonly basketplanService: BasketplanService,
                 private readonly videoReportService: VideoReportService,
@@ -84,13 +85,16 @@ export class VideoReportComponent implements OnInit, AfterViewInit, OnDestroy {
 
     save() {
         if (this.report) {
+            this.saving = true;
             this.videoReportService.saveVideoReport(this.report).subscribe({
                 next: response => {
                     this.report = response;
                     this.unsavedChanges = false;
+                    this.saving = false;
                     this.showMessage("Successfully saved!");
                 },
                 error: _ => {
+                    this.saving = false;
                     this.showMessage("An unexpected error occurred, report could not be saved.");
                 }
             });
