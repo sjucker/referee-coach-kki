@@ -1,5 +1,6 @@
 <div>
     <mat-toolbar color="primary">
+        <mat-progress-spinner mode="indeterminate" *ngIf="!notFound && !report" [diameter]="30" color="accent"></mat-progress-spinner>
         <span *ngIf="report && !report.textOnly">Video Report</span>
         <span *ngIf="report && report.textOnly">Report</span>
         <button *ngIf="report" mat-icon-button (click)="save()" [disabled]="saving || !unsavedChanges">

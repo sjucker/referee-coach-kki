@@ -258,11 +258,13 @@ export class MainComponent implements OnInit {
             } as VideoReportCopyDialogData
         }).afterClosed().subscribe((reportee: Reportee) => {
             if (reportee) {
+                this.reportsLoaded = false;
                 this.videoReportService.copyVideoReport(report.id, reportee).subscribe({
                     next: response => {
                         this.edit(response);
                     },
                     error: _ => {
+                        this.reportsLoaded = true;
                         this.snackBar.open("An unexpected error occurred, report could not be copied.", undefined, {
                             duration: 3000,
                             horizontalPosition: "center",
@@ -285,6 +287,7 @@ export class MainComponent implements OnInit {
     delete(report: VideoReportDTO) {
         this.dialog.open(VideoReportDeleteDialogComponent, {data: report}).afterClosed().subscribe((confirm: boolean) => {
             if (confirm) {
+                this.reportsLoaded = false;
                 this.videoReportService.deleteVideoReport(report).subscribe({
                     next: _ => {
                         this.loadVideoReports();
