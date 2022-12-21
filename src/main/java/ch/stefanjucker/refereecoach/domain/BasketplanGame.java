@@ -1,18 +1,18 @@
 package ch.stefanjucker.refereecoach.domain;
 
+import static jakarta.persistence.EnumType.STRING;
+
 import ch.stefanjucker.refereecoach.dto.OfficiatingMode;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 
-import javax.persistence.Column;
-import javax.persistence.Embeddable;
-import javax.persistence.Enumerated;
-import javax.persistence.JoinColumn;
-import javax.persistence.OneToOne;
+import jakarta.persistence.Column;
+import jakarta.persistence.Embeddable;
+import jakarta.persistence.Enumerated;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.OneToOne;
 import java.time.LocalDate;
-
-import static javax.persistence.EnumType.STRING;
 
 @Embeddable
 @Getter

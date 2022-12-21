@@ -1,5 +1,9 @@
 package ch.stefanjucker.refereecoach.service;
 
+import static ch.stefanjucker.refereecoach.dto.OfficiatingMode.OFFICIATING_2PO;
+import static ch.stefanjucker.refereecoach.dto.OfficiatingMode.OFFICIATING_3PO;
+import static javax.xml.XMLConstants.FEATURE_SECURE_PROCESSING;
+
 import ch.stefanjucker.refereecoach.domain.Referee;
 import ch.stefanjucker.refereecoach.domain.repository.RefereeRepository;
 import ch.stefanjucker.refereecoach.dto.BasketplanGameDTO;
@@ -18,10 +22,6 @@ import java.time.LocalDate;
 import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
-import static ch.stefanjucker.refereecoach.dto.OfficiatingMode.OFFICIATING_2PO;
-import static ch.stefanjucker.refereecoach.dto.OfficiatingMode.OFFICIATING_3PO;
-import static javax.xml.XMLConstants.FEATURE_SECURE_PROCESSING;
 
 @Slf4j
 @Service

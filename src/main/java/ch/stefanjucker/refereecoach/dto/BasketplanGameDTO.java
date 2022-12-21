@@ -1,6 +1,6 @@
 package ch.stefanjucker.refereecoach.dto;
 
-import javax.validation.constraints.NotNull;
+import jakarta.validation.constraints.NotNull;
 import java.time.LocalDate;
 
 public record BasketplanGameDTO(@NotNull String gameNumber,

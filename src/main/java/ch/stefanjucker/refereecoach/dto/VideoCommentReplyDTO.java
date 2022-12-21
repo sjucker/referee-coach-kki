@@ -2,7 +2,7 @@ package ch.stefanjucker.refereecoach.dto;
 
 import org.hibernate.validator.constraints.Length;
 
-import javax.validation.constraints.NotNull;
+import jakarta.validation.constraints.NotNull;
 import java.time.LocalDateTime;
 
 public record VideoCommentReplyDTO(@NotNull Long id,
