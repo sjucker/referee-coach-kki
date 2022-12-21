@@ -1,5 +1,8 @@
 package ch.stefanjucker.refereecoach.service;
 
+import static org.springframework.data.domain.Sort.Order.desc;
+import static org.springframework.data.domain.Sort.by;
+
 import ch.stefanjucker.refereecoach.domain.repository.VideoReportRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.poi.ss.usermodel.DateUtil;
@@ -12,9 +15,6 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-
-import static org.springframework.data.domain.Sort.Order.desc;
-import static org.springframework.data.domain.Sort.by;
 
 @Slf4j
 @Service

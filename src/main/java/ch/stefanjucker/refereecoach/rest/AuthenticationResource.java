@@ -1,5 +1,7 @@
 package ch.stefanjucker.refereecoach.rest;
 
+import static org.springframework.http.HttpStatus.UNAUTHORIZED;
+
 import ch.stefanjucker.refereecoach.domain.repository.UserRepository;
 import ch.stefanjucker.refereecoach.dto.ChangePasswordRequestDTO;
 import ch.stefanjucker.refereecoach.dto.LoginRequestDTO;
@@ -15,10 +17,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import javax.validation.Valid;
+import jakarta.validation.Valid;
 import java.time.LocalDateTime;
-
-import static org.springframework.http.HttpStatus.UNAUTHORIZED;
 
 @Slf4j
 @RestController

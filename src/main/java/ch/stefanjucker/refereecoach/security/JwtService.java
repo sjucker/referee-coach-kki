@@ -1,5 +1,8 @@
 package ch.stefanjucker.refereecoach.security;
 
+import static io.jsonwebtoken.SignatureAlgorithm.HS256;
+import static java.nio.charset.StandardCharsets.UTF_8;
+
 import ch.stefanjucker.refereecoach.configuration.RefereeCoachProperties;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.JwtException;
@@ -10,9 +13,6 @@ import org.springframework.stereotype.Service;
 
 import javax.crypto.spec.SecretKeySpec;
 import java.util.Optional;
-
-import static io.jsonwebtoken.SignatureAlgorithm.HS256;
-import static java.nio.charset.StandardCharsets.UTF_8;
 
 @Slf4j
 @Service

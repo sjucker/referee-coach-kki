@@ -38,3 +38,5 @@ node_modules
 .angular
 
 src/main/resources/application-local.properties
+/spring-boot-migrator.jar
+/.rewrite-cache/
