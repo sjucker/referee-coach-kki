@@ -53,14 +53,13 @@ public class SecurityConfiguration {
             .httpBasic().disable()
             .cors().and().csrf().disable()
             .authorizeHttpRequests()
-                .requestMatchers(GET, "/*").permitAll()
                 .requestMatchers(OPTIONS, "/api/**").permitAll()
                 .requestMatchers(POST, "/api/authenticate").permitAll()
                 // read-only report also available to anonymous users (i.e., the referees)
                 .requestMatchers(GET, "/api/video-report/*").permitAll()
-                .requestMatchers(GET, "/api/video-report/*/discussion").permitAll()
-                .requestMatchers(POST, "/api/video-report/*/discussion").permitAll()
+                .requestMatchers("/api/video-report/*/discussion").permitAll()
                 .requestMatchers("/api/**").authenticated()
+                .anyRequest().permitAll()
             .and().exceptionHandling()
             .and().sessionManagement().sessionCreationPolicy(STATELESS);
 
