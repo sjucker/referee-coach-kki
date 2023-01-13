@@ -64,6 +64,9 @@
             <column name="game_number" type="VARCHAR(255)">
                 <constraints nullable="false"/>
             </column>
+            <column name="competition" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
             <column name="date" type="DATE">
                 <constraints nullable="false"/>
             </column>
