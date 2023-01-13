@@ -34,7 +34,7 @@
     </changeSet>
 
     <changeSet author="jucker" id="3">
-        <createTable tableName="tags">
+        <createTable tableName="user">
             <column name="id" type="BIGINT" autoIncrement="true">
                 <constraints nullable="false" primaryKey="true" unique="true"/>
             </column>
