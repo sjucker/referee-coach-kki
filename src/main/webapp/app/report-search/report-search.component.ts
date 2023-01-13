@@ -9,7 +9,7 @@ import {MatSnackBar} from "@angular/material/snack-bar";
 @Component({
     selector: 'app-report-search',
     templateUrl: './report-search.component.html',
-    styleUrls: ['./report-search.component.css']
+    styleUrls: ['./report-search.component.scss']
 })
 export class ReportSearchComponent implements OnInit, AfterViewInit, OnDestroy {
 
@@ -73,7 +73,7 @@ export class ReportSearchComponent implements OnInit, AfterViewInit, OnDestroy {
                 this.snackBar.open("An unexpected error occurred", undefined, {
                     duration: 3000,
                     horizontalPosition: "center",
-                    verticalPosition: "top"
+                    verticalPosition: "top",
                 })
             },
             complete: () => {

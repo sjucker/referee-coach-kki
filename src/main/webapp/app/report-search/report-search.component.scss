@@ -1,0 +1,19 @@
+@import '../../styles';
+
+.spacer {
+    flex: 1 1 auto;
+}
+
+table {
+    width: 100%;
+}
+
+.search-container {
+    display: flex;
+    flex-direction: column;
+
+    @include responsive('gt-md') {
+        flex-direction: row;
+        gap: 20px;
+    }
+}

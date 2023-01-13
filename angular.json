@@ -8,6 +8,9 @@
       "schematics": {
         "@schematics/angular:application": {
           "strict": true
+        },
+        "@schematics/angular:component": {
+          "style": "scss"
         }
       },
       "root": "src/main/webapp",
@@ -27,8 +30,7 @@
               "src/main/webapp/assets"
             ],
             "styles": [
-              "./node_modules/@angular/material/prebuilt-themes/pink-bluegrey.css",
-              "src/main/webapp/styles.css"
+              "src/main/webapp/styles.scss"
             ],
             "scripts": [],
             "allowedCommonJsDependencies": [
@@ -120,7 +122,7 @@
             ],
             "styles": [
               "./node_modules/@angular/material/prebuilt-themes/purple-green.css",
-              "src/main/webapp/styles.css"
+              "src/main/webapp/styles.scss"
             ],
             "scripts": []
           }

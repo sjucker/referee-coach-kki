@@ -1,8 +1,7 @@
 <span style="display: inline-block; width: 250px">{{title}}:</span>
-<mat-slider min="6" max="9" step="0.1" tickInterval="auto"
+<!-- TODO: The 'tickInterval' property no longer exists -->
+<mat-slider min="6" max="9" step="0.1"
             thumbLabel
-            (input)="dto.score = $event.value!"
-            [value]="dto.score ? dto.score : 7"
-            (valueChange)="changed.emit($event)">
+            (valueChange)="changed.emit($event)" #ngSlider><input matSliderThumb [value]="dto.score ? dto.score : 7" (input)="dto.score = {source: ngSliderThumb, parent: ngSlider, value: ngSliderThumb.value}.value!" #ngSliderThumb="matSliderThumb" />
 </mat-slider>
 {{dto.score}} ({{rating()}})
