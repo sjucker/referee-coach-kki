@@ -209,4 +209,48 @@
         </createTable>
         <addPrimaryKey tableName="video_report_comment_tags" columnNames="video_report_comment_id,tag_id"/>
     </changeSet>
+
+    <changeSet author="jucker" id="8">
+        <insert tableName="tags">
+            <column name="name" value="TRAIL"/>
+            <column name="name" value="CENTER"/>
+            <column name="name" value="LEAD"/>
+            <column name="name" value="TV - TRAVELLING"/>
+            <column name="name" value="DD - DOUBLE DRIBBLE"/>
+            <column name="name" value="BCV - BACKCOURT"/>
+            <column name="name" value="TIME V. - TIME 3/5/8"/>
+            <column name="name" value="SCV - SHOT CLOCK VIOLATION"/>
+            <column name="name" value="OOB_T-IN - OUT OF BOUNDS &amp; THROW-IN"/>
+            <column name="name" value="GT_BI - GOAL TENDING AND INTERFERENCE"/>
+            <column name="name" value="UF - UNSPORTSMANLIKE FOUL"/>
+            <column name="name" value="FK - FAKE BEING FOULED"/>
+            <column name="name" value="AOS D - AOS: DEFENDER"/>
+            <column name="name" value="AOS S - AOS: SHOOTER"/>
+            <column name="name" value="NL_CH - BLOCK-CHARGE"/>
+            <column name="name" value="CYL - CYLINDER PLAY"/>
+            <column name="name" value="SCR - SCREENS"/>
+            <column name="name" value="PNR - PICK AND ROLL"/>
+            <column name="name" value="IUA_DEF - USE OH HANDS/ARMS DEFENSIVE"/>
+            <column name="name" value="IUA_OF - USE OF HANDS/ARMS OFFENSIVE"/>
+            <column name="name" value="SHOTS - MOVING SHOTS (AOS or not)"/>
+            <column name="name" value="MC - MARGINAL CALLS"/>
+            <column name="name" value="OP - OBVIOUS PLAYS"/>
+            <column name="name" value="RB - REBOUNDING"/>
+            <column name="name" value="TRANS - TRANSITION"/>
+            <column name="name" value="PLAYER - PLAYER MANAGEMENT"/>
+            <column name="name" value="COACH - COACH MANAGEMENT"/>
+            <column name="name" value="TW - TEAMWORK"/>
+            <column name="name" value="DW - DOUBLE WHISTLE"/>
+            <column name="name" value="COM - COMMUNICATION WITH COLLEAGUES"/>
+            <column name="name" value="PTP - PROCESS THE PLAY"/>
+            <column name="name" value="PW_CW - PATIENT WHISTLE /CADENCED WHISTLE"/>
+            <column name="name" value="QW - QUICK WHISTLE"/>
+            <column name="name" value="OA_CA - OPEN ANGLE vs CLOSE ANGLE"/>
+            <column name="name" value="D&amp;S - DISTANCE AND STATIONARY"/>
+            <column name="name" value="CLOCKS - CLOCKS CONTROL"/>
+            <column name="name" value="IRS - INSTANT REPLAY"/>
+            <column name="name" value="ATT - ATTITUDE"/>
+            <column name="name" value="FIT - FITNESS"/>
+        </insert>
+    </changeSet>
 </databaseChangeLog>
