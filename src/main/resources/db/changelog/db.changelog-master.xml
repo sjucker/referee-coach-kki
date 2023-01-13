@@ -34,7 +34,7 @@
     </changeSet>
 
     <changeSet author="jucker" id="3">
-        <createTable tableName="user">
+        <createTable tableName="coach">
             <column name="id" type="BIGINT" autoIncrement="true">
                 <constraints nullable="false" primaryKey="true" unique="true"/>
             </column>
@@ -52,6 +52,108 @@
             </column>
             <column name="last_login" type="DATETIME">
                 <constraints nullable="true"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+    <changeSet author="jucker" id="4">
+        <createTable tableName="video_report">
+            <column name="id" type="VARCHAR(255)">
+                <constraints nullable="false" primaryKey="true" unique="true"/>
+            </column>
+            <column name="game_number" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="date" type="DATE">
+                <constraints nullable="false"/>
+            </column>
+            <column name="result" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="team_a" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="team_b" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="officiating_mode" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="referee1_id" type="BIGINT">
+                <constraints nullable="true"
+                             foreignKeyName="FK_VIDEO_REPORT_ON_REFEREE1ID" references="referee(id)"/>
+            </column>
+            <column name="referee2_id" type="BIGINT">
+                <constraints nullable="true"
+                             foreignKeyName="FK_VIDEO_REPORT_ON_REFEREE2ID" references="referee(id)"/>
+            </column>
+            <column name="referee3_id" type="BIGINT">
+                <constraints nullable="true"
+                             foreignKeyName="FK_VIDEO_REPORT_ON_REFEREE3ID" references="referee(id)"/>
+            </column>
+            <column name="youtube_id" type="VARCHAR(255)">
+                <constraints nullable="true"/>
+            </column>
+            <column name="coach_id" type="BIGINT">
+                <constraints nullable="false"
+                             foreignKeyName="FK_VIDEO_REPORT_ON_COACHID" references="coach(id)"/>
+            </column>
+            <column name="reportee" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="general_comment" type="VARCHAR(1024)">
+                <constraints nullable="true"/>
+            </column>
+            <column name="general_score" type="DECIMAL(2, 1)">
+                <constraints nullable="true"/>
+            </column>
+            <column name="image_comment" type="VARCHAR(1024)">
+                <constraints nullable="true"/>
+            </column>
+            <column name="image_score" type="DECIMAL(2, 1)">
+                <constraints nullable="true"/>
+            </column>
+            <column name="fitness_comment" type="VARCHAR(1024)">
+                <constraints nullable="true"/>
+            </column>
+            <column name="fitness_score" type="DECIMAL(2, 1)">
+                <constraints nullable="true"/>
+            </column>
+            <column name="mechanics_comment" type="VARCHAR(1024)">
+                <constraints nullable="true"/>
+            </column>
+            <column name="mechanics_score" type="DECIMAL(2, 1)">
+                <constraints nullable="true"/>
+            </column>
+            <column name="fouls_comment" type="VARCHAR(1024)">
+                <constraints nullable="true"/>
+            </column>
+            <column name="fouls_score" type="DECIMAL(2, 1)">
+                <constraints nullable="true"/>
+            </column>
+            <column name="violations_comment" type="VARCHAR(1024)">
+                <constraints nullable="true"/>
+            </column>
+            <column name="violations_score" type="DECIMAL(2, 1)">
+                <constraints nullable="true"/>
+            </column>
+            <column name="game_management_comment" type="VARCHAR(1024)">
+                <constraints nullable="true"/>
+            </column>
+            <column name="game_management_score" type="DECIMAL(2, 1)">
+                <constraints nullable="true"/>
+            </column>
+            <column name="points_to_keep_comment" type="VARCHAR(1024)">
+                <constraints nullable="true"/>
+            </column>
+            <column name="points_to_improve_comment" type="VARCHAR(1024)">
+                <constraints nullable="true"/>
+            </column>
+            <column name="finished" type="BIT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="version" type="INT" defaultValue="1">
+                <constraints nullable="false"/>
             </column>
         </createTable>
     </changeSet>

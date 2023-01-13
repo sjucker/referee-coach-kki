@@ -112,8 +112,8 @@
                 <ng-container matColumnDef="coach">
                     <th mat-header-cell *matHeaderCellDef>Coach</th>
                     <td mat-cell *matCellDef="let element"
-                        [class]="isCurrentUser(element.reporter) ? 'current-user' : ''">
-                        {{element.reporter.name}}
+                        [class]="isCurrentUser(element.coach) ? 'current-user' : ''">
+                        {{element.coach.name}}
                     </td>
                 </ng-container>
 
