@@ -1,17 +1,9 @@
 @use '@angular/material' as mat;
 @import "responsive";
+@import "variables";
 
 @include mat.all-component-typographies();
 @include mat.core();
-
-$dark-primary-text: rgba(black, 0.87);
-$dark-secondary-text: rgba(black, 0.54);
-$dark-disabled-text: rgba(black, 0.38);
-$dark-dividers: rgba(black, 0.12);
-$dark-focused: rgba(black, 0.12);
-$light-primary-text: white;
-$primary-color: #098ed1;
-$accent-color: #ff5219;
 
 $my-primary: mat.define-palette((
         50: #e2f6fe,
@@ -111,7 +103,7 @@ mat-form-field {
 }
 
 .game-info-container {
-  display: flex ;
+  display: flex;
   flex-direction: column;
 
   @include responsive('gt-sm') {
@@ -157,10 +149,12 @@ mat-form-field {
 }
 
 table {
-  width: 100%;
-  max-width: 100%;
+  &.mat-mdc-table {
+    width: 100%;
+    max-width: 100%;
 
-  th, td {
-    padding: 0 2px;
+    th, td {
+      padding: 0 2px;
+    }
   }
 }

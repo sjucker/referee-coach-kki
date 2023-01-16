@@ -1,11 +1,11 @@
-@import "../../styles";
+@import "../../variables";
 
 p {
   white-space: pre-wrap;
 }
 
 .reportee {
-  color: $accent-color;
+  color: $primary-color;
 }
 
 .spacer {
