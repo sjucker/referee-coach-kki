@@ -158,3 +158,30 @@ table {
     }
   }
 }
+
+.video-comments-container {
+  max-height: 440px;
+  overflow-y: auto;
+
+  .mat-mdc-card-actions {
+    gap: 10px;
+  }
+
+  @include responsive('gt-sm') {
+    .mat-mdc-card {
+      margin-top: 0;
+    }
+  }
+
+  @include responsive('lt-md') {
+    .mat-mdc-card {
+      margin-left: 0;
+      margin-right: 0;
+    }
+
+    .mat-mdc-card-actions {
+      flex-direction: column;
+      align-items: stretch;
+    }
+  }
+}

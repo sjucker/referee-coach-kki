@@ -141,7 +141,7 @@
                                         [width]="videoWidth"
                                         [height]="videoHeight"></youtube-player>
                     </div>
-                    <div style="flex: 1" id="video-comments-container">
+                    <div style="flex: 1" class="video-comments-container">
                         <mat-card appearance="outlined" *ngFor="let videoComment of dto.videoComments; index as i;">
                             <mat-card-header>
                                 <mat-card-title>Video Comment #{{i + 1}}</mat-card-title>
