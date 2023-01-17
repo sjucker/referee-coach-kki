@@ -29,7 +29,7 @@ const dateFormat = 'yyyy-MM-dd';
 @Component({
     selector: 'app-main',
     templateUrl: './main.component.html',
-    styleUrls: ['./main.component.css']
+    styleUrls: ['./main.component.scss']
 })
 export class MainComponent implements OnInit {
     displayedColumns: string[] = ['finished', 'date', 'gameNumber', 'competition', 'teams', 'coach', 'reportee', 'edit', 'view', 'copy', 'delete'];

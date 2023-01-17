@@ -7,7 +7,7 @@ import {VideoReportService} from "../service/video-report.service";
 @Component({
     selector: 'app-tags-selection',
     templateUrl: './tags-selection.component.html',
-    styleUrls: ['./tags-selection.component.css']
+    styleUrls: ['./tags-selection.component.scss']
 })
 export class TagsSelectionComponent implements OnInit {
 
