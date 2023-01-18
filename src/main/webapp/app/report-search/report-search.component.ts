@@ -5,6 +5,7 @@ import {MatTableDataSource} from "@angular/material/table";
 import {YouTubePlayer} from "@angular/youtube-player";
 import {MatPaginator} from "@angular/material/paginator";
 import {MatSnackBar} from "@angular/material/snack-bar";
+import {Observable, of, share} from "rxjs";
 
 @Component({
     selector: 'app-report-search',
@@ -28,6 +29,8 @@ export class ReportSearchComponent implements OnInit, AfterViewInit, OnDestroy {
 
     searching = false;
 
+    availableTags: Observable<TagDTO[]> = of([]);
+
     constructor(private readonly videoReportService: VideoReportService,
                 private snackBar: MatSnackBar) {
     }
@@ -38,6 +41,8 @@ export class ReportSearchComponent implements OnInit, AfterViewInit, OnDestroy {
         const tag = document.createElement('script');
         tag.src = 'https://www.youtube.com/iframe_api';
         document.body.appendChild(tag);
+
+        this.availableTags = this.videoReportService.getAllAvailableTags().pipe(share())
     }
 
     ngAfterViewInit(): void {
