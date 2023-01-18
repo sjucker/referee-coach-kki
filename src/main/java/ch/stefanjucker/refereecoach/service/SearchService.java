@@ -26,7 +26,7 @@ public class SearchService {
         var parameters = new MapSqlParameterSource("ids", dto.tags().stream().map(TagDTO::id).toList());
 
         return jdbcTemplate.query("""
-                                          select r.game_number, r.competition, r.date, c.timestamp, c.comment, r.youtube_id, group_concat(distinct(tag.name)) as tags
+                                          select r.game_number, r.competition, r.date, c.timestamp, c.comment, r.youtube_id, string_agg(distinct(tag.name), ',') as tags
                                                                   from video_report_comment c
                                                                            join video_report_comment_tags t on c.id = t.video_report_comment_id
                                                                            join tags tag on t.tag_id = tag.id
