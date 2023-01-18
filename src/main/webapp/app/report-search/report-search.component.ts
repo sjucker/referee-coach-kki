@@ -82,15 +82,8 @@ export class ReportSearchComponent implements OnInit, AfterViewInit, OnDestroy {
         });
     }
 
-    tagsAsList(tags: TagDTO[]) {
-        return tags.map(t => t.name);
-    }
-
     play(element: VideoCommentDetailDTO) {
-        this.currentVideoId = element.basketplanGame.youtubeId;
-
-
-        console.log(this.youtube!.getPlayerState());
+        this.currentVideoId = element.youtubeId;
 
         const interval = setInterval(() => {
             if (this.youtube!.getPlayerState() !== YT.PlayerState.UNSTARTED) {
@@ -99,18 +92,16 @@ export class ReportSearchComponent implements OnInit, AfterViewInit, OnDestroy {
                 clearInterval(interval);
             }
         }, 500);
-
-        setTimeout(() => {
-            console.log(this.youtube!.getPlayerState());
-        }, 1000);
     }
 
     onResize = (): void => {
-        // minus padding (16px each side) and margin (10px each)
-        const contentWidth = this.widthMeasurement!.nativeElement.clientWidth - 52;
+        setTimeout(() => {
+            // minus padding (16px each side) and margin (10px each)
+            const contentWidth = this.widthMeasurement!.nativeElement.clientWidth - 52;
 
-        this.videoWidth = Math.min(contentWidth, 720);
-        this.videoHeight = this.videoWidth * 0.6;
+            this.videoWidth = Math.min(contentWidth, 720);
+            this.videoHeight = this.videoWidth * 0.6;
+        })
     }
 
 }
